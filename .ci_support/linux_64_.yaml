@@ -18,12 +18,6 @@ fmt:
 - '10'
 libboost_devel:
 - '1.84'
-pin_run_as_build:
-  python:
-    min_pin: x.x
-    max_pin: x.x
-python:
-- 3.8.* *_cpython
 re2:
 - 2023.09.01
 spdlog:
