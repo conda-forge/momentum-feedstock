@@ -44,7 +44,6 @@ requirements:
     - ms-gsl
     - nlohmann_json
     - openfbx
-    - python  # [linux]
     - re2
     - sophus
     - spdlog
@@ -52,7 +51,6 @@ requirements:
     - dispenso
     - gflags
     - libdeflate
-    - python  # [linux]
 
 test:
   commands:
