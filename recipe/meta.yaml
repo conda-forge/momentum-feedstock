@@ -1,5 +1,5 @@
 {% set name = "momentum" %}
-{% set version = "0.1.2" %}
+{% set version = "0.1.3" %}
 
 package:
   name: {{ name|lower }}
@@ -7,19 +7,19 @@ package:
 
 source:
   - url: https://github.com/facebookincubator/momentum/archive/v{{ version }}.tar.gz
-    sha256: 499a995927e5146c5d425c5687ff4ec548a710483bbf1fc2884fcc47907cc544
+    sha256: 29c718243a0c8cd6cb1feb0ff640f8978b389463a7a1cd1646ef65c32a4620cb
     patches:
       - disable-torch-python.patch
       - disable-simd-for-pymomentum.patch
 
 build:
-  number: 5
+  number: 0
   skip: true  # [py<310]
 
 outputs:
   - name: momentum-cpp
     script: build_cpp.sh  # [unix]
-    script: bld_cpp.bat   # [win]
+    script: bld_cpp.bat  # [win]
     build:
       run_exports:
         - {{ pin_subpackage('momentum-cpp', max_pin='x.x') }}
@@ -68,7 +68,7 @@ outputs:
 
   - name: pymomentum
     script: build_py.sh  # [unix]
-    script: bld_py.bat   # [win]
+    script: bld_py.bat  # [win]
     build:
       skip: true  # [linux or win]
     requirements:
