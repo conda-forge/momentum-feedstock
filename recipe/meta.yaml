@@ -8,8 +8,6 @@ package:
 source:
   - url: https://github.com/facebookincubator/momentum/archive/v{{ version }}.tar.gz
     sha256: 636ae9073640c2f85f35741bf0d7ba4044697b1f59e22371ce1df41876e8e40f
-    patches:
-      - disable-simd-for-pymomentum.patch
 
 build:
   number: 0
@@ -71,7 +69,6 @@ outputs:
     script: bld_py.bat  # [win]
     build:
       skip: true  # [linux or win]
-      skip: true  # [x86]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -109,7 +106,7 @@ outputs:
         - numpy
     test:
       imports:
-        - geometry
+        - numpy
 
   - name: momentum
     requirements:
