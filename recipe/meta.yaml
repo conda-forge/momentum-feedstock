@@ -111,9 +111,14 @@ outputs:
         - {{ pin_subpackage('momentum-cpp', exact=True) }}
         - python
         - numpy
+    files:
+      include:
+        - pymomentum/*.so
     test:
       imports:
-        - numpy # TODO: Fix importing pymomentum
+        - geometry
+        - quaternion
+        - skel_state
 
   - name: momentum
     requirements:
