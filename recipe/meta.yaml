@@ -16,7 +16,7 @@ source:
     sha256: b6b7d0a26d01bd39727a2ae949939de98dc9882fc43edfbd8b1badbf00fabc27
 
 build:
-  number: 1
+  number: 2
   skip: true  # [py<310]
 
 outputs:
@@ -85,7 +85,7 @@ outputs:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       skip: true  # [win]
-      skip: true  # [linux and not x86_64]
+      skip: true  # [ppc64le]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -174,7 +174,7 @@ outputs:
     requirements:
       run:
         - {{ pin_subpackage('momentum-cpp', exact=True) }}
-        - {{ pin_subpackage('pymomentum', exact=True) }}  # [linux and x86_64]
+        - {{ pin_subpackage('pymomentum', exact=True) }}  # [linux and not ppc64le]
         - {{ pin_subpackage('pymomentum', exact=True) }}  # [osx]
         - python
         - numpy
