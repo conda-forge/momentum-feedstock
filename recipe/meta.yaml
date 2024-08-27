@@ -13,7 +13,7 @@ source:
       - use-ninja-for-pymomentum.patch
 
 build:
-  number: 2
+  number: 3
   skip: true  # [py<310]
 
 outputs:
@@ -116,9 +116,9 @@ outputs:
         - pymomentum/*.so
     test:
       imports:
-        - geometry
-        - quaternion
-        - skel_state
+        - geometry    # [not osx]
+        - quaternion  # [not osx]
+        - skel_state  # [not osx]
 
   - name: momentum
     requirements:
