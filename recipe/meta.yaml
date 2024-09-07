@@ -1,5 +1,5 @@
 {% set name = "momentum" %}
-{% set version = "0.1.5" %}
+{% set version = "0.1.6" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/facebookincubator/momentum/archive/v{{ version }}.tar.gz
-    sha256: c9c90baab02b6406b00eaee96ca510de4151abcd55a5d14812a9262cbb04ea97
+    sha256: 9a5fdc385db6a8d29356d8a97a42353c89b8778c87e383b941ac107f7cb7e443
 
 build:
   number: 0
