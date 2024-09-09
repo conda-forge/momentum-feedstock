@@ -44,7 +44,8 @@ outputs:
         - cmake
         - gtest  # [build_platform == target_platform]
         - ninja  # [not win]
-        - python
+        - cross-python_{{ target_platform }}    # [build_platform != target_platform]
+        - python                                # [build_platform != target_platform]
       host:
         - ceres-solver
         - cli11
@@ -103,9 +104,10 @@ outputs:
         - cmake
         - gtest
         - ninja  # [not win]
-        - pip
         - pybind11
-        - python
+        - cross-python_{{ target_platform }}  # [build_platform != target_platform]
+        - pip                                 # [build_platform != target_platform]
+        - python                              # [build_platform != target_platform]
       host:
         # GPU requirements
         - cudnn                                     # [cuda_compiler_version != "None"]
