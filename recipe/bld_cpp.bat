@@ -1,5 +1,7 @@
 @echo on
 
+set CMAKE_CXX_FLAGS=/utf-8
+
 cmake %SRC_DIR% ^
   -B build ^
   -DBUILD_SHARED_LIBS=OFF ^
