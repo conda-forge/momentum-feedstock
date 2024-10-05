@@ -9,7 +9,7 @@ cuda_compiler:
 cuda_compiler_version:
 - None
 cxx_compiler:
-- vs2019
+- vs2022
 fmt:
 - '11'
 libblas:
