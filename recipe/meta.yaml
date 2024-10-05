@@ -16,7 +16,7 @@ source:
     sha256: 3836b95587b97d6e88b38ca0bc70c579ce8765ec1e570977f9a512e6090a6171
 
 build:
-  number: 3
+  number: 4
   skip: true  # [py<310]
 
 outputs:
@@ -44,7 +44,8 @@ outputs:
         - cmake
         - gtest  # [build_platform == target_platform]
         - ninja  # [not win]
-        - python
+        - cross-python_{{ target_platform }}    # [build_platform != target_platform]
+        - python                                # [build_platform != target_platform]
       host:
         - ceres-solver
         - cli11
@@ -103,9 +104,10 @@ outputs:
         - cmake
         - gtest
         - ninja  # [not win]
-        - pip
         - pybind11
-        - python
+        - cross-python_{{ target_platform }}  # [build_platform != target_platform]
+        - pip                                 # [build_platform != target_platform]
+        - python                              # [build_platform != target_platform]
       host:
         # GPU requirements
         - cudnn                                     # [cuda_compiler_version != "None"]
