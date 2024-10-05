@@ -16,6 +16,8 @@ cuda_compiler:
 - nvcc
 cuda_compiler_version:
 - '11.8'
+cudnn:
+- '8'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -26,18 +28,18 @@ fmt:
 - '11'
 libboost_devel:
 - '1.84'
+nccl:
+- '2'
 numpy:
-- '2.0'
-- '2.0'
 - '2.0'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
 - 3.12.* *_cpython
+pytorch:
+- '2.4'
 re2:
 - 2023.09.01
 spdlog:
