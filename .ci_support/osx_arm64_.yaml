@@ -20,8 +20,12 @@ cxx_compiler_version:
 - '18'
 fmt:
 - '11'
+gflags:
+- '2.2'
 libboost_devel:
 - '1.84'
+libdeflate:
+- '1.22'
 macos_machine:
 - arm64-apple-darwin20.0.0
 numpy:

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euxo pipefail
+set -exo pipefail
 
 # Set CMake options for pymomentum
 export MOMENTUM_ENABLE_SIMD=OFF

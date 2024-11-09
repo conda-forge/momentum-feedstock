@@ -16,18 +16,18 @@ source:
     sha256: f2371b794b8510607c722ff64c9a0e77a99c7c3389f1e41be981ddc8824657c0
 
 build:
-  number: 2
+  number: 3
   skip: true  # [py<310]
 
 outputs:
-  - name: momentum-cpp
+  - name: momentum
     script: build_cpp.sh  # [unix]
     script: bld_cpp.bat  # [win]
     build:
       skip:
         - true  # [cuda_compiler_version != "None"]
       run_exports:
-        - {{ pin_subpackage('momentum-cpp', max_pin='x.x') }}
+        - {{ pin_subpackage('momentum', max_pin='x.x') }}
       ignore_run_exports:
         - ceres-solver
         - drjit-cpp
@@ -77,7 +77,7 @@ outputs:
     script: build_py.sh  # [unix]
     script: bld_py.bat  # [win]
     build:
-      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       skip: true  # [win]
       skip: true  # [linux and not x86_64]
@@ -157,27 +157,37 @@ outputs:
         - numpy
         - python
         - pytorch
+      run_constrained:
+        - pymomentum-cpu =={{ version }}  # [cuda_compiler_version == "None"]
+        - pymomentum-gpu ==99999999       # [cuda_compiler_version == "None"]
+        - pymomentum-gpu =={{ version }}  # [cuda_compiler_version != "None"]
+        - pymomentum-cpu ==99999999       # [cuda_compiler_version != "None"]
     test:
       imports:
         - pymomentum.geometry
         - pymomentum.quaternion
         - pymomentum.skel_state
 
-  - name: momentum
+  {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}   # [cuda_compiler_version == "None"]
+  {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}   # [cuda_compiler_version != "None"]
+  - name: {{ pymomentum_cpu_gpu }}
     build:
-      run_exports:
-        - {{ pin_subpackage('momentum-cpp', max_pin='x.x') }}
+      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+      detect_binary_files_with_prefix: false
+      skip: true  # [win]
+      skip: true  # [linux and not x86_64]
+      # weigh down cpu implementation and give cuda preference
+      track_features:
+        - pymomentum-cpu                                                                                              # [cuda_compiler_version == "None"]
     requirements:
       run:
-        - {{ pin_subpackage('momentum-cpp', exact=True) }}
-        - {{ pin_subpackage('pymomentum', exact=True) }}  # [linux and x86_64]
-        - {{ pin_subpackage('pymomentum', exact=True) }}  # [osx]
-        - python
-        - numpy
+        - {{ pin_subpackage("pymomentum", exact=True) }}
     test:
-      commands:
-        - test -f $PREFIX/lib/cmake/momentum/momentum-config.cmake  # [not win]
-        - if not exist %PREFIX%\\Library\\lib\\cmake\\momentum\\momentum-config.cmake exit 1  # [win]
+      imports:
+        - pymomentum.geometry
+        - pymomentum.quaternion
+        - pymomentum.skel_state
 
 about:
   home: https://facebookincubator.github.io/momentum/
