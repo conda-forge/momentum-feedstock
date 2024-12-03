@@ -2,6 +2,10 @@ MACOSX_DEPLOYMENT_TARGET:
 - '10.15'
 MACOSX_SDK_VERSION:
 - '10.15'
+c_compiler:
+- clang
+c_compiler_version:
+- '18'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
@@ -47,5 +51,7 @@ spdlog:
 target_platform:
 - osx-64
 zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
 - - python
   - numpy

@@ -1,3 +1,7 @@
+c_compiler:
+- gcc
+c_compiler_version:
+- '12'
 c_stdlib:
 - sysroot
 c_stdlib_version:
@@ -8,14 +12,12 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
-cuda_compiler:
-- None
 cuda_compiler_version:
-- None
+- '12.6'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '13'
+- '12'
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
 fmt:
@@ -39,10 +41,10 @@ re2:
 spdlog:
 - '1.14'
 target_platform:
-- linux-ppc64le
+- linux-aarch64
 zip_keys:
-- - cxx_compiler_version
-  - cuda_compiler
+- - c_compiler_version
+  - cxx_compiler_version
   - cuda_compiler_version
   - docker_image
 - - python

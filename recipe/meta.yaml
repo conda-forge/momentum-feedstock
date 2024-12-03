@@ -1,12 +1,6 @@
 {% set name = "momentum" %}
 {% set version = "0.1.20" %}
 
-{% if cuda_compiler_version in (None, "None", True, False) %}
-{% set cuda_major = 0 %}
-{% else %}
-{% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
-{% endif %}
-
 package:
   name: {{ name|lower }}
   version: {{ version }}
@@ -16,8 +10,10 @@ source:
     sha256: b6b7d0a26d01bd39727a2ae949939de98dc9882fc43edfbd8b1badbf00fabc27
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<310]
+  # cuda 11.8 was dropped due to maintenance effort
+  skip: true  # [cuda_compiler_version == "11.8"]
 
 outputs:
   - name: momentum-cpp
@@ -54,8 +50,6 @@ outputs:
         - ezc3d
         - fmt
         - fx-gltf
-        - libblas  # [win]
-        - libcblas  # [win]
         - librerun-sdk
         - ms-gsl
         - nlohmann_json
@@ -63,7 +57,6 @@ outputs:
         - re2
         - spdlog
       run:
-        - blas-devel  # needed by ceres-solver
         - ceres-solver
         - cli11
         - dispenso
@@ -76,6 +69,15 @@ outputs:
         - openfbx
         - re2
     test:
+      script: run_test_cpp.sh   # [unix]
+      script: run_test_cpp.bat  # [win]
+      requires:
+        - cmake
+        - {{ compiler("c") }}
+        - {{ compiler("cxx") }}
+        - ninja  # [unix]
+      files:
+        - tests/
       commands:
         - test -f $PREFIX/lib/cmake/momentum/momentum-config.cmake  # [not win]
         - if not exist %PREFIX%\\Library\\lib\\cmake\\momentum\\momentum-config.cmake exit 1  # [win]
@@ -93,7 +95,7 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
-        {% if cuda_major >= 12 %}
+        {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev           # [build_platform != target_platform]
         - cuda-cudart-dev           # [build_platform != target_platform]
         - cuda-nvrtc-dev            # [build_platform != target_platform]
@@ -119,7 +121,7 @@ outputs:
         - nccl                                      # [cuda_compiler_version != "None"]
         - magma                                     # [cuda_compiler_version != "None"]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-        {% if cuda_major >= 12 %}
+        {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev
         - cuda-cudart-dev
         - cuda-nvrtc-dev
@@ -141,8 +143,6 @@ outputs:
         - ezc3d
         - fmt
         - fx-gltf
-        - libblas  # [win]
-        - libcblas  # [win]
         - librerun-sdk
         - ms-gsl
         - nlohmann_json
