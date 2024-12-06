@@ -116,24 +116,24 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>linux_ppc64le_cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13</td>
+              <td>linux_ppc64le_cuda_compilerNonecuda_compiler_versionNone</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cuda_compilerNonecuda_compiler_versionNone" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_ppc64le_cuda_compilercuda-nvcccuda_compiler_version12.4cxx_compiler_version12</td>
+              <td>linux_ppc64le_cuda_compilercuda-nvcccuda_compiler_version12.4</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cuda_compilercuda-nvcccuda_compiler_version12.4cxx_compiler_version12" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cuda_compilercuda-nvcccuda_compiler_version12.4" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_ppc64le_cuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11</td>
+              <td>linux_ppc64le_cuda_compilernvcccuda_compiler_version11.8</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cuda_compilernvcccuda_compiler_version11.8" alt="variant">
                 </a>
               </td>
             </tr><tr>
