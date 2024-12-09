@@ -2,6 +2,28 @@
 
 set -euxo pipefail
 
+if [[ ${cuda_compiler_version} != "None" ]]; then
+  # Set the CUDA arch list from
+  # https://github.com/conda-forge/pytorch-cpu-feedstock/blob/main/recipe/build_pytorch.sh
+  if [[ ${cuda_compiler_version} == 11.8 ]]; then
+    export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9+PTX"
+    export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
+  elif [[ ${cuda_compiler_version} == 12.0 || ${cuda_compiler_version} == 12.6 ]]; then
+    export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+    # $CUDA_HOME not set in CUDA 12.0. Using $PREFIX
+    export CUDA_TOOLKIT_ROOT_DIR="${PREFIX}"
+    # CUDA_HOME must be set for the build to work in torchaudio
+    export CUDA_HOME="${PREFIX}"
+  else
+    echo "unsupported cuda version. edit build.sh"
+    exit 1
+  fi
+
+  if [[ "${target_platform}" != "${build_platform}" ]]; then
+    export CUDA_TOOLKIT_ROOT=${PREFIX}
+  fi
+fi
+
 # Set extra cmake arguments that are not set in https://github.com/facebookincubator/momentum/blob/main/pyproject.toml
 export CMAKE_ARGS=" \
   -DMOMENTUM_BUILD_TESTING=OFF \
