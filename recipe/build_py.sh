@@ -9,6 +9,3 @@ export CMAKE_ARGS=" \
 
 # Install the current package with verbose output
 python -m pip install . -vv
-
-# To check if all the necessary package files are installed
-ls "$SP_DIR/pymomentum"
