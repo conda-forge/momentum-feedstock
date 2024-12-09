@@ -85,6 +85,8 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       skip: true  # [win]
       skip: true  # [linux and not x86_64]
+      # cuda 11.8 was dropped due to maintenance effort
+      skip: true  # [cuda_compiler_version == "11.8"]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -165,6 +167,7 @@ outputs:
     test:
       imports:
         - pymomentum.geometry
+        - pymomentum.marker_tracking
         - pymomentum.quaternion
         - pymomentum.skel_state
 
