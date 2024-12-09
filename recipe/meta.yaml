@@ -38,6 +38,7 @@ outputs:
         - libboost-devel
         - cmake
         - gtest  # [build_platform == target_platform]
+        - make
         - ninja  # [not win]
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
@@ -103,6 +104,7 @@ outputs:
         - cmake
         - gtest
         - libboost-devel
+        - make
         - ninja  # [not win]
         - pip
         - pybind11
