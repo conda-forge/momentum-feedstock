@@ -4,6 +4,7 @@ set -euxo pipefail
 
 # Set extra cmake arguments that are not set in https://github.com/facebookincubator/momentum/blob/main/pyproject.toml
 export CMAKE_ARGS=" \
+  -DMOMENTUM_BUILD_TESTING=OFF \
   -DMOMENTUM_ENABLE_SIMD=OFF \
 "
 
