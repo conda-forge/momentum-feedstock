@@ -180,6 +180,7 @@ outputs:
         - {{ pin_subpackage('momentum-cpp', exact=True) }}
         - {{ pin_subpackage('pymomentum', exact=True) }}  # [linux and x86_64]
         - {{ pin_subpackage('pymomentum', exact=True) }}  # [osx]
+        - {{ pin_subpackage('pymomentum', exact=True) }}  # [cuda_compiler_version != "None" and cuda_compiler_version == "11.8"]
         - python
         - numpy
     test:
