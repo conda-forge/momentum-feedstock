@@ -30,3 +30,5 @@ ls "$DEST_DIR"
 PACKAGE_DIR=$(ls "$DEST_DIR" | grep 'pymomentum-0.1.0')
 echo "Contents of the package directory:"
 ls "$DEST_DIR/$PACKAGE_DIR"
+ls "$DEST_DIR/$PACKAGE_DIR/pymomentum"
+ls "$DEST_DIR/$PACKAGE_DIR/pymomentum-0.1.0.dist-info"
