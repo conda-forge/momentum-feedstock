@@ -11,6 +11,7 @@ source:
     patches:
       - 001-character-test-helpers.patch
       - 002-pymomentum-install-path.patch
+      - 003-pymomentum-with-init.patch
 
 build:
   number: 0
