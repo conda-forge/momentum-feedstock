@@ -1,0 +1,13 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 588d032..f8c437e 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -38,7 +38,7 @@ sdist.exclude = [
+     ".clang-format",
+     "CMakeLists.txt",
+ ]
+-wheel.exclude = ["geometry_test_helper.*"]
++wheel.packages = ["pymomentum"]
+ wheel.py-api = "cp310"
+
+ [[tool.scikit-build.overrides]]
