@@ -16,6 +16,8 @@ cuda_compiler:
 - None
 cuda_compiler_version:
 - None
+cudnn:
+- '9'
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
@@ -26,6 +28,8 @@ libboost_devel:
 - '1.84'
 macos_machine:
 - x86_64-apple-darwin13.4.0
+nccl:
+- '2'
 numpy:
 - '2.0'
 - '2.0'

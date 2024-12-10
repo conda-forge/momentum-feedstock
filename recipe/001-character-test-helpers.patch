@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cb13d03..cf19fff 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -203,6 +203,14 @@ mt_library(
+     Microsoft.GSL::GSL
+ )
+
++mt_library(
++  NAME character_test_helpers
++  HEADERS_VARS character_test_helpers_public_headers
++  SOURCES_VARS character_test_helpers_sources
++  PUBLIC_LINK_LIBRARIES
++    character
++)
++
+ mt_library(
+   NAME solver
+   HEADERS_VARS solver_public_headers
+@@ -475,15 +483,6 @@ if(MOMENTUM_BUILD_TESTING)
+     EXCLUDE_FROM_INSTALL
+   )
+
+-  mt_library(
+-    NAME character_test_helpers
+-    HEADERS_VARS character_test_helpers_public_headers
+-    SOURCES_VARS character_test_helpers_sources
+-    PUBLIC_LINK_LIBRARIES
+-      character
+-    EXCLUDE_FROM_INSTALL
+-  )
+-
+   mt_library(
+     NAME character_test_helpers_gtest
+     HEADERS_VARS character_test_helpers_gtest_public_headers

@@ -1,5 +1,5 @@
 {% set name = "momentum" %}
-{% set version = "0.1.20" %}
+{% set version = "0.1.21" %}
 
 package:
   name: {{ name|lower }}
@@ -7,11 +7,18 @@ package:
 
 source:
   - url: https://github.com/facebookincubator/momentum/archive/v{{ version }}.tar.gz
-    sha256: b6b7d0a26d01bd39727a2ae949939de98dc9882fc43edfbd8b1badbf00fabc27
+    sha256: 8a74fdcffdd81d7e0a6ab82b202dcf375390b7143bfa5d87c5f1527ec49c4b56
+    patches:
+      - 001-character-test-helpers.patch
+      # - 002-pymomentum-install-path.patch
+      # - 003-pymomentum-with-init.patch
+      - 004-wheel-packages.patch
 
 build:
-  number: 2
+  number: 0
   skip: true  # [py<310]
+  # cuda 11.8 was dropped due to maintenance effort
+  skip: true  # [cuda_compiler_version == "11.8"]
 
 outputs:
   - name: momentum-cpp
@@ -36,6 +43,7 @@ outputs:
         - libboost-devel
         - cmake
         - gtest  # [build_platform == target_platform]
+        - make
         - ninja  # [not win]
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
@@ -76,7 +84,7 @@ outputs:
     script: build_py.sh  # [unix]
     script: bld_py.bat  # [win]
     build:
-      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       skip: true  # [win]
       skip: true  # [linux and not x86_64]
@@ -86,45 +94,49 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
-        - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
+        - {{ compiler('cuda') }}
         - cuda-driver-dev           # [build_platform != target_platform]
         - cuda-cudart-dev           # [build_platform != target_platform]
         - cuda-nvrtc-dev            # [build_platform != target_platform]
         - cuda-nvtx-dev             # [build_platform != target_platform]
         - cuda-nvml-dev             # [build_platform != target_platform]
         - cuda-profiler-api         # [build_platform != target_platform]
+        - cuda-toolkit
         - libcublas-dev             # [build_platform != target_platform]
         - libcufft-dev              # [build_platform != target_platform]
         - libcurand-dev             # [build_platform != target_platform]
         - libcusolver-dev           # [build_platform != target_platform]
         - libcusparse-dev           # [build_platform != target_platform]
         {% endif %}
-        - libboost-devel
         - cmake
         - gtest
+        - libboost-devel
+        - make
         - ninja  # [not win]
         - pip
         - pybind11
-        - python
+        - python                              # [build_platform != target_platform]
+        - cross-python_{{ target_platform }}  # [build_platform != target_platform]
+        - scikit-build-core
       host:
         # GPU requirements
-        - cudnn                                     # [cuda_compiler_version != "None"]
-        - nccl                                      # [cuda_compiler_version != "None"]
-        - magma                                     # [cuda_compiler_version != "None"]
-        - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
+        - cuda-version {{ cuda_compiler_version }}
         - cuda-driver-dev
         - cuda-cudart-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
+        - cudnn
         - libcublas-dev
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
         - libcusparse-dev
+        - magma
+        - nccl
         {% endif %}
         # other requirements
         - ceres-solver
@@ -141,12 +153,12 @@ outputs:
         - openfbx
         - python  # [linux]
         - re2
-        - setuptools
         - spdlog
         - pip
         - python
         - pytorch
         - numpy
+        - zlib  # [linux]
       run:
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}  # [cuda_compiler_version != "None"]
@@ -160,6 +172,7 @@ outputs:
     test:
       imports:
         - pymomentum.geometry
+        - pymomentum.marker_tracking
         - pymomentum.quaternion
         - pymomentum.skel_state
 
@@ -172,6 +185,7 @@ outputs:
         - {{ pin_subpackage('momentum-cpp', exact=True) }}
         - {{ pin_subpackage('pymomentum', exact=True) }}  # [linux and x86_64]
         - {{ pin_subpackage('pymomentum', exact=True) }}  # [osx]
+        - {{ pin_subpackage('pymomentum', exact=True) }}  # [cuda_compiler_version != "None" and cuda_compiler_version == "11.8"]
         - python
         - numpy
     test:
