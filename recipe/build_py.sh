@@ -24,6 +24,7 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
   case ${cuda_compiler_version} in
     12.6)
       export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+      export CUDA_INCLUDE_DIRS=${PREFIX}
       ;;
     *)
       echo "unsupported cuda version. edit build.sh"
