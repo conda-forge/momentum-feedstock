@@ -1,0 +1,10 @@
+diff --git a/pymomentum/CMakeLists.txt b/pymomentum/CMakeLists.txt
+index 2f94d98..edbc960 100644
+--- a/pymomentum/CMakeLists.txt
++++ b/pymomentum/CMakeLists.txt
+@@ -193,4 +193,4 @@ endif()
+ #===============================================================================
+
+ get_property(pymomentum_targets_to_install GLOBAL PROPERTY PYMOMENTUM_TARGETS_TO_INSTALL)
+-install(TARGETS ${pymomentum_targets_to_install} DESTINATION pymomentum)
++install(TARGETS ${pymomentum_targets_to_install} DESTINATION ${Python3_SITEARCH}/pymomentum)
