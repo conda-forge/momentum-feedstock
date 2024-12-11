@@ -98,7 +98,6 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       skip: true  # [win]
       skip: true  # [ppc64le]
-      skip: true  # [aarch64 and cuda_compiler_version != "None"]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -170,6 +169,10 @@ outputs:
         - re2
         - scikit-build-core
         - spdlog
+        - pip
+        - python
+        - pytorch
+        - setuptools
         - urdfdom
       run:
         # GPU requirements without run_exports
@@ -202,7 +205,6 @@ outputs:
       detect_binary_files_with_prefix: false
       skip: true  # [win]
       skip: true  # [ppc64le]
-      skip: true  # [aarch64 and cuda_compiler_version != "None"]
     requirements:
       run:
         - {{ pin_subpackage("pymomentum", exact=True) }}
