@@ -153,6 +153,7 @@ outputs:
         - pip
         - python
         - pytorch
+        - setuptools
         - numpy
       run:
         # GPU requirements without run_exports
