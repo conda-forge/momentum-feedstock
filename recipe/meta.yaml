@@ -94,17 +94,6 @@ outputs:
         - {{ stdlib('c') }}
         {% if cuda_compiler_version != "None" %}
         - {{ compiler('cuda') }}
-        - cuda-driver-dev           # [build_platform != target_platform]
-        - cuda-cudart-dev           # [build_platform != target_platform]
-        - cuda-nvrtc-dev            # [build_platform != target_platform]
-        - cuda-nvtx-dev             # [build_platform != target_platform]
-        - cuda-nvml-dev             # [build_platform != target_platform]
-        - cuda-profiler-api         # [build_platform != target_platform]
-        - libcublas-dev             # [build_platform != target_platform]
-        - libcufft-dev              # [build_platform != target_platform]
-        - libcurand-dev             # [build_platform != target_platform]
-        - libcusolver-dev           # [build_platform != target_platform]
-        - libcusparse-dev           # [build_platform != target_platform]
         {% endif %}
         - cmake
         - gtest
