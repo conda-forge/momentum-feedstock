@@ -110,6 +110,7 @@ outputs:
         - cuda-nvtx-dev
         - cuda-nvml-dev             # [build_platform != target_platform]
         - cuda-profiler-api         # [build_platform != target_platform]
+        - cuda-toolkit              # [build_platform != target_platform]
         - libcublas-dev             # [build_platform != target_platform]
         - libcufft-dev              # [build_platform != target_platform]
         - libcurand-dev             # [build_platform != target_platform]
