@@ -39,6 +39,7 @@ outputs:
         - re2
     requirements:
       build:
+        - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - libboost-devel
@@ -100,6 +101,7 @@ outputs:
       skip: true  # [ppc64le]
     requirements:
       build:
+        - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         {% if cuda_compiler_version != "None" %}
