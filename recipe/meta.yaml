@@ -1,5 +1,7 @@
+{% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
+{% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.21" %}
+{% set version = "0.1.22" %}
 
 package:
   name: {{ name|lower }}
@@ -7,14 +9,14 @@ package:
 
 source:
   - url: https://github.com/facebookincubator/momentum/archive/v{{ version }}.tar.gz
-    sha256: 8a74fdcffdd81d7e0a6ab82b202dcf375390b7143bfa5d87c5f1527ec49c4b56
+    sha256: 80a624a964ec6a4d16ddacedefccec311e59270f7aa5e3438a5de086465746a4
     patches:
       - 001-character-test-helpers.patch
       - 002-remove-pyproject-toml.patch
       - 003-add-setup-py.patch
 
 build:
-  number: 3
+  number: 0
   skip: true  # [py<310]
   # cuda 11.8 was dropped due to maintenance effort
   skip: true  # [cuda_compiler_version == "11.8"]
@@ -76,7 +78,7 @@ outputs:
         - openfbx
         - re2
     test:
-      script: run_test_cpp.sh   # [unix]
+      script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
       requires:
         - cmake
@@ -91,9 +93,9 @@ outputs:
 
   - name: pymomentum
     script: build_py.sh  # [unix]
-    script: bld_py.bat   # [win]
+    script: bld_py.bat  # [win]
     build:
-      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
+      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       skip: true  # [win]
       skip: true  # [ppc64le]
@@ -191,7 +193,7 @@ outputs:
   {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pymomentum_cpu_gpu }}
     build:
-      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
+      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       detect_binary_files_with_prefix: false
       skip: true  # [win]
