@@ -125,7 +125,7 @@ outputs:
         - ninja  # [not win]
         - pip
         - pybind11
-        - python                                 # [build_platform != target_platform]
+        - python
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - setuptools
       host:
@@ -161,7 +161,6 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
-        - python  # [linux]
         - re2
         - spdlog
         - pip
