@@ -125,7 +125,7 @@ outputs:
         - ninja  # [not win]
         - pip
         - pybind11
-        - python
+        - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - setuptools
       host:
