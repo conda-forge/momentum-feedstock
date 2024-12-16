@@ -7,7 +7,7 @@ if [[ "${target_platform}" == *aarch64 || "${target_platform}" == *ppc64le ]]; t
   CXXFLAGS="${CXXFLAGS} -Wno-narrowing"
 
   CFLAGS=${CFLAGS/-march=nocona/}
-  CFLAGS=${CFLAGS-mtune=haswell/}
+  CFLAGS=${CFLAGS/-mtune=haswell/}
   DEBUG_CFLAGS=${DEBUG_CFLAGS/-march=nocona/}
   DEBUG_CFLAGS=${DEBUG_CFLAGS/-mtune=haswell/}
 fi
