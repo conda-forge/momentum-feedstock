@@ -49,7 +49,7 @@ pytorch:
 re2:
 - 2024.07.02
 spdlog:
-- '1.14'
+- '1.15'
 target_platform:
 - linux-64
 zip_keys:
