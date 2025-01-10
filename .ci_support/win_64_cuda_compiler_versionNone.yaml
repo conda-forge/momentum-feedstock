@@ -16,24 +16,9 @@ fmt:
 - '11'
 libboost_devel:
 - '1.84'
-numpy:
-- '2.0'
-- '2.0'
-- '2.0'
-pin_run_as_build:
-  python:
-    min_pin: x.x
-    max_pin: x.x
-python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
 re2:
 - 2024.07.02
 spdlog:
 - '1.14'
 target_platform:
 - win-64
-zip_keys:
-- - python
-  - numpy
