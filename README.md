@@ -32,31 +32,59 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_64_c_compiler_version13cuda_compiler_version12.6cxx_compiler_version13</td>
+              <td>linux_64_cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_c_compiler_version13cuda_compiler_version12.6cxx_compiler_version13" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version13cuda_compiler_versionNonecxx_compiler_version13</td>
+              <td>linux_64_cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13python3.11.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_c_compiler_version13cuda_compiler_versionNonecxx_compiler_version13" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13python3.11.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_c_compiler_version13cuda_compiler_version12.6cxx_compiler_version13</td>
+              <td>linux_64_cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13cuda_compiler_version12.6cxx_compiler_version13" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13python3.12.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_c_compiler_version13cuda_compiler_versionNonecxx_compiler_version13</td>
+              <td>linux_64_cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13cuda_compiler_versionNonecxx_compiler_version13" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_cuda_compiler_version12.6</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_version12.6" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_cuda_compiler_versionNone</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_versionNone" alt="variant">
                 </a>
               </td>
             </tr><tr>
@@ -104,6 +132,7 @@ Current release info
 | [![Conda Recipe](https://img.shields.io/badge/recipe-momentum--cpp-green.svg)](https://anaconda.org/conda-forge/momentum-cpp) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/momentum-cpp.svg)](https://anaconda.org/conda-forge/momentum-cpp) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/momentum-cpp.svg)](https://anaconda.org/conda-forge/momentum-cpp) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/momentum-cpp.svg)](https://anaconda.org/conda-forge/momentum-cpp) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pymomentum-green.svg)](https://anaconda.org/conda-forge/pymomentum) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pymomentum.svg)](https://anaconda.org/conda-forge/pymomentum) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pymomentum.svg)](https://anaconda.org/conda-forge/pymomentum) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pymomentum.svg)](https://anaconda.org/conda-forge/pymomentum) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pymomentum--cpu-green.svg)](https://anaconda.org/conda-forge/pymomentum-cpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pymomentum-cpu.svg)](https://anaconda.org/conda-forge/pymomentum-cpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pymomentum-cpu.svg)](https://anaconda.org/conda-forge/pymomentum-cpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pymomentum-cpu.svg)](https://anaconda.org/conda-forge/pymomentum-cpu) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-pymomentum--gpu-green.svg)](https://anaconda.org/conda-forge/pymomentum-gpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pymomentum-gpu.svg)](https://anaconda.org/conda-forge/pymomentum-gpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pymomentum-gpu.svg)](https://anaconda.org/conda-forge/pymomentum-gpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pymomentum-gpu.svg)](https://anaconda.org/conda-forge/pymomentum-gpu) |
 
 Installing momentum
 ===================
@@ -115,16 +144,16 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `momentum, momentum-cpp, pymomentum, pymomentum-cpu` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `momentum, momentum-cpp, pymomentum, pymomentum-cpu, pymomentum-gpu` can be installed with `conda`:
 
 ```
-conda install momentum momentum-cpp pymomentum pymomentum-cpu
+conda install momentum momentum-cpp pymomentum pymomentum-cpu pymomentum-gpu
 ```
 
 or with `mamba`:
 
 ```
-mamba install momentum momentum-cpp pymomentum pymomentum-cpu
+mamba install momentum momentum-cpp pymomentum pymomentum-cpu pymomentum-gpu
 ```
 
 It is possible to list all of the versions of `momentum` available on your platform with `conda`:
