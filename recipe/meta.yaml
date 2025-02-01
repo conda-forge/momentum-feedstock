@@ -40,6 +40,7 @@ outputs:
         - re2
     requirements:
       build:
+        - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - libboost-devel
@@ -98,10 +99,9 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       skip: true  # [win]
       skip: true  # [ppc64le]
-      skip: true  # [aarch64 and cuda_compiler_version != "None"]
-      skip: true  # [linux-64 and cuda_compiler_version != "None"]
     requirements:
       build:
+        - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         {% if cuda_compiler_version != "None" %}
@@ -112,6 +112,7 @@ outputs:
         - cuda-nvtx-dev             # [build_platform != target_platform]
         - cuda-nvml-dev             # [build_platform != target_platform]
         - cuda-profiler-api         # [build_platform != target_platform]
+        - cuda-toolkit              # [build_platform != target_platform]
         - libcublas-dev             # [build_platform != target_platform]
         - libcufft-dev              # [build_platform != target_platform]
         - libcurand-dev             # [build_platform != target_platform]
@@ -124,7 +125,7 @@ outputs:
         - ninja  # [not win]
         - pip
         - pybind11
-        - python
+        - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - setuptools
       host:
@@ -160,13 +161,13 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
-        - python  # [linux]
         - re2
         - setuptools
         - spdlog
         - pip
         - python
         - pytorch
+        - setuptools
         - numpy
       run:
         # GPU requirements without run_exports
@@ -199,8 +200,6 @@ outputs:
       detect_binary_files_with_prefix: false
       skip: true  # [win]
       skip: true  # [ppc64le]
-      skip: true  # [aarch64 and cuda_compiler_version != "None"]
-      skip: true  # [linux-64 and cuda_compiler_version != "None"]
     requirements:
       run:
         - {{ pin_subpackage("pymomentum", exact=True) }}
