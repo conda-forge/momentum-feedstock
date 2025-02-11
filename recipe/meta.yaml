@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.27" %}
+{% set version = "0.1.29" %}
 
 package:
   name: {{ name|lower }}
@@ -9,7 +9,7 @@ package:
 
 source:
   - url: https://github.com/facebookincubator/momentum/archive/v{{ version }}.tar.gz
-    sha256: 60d0c65651f1f6515fe9b9b179d77b2c22a523dab3eb1a05b8f52aba9886cbbf
+    sha256: 6f3d6fc921dc64c91711a537837cdcbfaaab7ad2446613ea5e21296e40bcddb3
     patches:
       - 002-remove-pyproject-toml.patch
       - 003-add-setup-py.patch
@@ -63,6 +63,7 @@ outputs:
         - openfbx
         - re2
         - spdlog
+        - urdfdom
       run:
         - ceres-solver
         - cli11
@@ -160,15 +161,15 @@ outputs:
         - libtorch
         - ms-gsl
         - nlohmann_json
+        - numpy
         - openfbx
-        - python  # [linux]
-        - re2
-        - setuptools
-        - spdlog
         - pip
         - python
         - pytorch
-        - numpy
+        - re2
+        - setuptools
+        - spdlog
+        - urdfdom
       run:
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}  # [cuda_compiler_version != "None"]

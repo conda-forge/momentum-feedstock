@@ -51,7 +51,7 @@ re2:
 spdlog:
 - '1.15'
 target_platform:
-- linux-aarch64
+- linux-64
 urdfdom:
 - '4.0'
 zip_keys:

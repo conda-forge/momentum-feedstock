@@ -34,6 +34,8 @@ spdlog:
 - '1.15'
 target_platform:
 - win-64
+urdfdom:
+- '4.0'
 zip_keys:
 - - python
   - numpy
