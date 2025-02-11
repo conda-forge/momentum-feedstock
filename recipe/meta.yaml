@@ -116,6 +116,7 @@ outputs:
         - libcurand-dev             # [build_platform != target_platform]
         - libcusolver-dev           # [build_platform != target_platform]
         - libcusparse-dev           # [build_platform != target_platform]
+        - nvtx-c                    # [build_platform != target_platform and linux]
         {% endif %}
         - cmake
         - gtest
@@ -144,6 +145,7 @@ outputs:
         - libcusparse-dev
         - magma
         - nccl
+        - nvtx-c                    # [linux]
         {% endif %}
         # other requirements
         - ceres-solver
