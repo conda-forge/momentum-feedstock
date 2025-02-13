@@ -15,7 +15,7 @@ source:
       - 003-add-setup-py.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<310]
   # cuda 11.8 was dropped due to maintenance effort
   skip: true  # [cuda_compiler_version == "11.8"]
@@ -100,7 +100,6 @@ outputs:
       skip: true  # [win]
       skip: true  # [ppc64le]
       skip: true  # [aarch64 and cuda_compiler_version != "None"]
-      skip: true  # [linux-64 and cuda_compiler_version != "None"]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -118,6 +117,7 @@ outputs:
         - libcurand-dev             # [build_platform != target_platform]
         - libcusolver-dev           # [build_platform != target_platform]
         - libcusparse-dev           # [build_platform != target_platform]
+        - nvtx-c                    # [build_platform != target_platform and linux]
         {% endif %}
         - cmake
         - gtest
@@ -146,6 +146,7 @@ outputs:
         - libcusparse-dev
         - magma
         - nccl
+        - nvtx-c                    # [linux]
         {% endif %}
         # other requirements
         - ceres-solver
@@ -164,7 +165,8 @@ outputs:
         - openfbx
         - pip
         - python
-        - pytorch
+        - pytorch-cpu  # [cuda_compiler_version == "None"]
+        - pytorch-gpu  # [cuda_compiler_version != "None"]
         - re2
         - setuptools
         - spdlog
@@ -177,11 +179,10 @@ outputs:
         - fmt
         - gflags
         - libdeflate
-        - libtorch * cpu*   # [cuda_compiler_version == "None"]
-        - libtorch * cuda*  # [cuda_compiler_version != "None"]
+        - pytorch-cpu  # [cuda_compiler_version == "None"]
+        - pytorch-gpu  # [cuda_compiler_version != "None"]
         - numpy
         - python
-        - pytorch
         - re2
         - spdlog
     test:
@@ -201,7 +202,6 @@ outputs:
       skip: true  # [win]
       skip: true  # [ppc64le]
       skip: true  # [aarch64 and cuda_compiler_version != "None"]
-      skip: true  # [linux-64 and cuda_compiler_version != "None"]
     requirements:
       run:
         - {{ pin_subpackage("pymomentum", exact=True) }}
