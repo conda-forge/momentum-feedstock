@@ -165,7 +165,8 @@ outputs:
         - openfbx
         - pip
         - python
-        - pytorch
+        - pytorch-cpu  # [cuda_compiler_version == "None"]
+        - pytorch-gpu  # [cuda_compiler_version != "None"]
         - re2
         - setuptools
         - spdlog
@@ -178,11 +179,10 @@ outputs:
         - fmt
         - gflags
         - libdeflate
-        - libtorch * cpu*   # [cuda_compiler_version == "None"]
-        - libtorch * cuda*  # [cuda_compiler_version != "None"]
+        - pytorch-cpu  # [cuda_compiler_version == "None"]
+        - pytorch-gpu  # [cuda_compiler_version != "None"]
         - numpy
         - python
-        - pytorch
         - re2
         - spdlog
     test:
