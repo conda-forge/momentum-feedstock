@@ -44,8 +44,6 @@ python:
 - 3.10.* *_cpython
 - 3.11.* *_cpython
 - 3.12.* *_cpython
-pytorch:
-- '2.5'
 re2:
 - 2024.07.02
 spdlog:
