@@ -7,7 +7,7 @@ if [[ "${target_platform}" == osx-* ]]; then
   CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 fi
 
-if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" || "${target_platform}" == osx-* ]]; then
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" || "${target_platform}" == *aarch64 || "${target_platform}" == osx-* ]]; then
   MOMENTUM_ENABLE_SIMD=OFF
 else
   MOMENTUM_ENABLE_SIMD=ON
