@@ -8,14 +8,22 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
+cuda_compiler:
+- None
 cuda_compiler_version:
 - None
+cudnn:
+- '9'
 cxx_compiler:
 - vs2019
 fmt:
 - '11'
 libboost_devel:
 - '1.84'
+libtorch:
+- '2.6'
+nccl:
+- '2'
 numpy:
 - '2.0'
 - '2.0'
@@ -39,5 +47,7 @@ target_platform:
 urdfdom:
 - '4.0'
 zip_keys:
+- - cuda_compiler
+  - cuda_compiler_version
 - - python
   - numpy
