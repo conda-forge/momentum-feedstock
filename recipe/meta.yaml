@@ -173,9 +173,6 @@ outputs:
         - scikit-build-core
         - spdlog
         - pip
-        - python
-        - pytorch
-        - setuptools
         - urdfdom
       run:
         # GPU requirements without run_exports
