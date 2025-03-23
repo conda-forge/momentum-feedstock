@@ -19,4 +19,6 @@ if [[ "${target_platform}" == *aarch64 || "${target_platform}" == *ppc64le ]]; t
   DEBUG_CXXFLAGS=${DEBUG_CXXFLAGS/-mtune=haswell/}
 fi
 
+export USE_SYSTEM_NVTX=1
+
 python -m pip install --no-deps --ignore-installed . -vv --prefix=$PREFIX
