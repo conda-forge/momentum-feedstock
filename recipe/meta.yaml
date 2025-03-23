@@ -117,7 +117,7 @@ outputs:
         - libcurand-dev             # [build_platform != target_platform]
         - libcusolver-dev           # [build_platform != target_platform]
         - libcusparse-dev           # [build_platform != target_platform]
-        - nvtx-c                    # [build_platform != target_platform and linux]
+        - nvtx-c                    # [build_platform != target_platform]
         {% endif %}
         - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
@@ -147,7 +147,7 @@ outputs:
         - libcusparse-dev
         - magma
         - nccl
-        - nvtx-c                    # [linux]
+        - nvtx-c
         {% endif %}
         # other requirements
         - ceres-solver
