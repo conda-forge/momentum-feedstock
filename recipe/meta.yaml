@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.32" %}
+{% set version = "0.1.33" %}
 
 package:
   name: {{ name|lower }}
@@ -9,7 +9,7 @@ package:
 
 source:
   - url: https://github.com/facebookincubator/momentum/archive/v{{ version }}.tar.gz
-    sha256: c7184efbb971e4f1bdd6f3ebd5095de400fa888dc3db155060cdae58f735ebe1
+    sha256: 7a4ccd3c24b32fd1820e1bd6e45bd9591885b8ba77a94da597928e6d1a85f9ca
     patches:
       - patches/0001-Disable-SIMD-by-default-for-pymomentum.patch
       - patches/0002-Install-rerun-libraries.patch
