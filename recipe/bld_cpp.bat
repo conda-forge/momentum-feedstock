@@ -1,6 +1,7 @@
 @echo on
 
 cmake %SRC_DIR% ^
+  %CMAKE_ARGS% ^
   -B build ^
   -DBUILD_SHARED_LIBS=ON ^
   -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^

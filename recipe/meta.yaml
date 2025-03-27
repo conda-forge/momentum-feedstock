@@ -12,8 +12,8 @@ source:
     sha256: a75fe7c22c43edb54c3d11a6ca9b1d97e4d4ba766954df12da6c86a76c85101e
 
 build:
-  number: 0
-  skip: true  # [py<312]
+  number: 1
+  skip: true  # [py<312 or (win and py>312)]
 
 outputs:
   - name: momentum-cpp
@@ -38,7 +38,7 @@ outputs:
         - cmake
         - gtest  # [build_platform == target_platform]
         - indicators
-        - ninja  # [not win]
+        - ninja
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
       host:
@@ -88,7 +88,7 @@ outputs:
         - cmake
         - {{ compiler("c") }}
         - {{ compiler("cxx") }}
-        - ninja  # [unix]
+        - ninja
       files:
         - tests/
       commands:
@@ -110,36 +110,44 @@ outputs:
     build:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      skip: true  # [win and cuda_compiler_version != "None"]
+      # Internal DLLs bundled together that reference each other
+      missing_dso_whitelist:  # [win]
+        - "*/momentum_*.dll"  # [win]
+        - "*/axel.dll"  # [win]
+        - "*/nvcuda.dll"  # [win and cuda_compiler_version != "None"]  System NVIDIA driver
     requirements:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
-        {% if cuda_compiler_version != "None" %}
-        - {{ compiler('cuda') }}
-        - cuda-toolkit
-        - nvtx-c
-        {% endif %}
+        - {{ compiler('cuda') }}                        # [cuda_compiler_version != "None" and not win]
+        - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
+        - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None" and win]
+        - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
+        - cuda-nvcc_win-64                              # [cuda_compiler_version != "None" and win]
         - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - gtest
         - indicators
         - libboost-devel
         - make
-        - ninja  # [not win]
+        - ninja
         - pip
-        - pybind11
         - pybind11-abi
         - python
         - pytorch
-        - scikit-build-core
+        - scikit-build-core >=0.11
       host:
         # GPU requirements
-        {% if cuda_compiler_version != "None" %}
-        - cuda-version {{ cuda_compiler_version }}
-        - cuda-toolkit
-        - nvtx-c
-        {% endif %}
+        - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
+        - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None"]
+        - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
+        # CUDA runtime/headers for both link & import time:
+        - cuda-cudart-dev                               # [cuda_compiler_version != "None" and win]
+        - cuda-cudart                                   # [cuda_compiler_version != "None"]
+        - cuda-nvrtc-dev                                # [cuda_compiler_version != "None" and win]
+        - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
+        - nvtx-c                                        # [cuda_compiler_version != "None"]
+        - kokkos * *cuda*                               # [cuda_compiler_version != "None"]
         # other requirements
         - ceres-solver
         - cli11
@@ -152,7 +160,6 @@ outputs:
         - indicators
         - kokkos
         - librerun-sdk {{ rerun_version }}
-        - libtorch
         - ms-gsl
         - nlohmann_json
         - numpy
@@ -162,13 +169,18 @@ outputs:
         - python
         - pytorch
         - re2
-        - scikit-build-core
+        - scikit-build-core >=0.11
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
         - tbb-devel  # [not win]
         - urdfdom
         - zlib
       run:
+        # CUDA runtime needed at import time (no GPU required to import):
+        - cuda-cudart                                   # [cuda_compiler_version != "None"]
+        - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
+        # Kokkos CUDA variant needed for geometry module on CUDA builds
+        - kokkos * *cuda*                               # [cuda_compiler_version != "None"]
         - ezc3d
         - dispenso
         - fmt
@@ -176,7 +188,6 @@ outputs:
         - indicators
         - libabseil  # [osx]
         - libdeflate
-        - pybind11
         - pytorch
         - numpy
         - python
@@ -186,16 +197,18 @@ outputs:
     test:
       imports:
         - pymomentum.axel
-        - pymomentum.backend
-        - pymomentum.geometry
-        - pymomentum.diff_geometry
-        - pymomentum.marker_tracking
+        # On Windows CUDA builds, geometry/backend require nvcuda.dll (NVIDIA driver)
+        # which is not available on Azure build machines without GPUs
+        - pymomentum.backend  # [not (win and cuda_compiler_version != "None")]
+        - pymomentum.geometry  # [not (win and cuda_compiler_version != "None")]
+        - pymomentum.diff_geometry  # [not (win and cuda_compiler_version != "None")]
+        - pymomentum.marker_tracking  # [not (win and cuda_compiler_version != "None")]
         - pymomentum.quaternion
-        - pymomentum.renderer  # [cuda_compiler_version == "None"]
+        - pymomentum.renderer  # [cuda_compiler_version == "None" and not win]
         - pymomentum.skel_state
-        - pymomentum.solver
-        - pymomentum.solver2
-        - pymomentum.torch.character
+        - pymomentum.solver  # [not (win and cuda_compiler_version != "None")]
+        - pymomentum.solver2  # [not (win and cuda_compiler_version != "None")]
+        - pymomentum.torch.character  # [not (win and cuda_compiler_version != "None")]
         - pymomentum.trs
       commands:
         - pip list
@@ -210,7 +223,6 @@ outputs:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       detect_binary_files_with_prefix: false
-      skip: true  # [win and cuda_compiler_version != "None"]
     requirements:
       run:
         - {{ pin_subpackage("pymomentum", exact=True) }}

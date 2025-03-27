@@ -31,7 +31,7 @@ else
 fi
 
 cmake $SRC_DIR \
-  ${CMAKE_ARGS} \
+  $CMAKE_ARGS \
   -G Ninja \
   -B build \
   -DBUILD_SHARED_LIBS=ON \
