@@ -88,7 +88,7 @@ outputs:
         - cmake
         - {{ compiler("c") }}
         - {{ compiler("cxx") }}
-        - ninja  # [unix]
+        - ninja
       files:
         - tests/
       commands:
@@ -110,7 +110,6 @@ outputs:
     build:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      skip: true  # [win and cuda_compiler_version != "None"]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -118,7 +117,6 @@ outputs:
         {% if cuda_compiler_version != "None" %}
         - {{ compiler('cuda') }}
         - cuda-toolkit
-        - nvtx-c
         {% endif %}
         - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
@@ -126,7 +124,7 @@ outputs:
         - indicators
         - libboost-devel
         - make
-        - ninja  # [not win]
+        - ninja
         - pip
         - pybind11
         - pybind11-abi
@@ -136,8 +134,8 @@ outputs:
       host:
         # GPU requirements
         {% if cuda_compiler_version != "None" %}
-        - cuda-version {{ cuda_compiler_version }}
         - cuda-toolkit
+        - cuda-version {{ cuda_compiler_version }}
         - nvtx-c
         {% endif %}
         # other requirements
@@ -152,7 +150,6 @@ outputs:
         - indicators
         - kokkos
         - librerun-sdk {{ rerun_version }}
-        - libtorch
         - ms-gsl
         - nlohmann_json
         - numpy
@@ -210,7 +207,6 @@ outputs:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       detect_binary_files_with_prefix: false
-      skip: true  # [win and cuda_compiler_version != "None"]
     requirements:
       run:
         - {{ pin_subpackage("pymomentum", exact=True) }}
