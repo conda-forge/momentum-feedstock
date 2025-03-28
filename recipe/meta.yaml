@@ -39,8 +39,7 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - libboost-devel
-        - cmake     # [not win]
-        - cmake <4  # [win]
+        - cmake
         - gtest  # [build_platform == target_platform]
         - ninja  # [not win]
         - python                                 # [build_platform != target_platform]
@@ -79,8 +78,7 @@ outputs:
       script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
       requires:
-        - cmake     # [not win]
-        - cmake <4  # [win]
+        - cmake
         - {{ compiler("c") }}
         - {{ compiler("cxx") }}
         - ninja  # [unix]
@@ -103,11 +101,10 @@ outputs:
         - {{ stdlib('c') }}
         {% if cuda_compiler_version != "None" %}
         - {{ compiler('cuda') }}
-        - cuda
+        - cuda-toolkit
         - nvtx-c
         {% endif %}
-        - cmake     # [not win]
-        - cmake <4  # [win]
+        - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - gtest
         - libboost-devel
@@ -121,8 +118,7 @@ outputs:
       host:
         # GPU requirements
         {% if cuda_compiler_version != "None" %}
-        - {{ compiler('cuda') }}
-        - cuda
+        - cuda-toolkit
         - cuda-version {{ cuda_compiler_version }}
         - nvtx-c
         {% endif %}
