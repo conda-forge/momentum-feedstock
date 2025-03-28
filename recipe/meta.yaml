@@ -39,7 +39,8 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - libboost-devel
-        - cmake
+        - cmake     # [not win]
+        - cmake <4  # [win]
         - gtest  # [build_platform == target_platform]
         - ninja  # [not win]
         - python                                 # [build_platform != target_platform]
@@ -78,7 +79,8 @@ outputs:
       script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
       requires:
-        - cmake
+        - cmake     # [not win]
+        - cmake <4  # [win]
         - {{ compiler("c") }}
         - {{ compiler("cxx") }}
         - ninja  # [unix]
@@ -104,7 +106,8 @@ outputs:
         - cuda
         - nvtx-c
         {% endif %}
-        - cmake
+        - cmake     # [not win]
+        - cmake <4  # [win]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - gtest
         - libboost-devel
