@@ -4,11 +4,11 @@ echo CUDA_HOME is set to: %CUDA_HOME%
 
 echo PATH is set to: %PATH%
 
-set CMAKE_ARGS=%CMAKE_ARGS% ^
-    -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON ^
-    -DMOMENTUM_USE_SYSTEM_PYBIND11=ON ^
-    -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON
-if errorlevel 1 exit 1
+@REM set CMAKE_ARGS=%CMAKE_ARGS% ^
+@REM     -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON ^
+@REM     -DMOMENTUM_USE_SYSTEM_PYBIND11=ON ^
+@REM     -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON
+@REM if errorlevel 1 exit 1
 
 %PYTHON% -m pip install --no-deps --ignore-installed . -vv --prefix=%PREFIX%
 if errorlevel 1 exit 1
