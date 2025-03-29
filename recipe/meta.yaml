@@ -101,8 +101,6 @@ outputs:
         - {{ stdlib('c') }}
         {% if cuda_compiler_version != "None" %}
         - {{ compiler('cuda') }}
-        - cuda-toolkit
-        - nvtx-c
         {% endif %}
         - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
