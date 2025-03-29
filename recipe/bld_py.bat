@@ -1,5 +1,9 @@
 @echo on
 
+echo CUDA_HOME is set to: %CUDA_HOME%
+
+echo PATH is set to: %PATH%
+
 set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON ^
     -DMOMENTUM_USE_SYSTEM_PYBIND11=ON ^
