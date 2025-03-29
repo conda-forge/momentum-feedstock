@@ -118,7 +118,6 @@ outputs:
       host:
         # GPU requirements
         {% if cuda_compiler_version != "None" %}
-        - {{ compiler('cuda') }}
         - cuda-toolkit
         - cuda-version {{ cuda_compiler_version }}
         - nvtx-c
