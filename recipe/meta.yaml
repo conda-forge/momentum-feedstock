@@ -101,7 +101,7 @@ outputs:
         - {{ stdlib('c') }}
         {% if cuda_compiler_version != "None" %}
         - {{ compiler('cuda') }}
-        - cuda
+        - cuda-toolkit
         - nvtx-c
         {% endif %}
         - cmake
@@ -119,7 +119,7 @@ outputs:
         # GPU requirements
         {% if cuda_compiler_version != "None" %}
         - {{ compiler('cuda') }}
-        - cuda
+        - cuda-toolkit
         - cuda-version {{ cuda_compiler_version }}
         - nvtx-c
         {% endif %}
