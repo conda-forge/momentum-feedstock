@@ -1,5 +1,5 @@
 c_compiler:
-- vs2019
+- vs2022
 c_stdlib:
 - vs
 channel_sources:
@@ -11,7 +11,7 @@ cuda_compiler:
 cuda_compiler_version:
 - None
 cxx_compiler:
-- vs2019
+- vs2022
 fmt:
 - '11.1'
 libboost_devel:
@@ -19,18 +19,12 @@ libboost_devel:
 libtorch:
 - '2.6'
 numpy:
-- '2.0'
-- '2.0'
-- '2.0'
 - '2'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
 - 3.13.* *_cp313
 pytorch:
 - '2.6'
