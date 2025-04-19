@@ -25,7 +25,7 @@ cxx_compiler_version:
 fmt:
 - '11.1'
 libboost_devel:
-- '1.84'
+- '1.86'
 libtorch:
 - '2.6'
 macos_machine:

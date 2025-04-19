@@ -18,4 +18,4 @@ else
   export CMAKE_ARGS="$CMAKE_ARGS -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON"
 fi
 
-python -m pip install --no-deps --ignore-installed . -vv --prefix=$PREFIX
+$PYTHON -m pip install . -vv --no-deps --no-build-isolation
