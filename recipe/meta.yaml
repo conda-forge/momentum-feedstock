@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.36" %}
+{% set version = "0.1.38" %}
 
 package:
   name: {{ name|lower }}
@@ -9,7 +9,7 @@ package:
 
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
-    sha256: f5ece092d56c595f45b452ee9fb5cef5b5d1faf8b61a6591dff0396e5ba0f172
+    sha256: 1b82d5280c5fe18439c2a5e8ddda4e800c68c6d0dac389724362608ecc1f377b
     patches:
       - patches/0001-Use-Python3-Module-instead-of-Python3_LIBRARIES.patch
       - patches/0002-Use-ninja-instead-of-visual-studio.patch
@@ -42,6 +42,7 @@ outputs:
         - libboost-devel
         - cmake
         - gtest  # [build_platform == target_platform]
+        - indicators
         - ninja
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
@@ -54,6 +55,7 @@ outputs:
         - ezc3d
         - fmt
         - fx-gltf
+        - indicators
         - librerun-sdk {{ rerun_version }}
         - ms-gsl
         - nlohmann_json
@@ -68,6 +70,7 @@ outputs:
         - drjit-cpp
         - ezc3d
         - fx-gltf
+        - indicators
         - librerun-sdk {{ rerun_version }}
         - gflags
         - libdeflate
@@ -106,6 +109,7 @@ outputs:
         - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - gtest
+        - indicators
         - libboost-devel
         - make
         - ninja
@@ -130,6 +134,7 @@ outputs:
         - ezc3d
         - fmt
         - fx-gltf
+        - indicators
         - librerun-sdk {{ rerun_version }}
         - libtorch
         - ms-gsl
@@ -148,6 +153,7 @@ outputs:
         - dispenso
         - fmt
         - gflags
+        - indicators
         - libdeflate
         - pytorch
         - numpy
