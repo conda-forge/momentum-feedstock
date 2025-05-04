@@ -11,3 +11,13 @@ cxx_compiler:  # [win]
 
 rerun_version:
   - '0.22'
+
+# Enforce CUDA 12.8 for Windows
+{% if win %}
+cuda_compiler:
+  - None
+  - cuda-nvcc
+cuda_compiler_version:
+  - None
+  - 12.8
+{% endif %}
