@@ -12,7 +12,7 @@ source:
     sha256: 1b82d5280c5fe18439c2a5e8ddda4e800c68c6d0dac389724362608ecc1f377b
     patches:
       - patches/0001-Use-Python3-Module-instead-of-Python3_LIBRARIES.patch
-      - patches/0002-Use-ninja-instead-of-visual-studio.patch
+      # - patches/0002-Use-ninja-instead-of-visual-studio.patch
 
 build:
   number: 1
