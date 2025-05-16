@@ -1,0 +1,53 @@
+c_compiler:
+- vs2022
+c_stdlib:
+- vs
+channel_sources:
+- conda-forge
+channel_targets:
+- conda-forge main
+cuda_compiler:
+- cuda-nvcc
+cuda_compiler_version:
+- '12.9'
+cxx_compiler:
+- vs2022
+fmt:
+- '11.1'
+libboost_devel:
+- '1.86'
+libtorch:
+- '2.6'
+numpy:
+- '2.0'
+- '2.0'
+- '2.0'
+- '2'
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+python:
+- 3.10.* *_cpython
+- 3.11.* *_cpython
+- 3.12.* *_cpython
+- 3.13.* *_cp313
+pytorch:
+- '2.6'
+re2:
+- 2024.07.02
+rerun_version:
+- '0.22'
+spdlog:
+- '1.15'
+target_platform:
+- win-64
+urdfdom:
+- '4.0'
+zip_keys:
+- - cuda_compiler
+  - cuda_compiler_version
+- - python
+  - numpy
+zlib:
+- '1'
