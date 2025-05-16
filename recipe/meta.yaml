@@ -106,7 +106,7 @@ outputs:
         {% if cuda_compiler_version != "None" %}
         - {{ compiler('cuda') }}
         - cuda-toolkit
-        - cuda-version {{ cuda_compiler_version }}
+        - cuda-version
         - nvtx-c
         {% endif %}
         - cmake
