@@ -4,6 +4,8 @@ where nvcc >nul 2>&1 && nvcc --version
 
 set TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
 
+set PATH=%CONDA_PREFIX%\Library\bin;%PATH%
+
 set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=ON ^
