@@ -21,5 +21,7 @@ if EXIST build (
     if %ERRORLEVEL% neq 0 exit 1
 )
 
-%PYTHON% -m pip install . -vv --no-deps --no-build-isolation
+%PYTHON% -m pip install . -vv --no-deps --no-build-isolation ^
+    --global-option=build_ext ^
+    --global-option="-DCMAKE_CUDA_COMPILER=%CONDA_PREFIX%\Library\bin\nvcc.exe"
 if errorlevel 1 exit 1
