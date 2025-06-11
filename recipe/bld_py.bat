@@ -12,6 +12,9 @@ set "SKBUILD_CMAKE_GENERATOR=Ninja"
 rem Make sure nvcc is the CUDA compiler CMake sees
 set "CMAKE_CUDA_COMPILER=%CUDA_HOME%\bin\nvcc.exe"
 
+rem Tell CMake where libtorch lives (picked up from the host env)
+set "Torch_DIR=%PREFIX%\Library\share\cmake\Torch"
+
 rem CUDA architectures to build – **never quote** the list!
 set TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX
 
