@@ -107,6 +107,8 @@ outputs:
   - name: pymomentum
     script: build_py.sh  # [unix]
     script: bld_py.bat  # [win]
+    script_env:
+      - Torch_DIR
     build:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
