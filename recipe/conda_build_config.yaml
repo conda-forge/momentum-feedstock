@@ -3,5 +3,26 @@
 c_stdlib_version:  # [osx and x86_64]
   - '10.15'        # [osx and x86_64]
 
+c_compiler:  # [win]
+  - vs2019   # [win]
+
+cxx_compiler:  # [win]
+  - vs2019     # [win]
+
 rerun_version:
   - '0.22'
+
+pytorch:
+  - '2.7'
+
+# Enforce CUDA 12.8 for Windows
+cuda_compiler:          # [win]
+  - None                # [win]
+  - cuda-nvcc           # [win]
+  - cuda-nvcc           # [win]
+  - cuda-nvcc           # [win]
+cuda_compiler_version:  # [win]
+  - None                # [win]
+  - 12.6                # [win]
+  - 12.8                # [win]
+  - 12.9                # [win]
