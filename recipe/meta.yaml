@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.44" %}
+{% set version = "0.1.45" %}
 
 package:
   name: {{ name|lower }}
@@ -9,7 +9,7 @@ package:
 
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
-    sha256: a6aca21aa86b45cd1b585c77b5fa414482009cc4dc7c0adcdb51e49850bb00be
+    sha256: e6fab34ecbe2adde6987d660237fc35c8e10f8912ee1a88b86a5d4477844566b
     patches:
       - patches/0001-Use-Python3-Module-instead-of-Python3_LIBRARIES.patch
 
