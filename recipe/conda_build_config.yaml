@@ -3,12 +3,6 @@
 c_stdlib_version:  # [osx and x86_64]
   - '10.15'        # [osx and x86_64]
 
-c_compiler:  # [win]
-  - vs2019   # [win]
-
-cxx_compiler:  # [win]
-  - vs2019     # [win]
-
 rerun_version:
   - '0.23'
 
