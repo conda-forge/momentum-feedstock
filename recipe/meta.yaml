@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.47" %}
+{% set version = "0.1.48" %}
 
 package:
   name: {{ name|lower }}
@@ -9,7 +9,7 @@ package:
 
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
-    sha256: 4100cd42a522b0abd99ee5716701dec1a1907652c86cb9fd8d21b3f47c736775
+    sha256: dd3608a893ee18bf5253cfe6cd0609cfa6cd88f69735f46c1f1ed029bcadea20
     patches:
       - patches/0001-Use-Python3-Module-instead-of-Python3_LIBRARIES.patch
 
@@ -178,6 +178,12 @@ outputs:
         - pymomentum.quaternion
         - pymomentum.skel_state
         - pymomentum.solver
+        - pymomentum.solver2
+      commands:
+        - pip list
+        - pip check
+      requires:
+        - pip
 
   {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}   # [cuda_compiler_version == "None"]
   {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}   # [cuda_compiler_version != "None"]
