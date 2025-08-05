@@ -114,10 +114,11 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
-        {% if cuda_compiler_version != "None" %}
-        - {{ compiler('cuda') }} {{ cuda_compiler_version }}
-        - cuda-toolkit {{ cuda_compiler_version }}
-        {% endif %}
+        - {{ compiler('cuda') }}                        # [cuda_compiler_version != "None" and not win]
+        - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
+        - cuda-nvcc                                     # [cuda_compiler_version != "None" and win]
+        - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None" and win]
+        - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
         - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - gtest
@@ -133,11 +134,11 @@ outputs:
         - scikit-build-core
       host:
         # GPU requirements
-        {% if cuda_compiler_version != "None" %}
-        - cuda-toolkit {{ cuda_compiler_version }}
-        - cuda-version {{ cuda_compiler_version }}
-        - nvtx-c
-        {% endif %}
+        - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
+        - cuda-nvcc                                     # [cuda_compiler_version != "None" and win]
+        - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None"]
+        - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
+        - nvtx-c                                        # [cuda_compiler_version != "None"]
         # other requirements
         - ceres-solver
         - cli11
