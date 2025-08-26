@@ -82,7 +82,7 @@ outputs:
         - cmake
         - {{ compiler("c") }}
         - {{ compiler("cxx") }}
-        - ninja  # [unix]
+        - ninja
       files:
         - tests/
       commands:
@@ -104,23 +104,22 @@ outputs:
     build:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      skip: true  # [win and cuda_compiler_version != "None"]
     requirements:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
-        {% if cuda_compiler_version != "None" %}
-        - {{ compiler('cuda') }}
-        - cuda-toolkit
-        - nvtx-c
-        {% endif %}
+        - {{ compiler('cuda') }}                        # [cuda_compiler_version != "None" and not win]
+        - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
+        - cuda-nvcc                                     # [cuda_compiler_version != "None" and win]
+        - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None" and win]
+        - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
         - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - gtest
         - indicators
         - libboost-devel
         - make
-        - ninja  # [not win]
+        - ninja
         - pip
         - pybind11
         - python
@@ -128,11 +127,11 @@ outputs:
         - scikit-build-core
       host:
         # GPU requirements
-        {% if cuda_compiler_version != "None" %}
-        - cuda-version {{ cuda_compiler_version }}
-        - cuda-toolkit
-        - nvtx-c
-        {% endif %}
+        - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
+        - cuda-nvcc                                     # [cuda_compiler_version != "None" and win]
+        - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None"]
+        - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
+        - nvtx-c                                        # [cuda_compiler_version != "None"]
         # other requirements
         - ceres-solver
         - cli11
@@ -144,7 +143,6 @@ outputs:
         - fx-gltf
         - indicators
         - librerun-sdk {{ rerun_version }}
-        - libtorch
         - ms-gsl
         - nlohmann_json
         - numpy
@@ -190,7 +188,6 @@ outputs:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       detect_binary_files_with_prefix: false
-      skip: true  # [win and cuda_compiler_version != "None"]
     requirements:
       run:
         - {{ pin_subpackage("pymomentum", exact=True) }}
