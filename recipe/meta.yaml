@@ -115,7 +115,6 @@ outputs:
         - {{ stdlib('c') }}
         - {{ compiler('cuda') }}                        # [cuda_compiler_version != "None" and not win]
         - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
-        - cuda-nvcc                                     # [cuda_compiler_version != "None" and win]
         - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None" and win]
         - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
         - cmake
@@ -134,7 +133,6 @@ outputs:
       host:
         # GPU requirements
         - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
-        - cuda-nvcc                                     # [cuda_compiler_version != "None" and win]
         - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None"]
         - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
         - nvtx-c                                        # [cuda_compiler_version != "None"]
