@@ -117,6 +117,7 @@ outputs:
         - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
         - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None" and win]
         - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
+        - cuda-nvcc_win-64                              # [cuda_compiler_version != "None" and win]
         - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - gtest
