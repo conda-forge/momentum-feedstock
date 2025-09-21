@@ -1,7 +1,15 @@
 @echo on
+setlocal EnableExtensions
+
+rem Prefer Ninja & parallel builds on Windows
+set "CMAKE_GENERATOR=Ninja"
+set "CMAKE_BUILD_PARALLEL_LEVEL=%CPU_COUNT%"
 
 cmake %SRC_DIR% ^
+  %CMAKE_ARGS% ^
+  -G Ninja ^
   -B build ^
+  -DCMAKE_BUILD_TYPE=Release ^
   -DBUILD_SHARED_LIBS=ON ^
   -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
   -DCMAKE_PREFIX_PATH=%LIBRARY_PREFIX% ^
@@ -14,11 +22,11 @@ cmake %SRC_DIR% ^
   -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON
 if errorlevel 1 exit 1
 
-cmake --build build --parallel --config Release
+cmake --build build --parallel
 if errorlevel 1 exit 1
 
-cmake --build build --parallel --config Release --target install
+cmake --install build
 if errorlevel 1 exit 1
 
-ctest --test-dir build --output-on-failure --build-config Release
+ctest --test-dir build --output-on-failure
 if errorlevel 1 exit 1
