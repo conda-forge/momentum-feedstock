@@ -1,32 +1,37 @@
 @echo on
+setlocal EnableExtensions
 
 where nvcc >nul 2>&1 && nvcc --version
 
 rem ----------------------------------------------------------------------
 rem  Build-time environment
 rem ----------------------------------------------------------------------
-rem Tell scikit‑build‑core / CMake to use Ninja (avoid Visual Studio)
+rem Always use Ninja for the Python build
 set "CMAKE_GENERATOR=Ninja"
-set "SKBUILD_CMAKE_GENERATOR=Ninja"
+set "CMAKE_BUILD_PARALLEL_LEVEL=%CPU_COUNT%"
 
-rem Make sure nvcc is the CUDA compiler CMake sees
-set "CMAKE_CUDA_COMPILER=%CUDA_HOME%\bin\nvcc.exe"
+rem Make CMake find previously installed deps from the C++ step
+set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
 
-rem Tell CMake where libtorch lives (picked up from the host env)
-set "Torch_DIR=%PREFIX%\Library\share\cmake\Torch"
+rem Optional: libtorch hint only if it exists
+if exist "%PREFIX%\Library\share\cmake\Torch" set "Torch_DIR=%PREFIX%\Library\share\cmake\Torch"
 
-rem CUDA architectures to build – **never quote** the list!
-set TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX
-
-rem Ensure nvcc, cl.exe, etc. are reachable
-set "PATH=%CUDA_HOME%\bin;%CONDA_PREFIX%\Library\bin;%PATH%"
+rem CUDA: only set when the cuda variant is enabled AND nvcc exists
+if /I not "%cuda_compiler_version%"=="None" (
+  if exist "%CUDA_HOME%\bin\nvcc.exe" (
+    set "CUDACXX=%CUDA_HOME%\bin\nvcc.exe"
+  ) else (
+    echo Requested CUDA build but nvcc not found at %%CUDA_HOME%%\bin\nvcc.exe
+    exit /b 1
+  )
+)
 
 rem Extra Momentum options
 set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_ENABLE_SIMD=OFF"
 set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON"
 set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_USE_SYSTEM_PYBIND11=ON"
 set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON"
-set "CMAKE_ARGS=%CMAKE_ARGS% -DCMAKE_CUDA_COMPILER=%CMAKE_CUDA_COMPILER%"
+if defined CUDACXX set "CMAKE_ARGS=%CMAKE_ARGS% -DCMAKE_CUDA_COMPILER=%CUDACXX%"
 
 if EXIST build (
     cmake --build build --target clean
@@ -34,11 +39,10 @@ if EXIST build (
 )
 
 rem ----------------------------------------------------------------------
-rem  Build & install the wheel with the modern, supported interface
+rem  Build & install the wheel (use only supported config-settings)
 rem ----------------------------------------------------------------------
-%PYTHON% -m pip install . -vv --no-deps --no-build-isolation ^
-    --config-settings=cmake.build-type=Release ^
-    --config-settings=cmake.generator=Ninja ^
-    --config-settings=cmake.define.CMAKE_CUDA_COMPILER=%CMAKE_CUDA_COMPILER%
+set "PIP_CSET=-Ccmake.build-type=Release -Cbuild-dir=build/{wheel_tag}"
+if defined CUDACXX set "PIP_CSET=%PIP_CSET% -Ccmake.define.CMAKE_CUDA_COMPILER=%CUDACXX%"
 
+%PYTHON% -m pip install . -vv --no-deps --no-build-isolation %PIP_CSET%
 if errorlevel 1 exit 1
