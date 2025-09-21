@@ -132,16 +132,16 @@ outputs:
         - pytorch
         - scikit-build-core >=0.10
       host:
-         # GPU requirements
-         - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
-         - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None"]
-         - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
-         # CUDA runtime/headers for both link & import time:
-         - cuda-cudart-dev                               # [cuda_compiler_version != "None" and win]
-         - cuda-cudart                                   # [cuda_compiler_version != "None"]
-         - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
-         - nvtx-c                                        # [cuda_compiler_version != "None"]
-         # other requirements
+        # GPU requirements
+        - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
+        - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None"]
+        - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
+        # CUDA runtime/headers for both link & import time:
+        - cuda-cudart-dev                               # [cuda_compiler_version != "None" and win]
+        - cuda-cudart                                   # [cuda_compiler_version != "None"]
+        - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
+        - nvtx-c                                        # [cuda_compiler_version != "None"]
+        # other requirements
         - ceres-solver
         - cli11
         - dispenso
