@@ -173,6 +173,7 @@ outputs:
         - spdlog
     test:
       imports:
+        - pymomentum.backend
         - pymomentum.geometry
         - pymomentum.marker_tracking
         - pymomentum.quaternion
