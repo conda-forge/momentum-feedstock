@@ -53,6 +53,8 @@ outputs:
         - fmt
         - fx-gltf
         - indicators
+        # Replace with mdspan (https://github.com/conda-forge/staged-recipes/pull/31152)
+        - kokkos
         - librerun-sdk {{ rerun_version }}
         - ms-gsl
         - nlohmann_json
@@ -145,6 +147,8 @@ outputs:
         - fmt
         - fx-gltf
         - indicators
+        # Replace with mdspan (https://github.com/conda-forge/staged-recipes/pull/31152)
+        - kokkos
         - librerun-sdk {{ rerun_version }}
         - libtorch
         - ms-gsl
