@@ -181,13 +181,14 @@ outputs:
       imports:
         - pymomentum.backend
         - pymomentum.geometry
-        - pymomentum.gpu_character
         - pymomentum.marker_tracking
         - pymomentum.quaternion
+        - pymomentum.renderer
         - pymomentum.skel_state
         - pymomentum.solver
         - pymomentum.solver2
-        - pymomentum.trs
+        - pymomentum.torch.character
+        - pymomentum.trs        
       commands:
         - pip list
         - pip check
