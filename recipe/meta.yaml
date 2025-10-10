@@ -12,6 +12,7 @@ source:
     sha256: 513171303d07ea6108684632181eb06c91abaefc13f1be2d7e528617a3cca9eb
     patches:
       - patches/0001-Fix-install-pymomentum-on-Windows.patch
+      - patches/0002-Fix-rasterizer-test-segfaults-in-conda-forge-builds.patch
 
 build:
   number: 1

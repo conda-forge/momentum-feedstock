@@ -1,0 +1,118 @@
+From 516edb1a09bb256fd01baa4ea2328d99633c99b1 Mon Sep 17 00:00:00 2001
+From: Jeongseok Lee <jeongseok@meta.com>
+Date: Thu, 9 Oct 2025 23:30:00 -0700
+Subject: [PATCH 2/2] Fix rasterizer test segfaults in conda-forge builds
+
+---
+ momentum/rasterizer/fwd.h                     | 13 +++++++
+ momentum/rasterizer/tensor.h                  | 38 ++++++++++++++++++-
+ .../rasterizer/test_software_rasterizer.cpp   |  6 +++
+ 3 files changed, 56 insertions(+), 1 deletion(-)
+
+diff --git a/momentum/rasterizer/fwd.h b/momentum/rasterizer/fwd.h
+index 570079e76..9c954ead4 100644
+--- a/momentum/rasterizer/fwd.h
++++ b/momentum/rasterizer/fwd.h
+@@ -23,6 +23,19 @@ using IntrinsicsModel = IntrinsicsModelT<float>;
+ constexpr size_t kSimdPacketSize = drjit::DefaultSize;
+ constexpr size_t kSimdAlignment = 4 * kSimdPacketSize;
+ 
++// Compile-time sanity check: Ensure SIMD packet size is reasonable (typically 4, 8, 16, or 32)
++// This helps catch misconfigured builds where DefaultSize might be incorrect
++static_assert(
++    kSimdPacketSize >= 1 && kSimdPacketSize <= 64,
++    "kSimdPacketSize must be between 1 and 64. If this assertion fails, "
++    "drjit::DefaultSize may be misconfigured in your build environment.");
++
++// Additional check: packet size should be a power of 2 for most SIMD implementations
++static_assert(
++    (kSimdPacketSize & (kSimdPacketSize - 1)) == 0,
++    "kSimdPacketSize should be a power of 2 (1, 2, 4, 8, 16, 32, 64). "
++    "If this fails, check your drjit configuration.");
++
+ using IntP = drjit::Packet<int32_t, kSimdPacketSize>;
+ using UintP = drjit::Packet<uint32_t, kSimdPacketSize>;
+ using Uint8P = drjit::Packet<uint8_t, kSimdPacketSize>;
+diff --git a/momentum/rasterizer/tensor.h b/momentum/rasterizer/tensor.h
+index dd8450eae..c6b1e8fc6 100644
+--- a/momentum/rasterizer/tensor.h
++++ b/momentum/rasterizer/tensor.h
+@@ -9,6 +9,7 @@
+ 
+ #include <mdspan/mdspan.hpp>
+ #include <momentum/common/aligned.h>
++#include <momentum/common/exception.h>
+ #include <momentum/rasterizer/fwd.h>
+ #include <algorithm>
+ #include <array>
+@@ -40,7 +41,31 @@ class Tensor {
+   explicit Tensor(const extents_t& extents, const T& defaultValue = T{}) : _extents(extents) {
+     auto size = calculateSize(extents);
+     if (size > 0) {
+-      _data.resize(size, defaultValue);
++      // Sanity check: if size is unreasonably large (e.g. > 1GB for floats/ints),
++      // throw a more descriptive error than std::bad_alloc
++      constexpr index_t kMaxReasonableElements =
++          256 * 1024 * 1024; // 256M elements (~1GB for floats)
++      MT_THROW_IF(
++          size > kMaxReasonableElements,
++          "Tensor allocation size is unreasonably large: {} elements. "
++          "This may indicate a configuration error with SIMD packet size. "
++          "Expected extents: [{}]",
++          size,
++          formatExtents(extents));
++      try {
++        _data.resize(size, defaultValue);
++      } catch (const std::bad_alloc& e) {
++        MT_THROW(
++            "Failed to allocate tensor of size {} elements ({} bytes). "
++            "Extents: [{}]. "
++            "This may indicate misconfigured SIMD packet size (kSimdPacketSize={}). "
++            "Original error: {}",
++            size,
++            size * sizeof(T),
++            formatExtents(extents),
++            kSimdPacketSize,
++            e.what());
++      }
+     }
+   }
+ 
+@@ -131,6 +156,17 @@ class Tensor {
+     }
+     return size;
+   }
++
++  static std::string formatExtents(const extents_t& extents) {
++    std::string result;
++    for (size_t i = 0; i < Rank; ++i) {
++      if (i > 0) {
++        result += ", ";
++      }
++      result += std::to_string(extents[i]);
++    }
++    return result;
++  }
+ };
+ 
+ using Tensor2f = Tensor<float, 2>;
+diff --git a/momentum/test/rasterizer/test_software_rasterizer.cpp b/momentum/test/rasterizer/test_software_rasterizer.cpp
+index 0805aa01a..89fb12e0f 100644
+--- a/momentum/test/rasterizer/test_software_rasterizer.cpp
++++ b/momentum/test/rasterizer/test_software_rasterizer.cpp
+@@ -196,6 +196,12 @@ TEST(SoftwareRasterizer, OneQuad) {
+   const int width = 20;
+   const int height = 10;
+ 
++  // Add diagnostic information to help debug allocation issues
++  // This can help identify when SIMD packet size is misconfigured
++  SCOPED_TRACE(
++      "SIMD Configuration: kSimdPacketSize=" + std::to_string(kSimdPacketSize) +
++      ", kSimdAlignment=" + std::to_string(kSimdAlignment));
++
+   // Create OpenCV intrinsics with no distortion
+   OpenCVDistortionParametersT<float> distortionParams; // All zeros by default
+   auto intrinsics = std::make_shared<OpenCVIntrinsicsModel>(
+-- 
+2.50.1
+
