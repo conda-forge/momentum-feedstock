@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.71" %}
+{% set version = "0.1.73" %}
 
 package:
   name: {{ name|lower }}
@@ -9,12 +9,12 @@ package:
 
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
-    sha256: 3e1edf314bec8a91132e8ae28261d0637f97e407df9fcc48ec8ead37266a1641
+    sha256: ee5842f4b30c90caa27ade66ee3a89a1a7c7217975eaf6fd1327ff4ca59e68a6
     patches:
       - patches/0001-Fix-install-pymomentum-on-Windows.patch  # [win]
 
 build:
-  number: 1
+  number: 0
   skip: true  # [py<312]
 
 outputs:
