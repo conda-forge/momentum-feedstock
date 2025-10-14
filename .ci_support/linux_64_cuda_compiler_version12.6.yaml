@@ -21,7 +21,7 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
 fmt:
-- '11.2'
+- '12.0'
 libboost_devel:
 - '1.86'
 libtorch:
@@ -44,7 +44,7 @@ re2_version:
 rerun_version:
 - '0.22'
 spdlog:
-- '1.15'
+- '1.16'
 target_platform:
 - linux-64
 urdfdom:

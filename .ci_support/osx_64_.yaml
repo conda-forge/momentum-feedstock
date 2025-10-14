@@ -23,7 +23,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '19'
 fmt:
-- '11.2'
+- '12.0'
 libboost_devel:
 - '1.86'
 libtorch:
@@ -48,7 +48,7 @@ re2_version:
 rerun_version:
 - '0.22'
 spdlog:
-- '1.15'
+- '1.16'
 target_platform:
 - osx-64
 urdfdom:
