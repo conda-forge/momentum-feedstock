@@ -60,6 +60,7 @@ outputs:
         - spdlog
         - urdfdom
       run:
+        - {{ pin_compatible('fmt', max_pin='x') }}
         - ceres-solver
         - cli11
         - dispenso
@@ -159,6 +160,7 @@ outputs:
         - urdfdom
         - zlib
       run:
+        - {{ pin_compatible('fmt', max_pin='x') }}
         - ezc3d
         - dispenso
         - fmt
