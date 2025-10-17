@@ -12,7 +12,7 @@ source:
     sha256: c3f81140ba97d156e7d90437a08e51057d7cd59608b469a397c790fa70f1ddf5
 
 build:
-  number: 1
+  number: 2
   skip: true  # [py<312]
 
 outputs:
@@ -102,14 +102,18 @@ outputs:
     script: build_py.sh  # [unix]
     script: bld_py.bat  # [win]
     build:
-      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+      string: cpu_py{{ CONDA_PY }}_pt{{ pytorch | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_pt{{ pytorch | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       skip: true  # [win and cuda_compiler_version != "None"]
+      skip: true  # [pytorch == "2.5" and cuda_compiler_version != "11.8"]
     requirements:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
-        {% if cuda_compiler_version != "None" %}
+        {% if cuda_compiler_version == "11.8" %}
+        - cudatoolkit {{ cuda_compiler_version }}.*
+        {% endif %}
+        {% if cuda_compiler_version != "None" and cuda_compiler_version != "11.8" %}
         - {{ compiler('cuda') }}
         - cuda-toolkit
         - nvtx-c
@@ -128,7 +132,10 @@ outputs:
         - scikit-build-core
       host:
         # GPU requirements
-        {% if cuda_compiler_version != "None" %}
+        {% if cuda_compiler_version == "11.8" %}
+        - cudatoolkit {{ cuda_compiler_version }}.*
+        {% endif %}
+        {% if cuda_compiler_version != "None" and cuda_compiler_version != "11.8" %}
         - cuda-version {{ cuda_compiler_version }}
         - cuda-toolkit
         - nvtx-c
@@ -192,10 +199,11 @@ outputs:
   {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pymomentum_cpu_gpu }}
     build:
-      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+      string: cpu_py{{ CONDA_PY }}_pt{{ pytorch | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_pt{{ pytorch | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       detect_binary_files_with_prefix: false
       skip: true  # [win and cuda_compiler_version != "None"]
+      skip: true  # [pytorch == "2.5" and cuda_compiler_version != "11.8"]
     requirements:
       run:
         - {{ pin_subpackage("pymomentum", exact=True) }}

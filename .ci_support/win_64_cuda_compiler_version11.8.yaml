@@ -9,7 +9,7 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '12.6'
+- '11.8'
 cxx_compiler:
 - vs2022
 fmt:
