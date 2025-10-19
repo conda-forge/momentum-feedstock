@@ -173,6 +173,7 @@ outputs:
         - spdlog
     test:
       imports:
+        - pymomentum.axel
         - pymomentum.backend
         - pymomentum.geometry
         - pymomentum.marker_tracking
