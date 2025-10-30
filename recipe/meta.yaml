@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.82" %}
+{% set version = "0.1.83" %}
 
 package:
   name: {{ name|lower }}
@@ -9,7 +9,7 @@ package:
 
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
-    sha256: c915117cead1b0011645897e910bad74d1621a980a28a076b2707d053010519c
+    sha256: 8f48c2f5fae474f372052b8e8fb8de2e38c1370a60cb6d94e9ce52579ea0820a
 
 build:
   number: 0
