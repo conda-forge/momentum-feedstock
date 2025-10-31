@@ -58,7 +58,7 @@ outputs:
         - nlohmann_json
         - openfbx
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
-        - re2 {{ re2_version }}
+        - re2
         - spdlog
         - urdfdom
       run:
@@ -76,7 +76,7 @@ outputs:
         - nlohmann_json
         - openfbx
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
-        - re2 {{ re2_version }}
+        - re2
     test:
       script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
@@ -155,7 +155,7 @@ outputs:
         - python
         - pytorch
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
-        - re2 {{ re2_version }}
+        - re2
         - scikit-build-core
         - spdlog
         - urdfdom
@@ -171,7 +171,7 @@ outputs:
         - numpy
         - python
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
-        - re2 {{ re2_version }}
+        - re2
         - spdlog
     test:
       imports:

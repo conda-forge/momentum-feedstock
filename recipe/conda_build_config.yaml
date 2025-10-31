@@ -5,7 +5,3 @@ c_stdlib_version:  # [osx and x86_64]
 
 rerun_version:
   - '0.23'
-
-# TODO: Remove when upgrading rerun_version to >0.22
-re2_version:
-  - '2024.07.02'
