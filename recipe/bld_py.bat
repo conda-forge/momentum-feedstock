@@ -7,15 +7,6 @@ rem ----------------------------------------------------------------------
 rem  Unpack and enter the source directory
 rem ----------------------------------------------------------------------
 cd /d %SRC_DIR%
-
-rem ----------------------------------------------------------------------
-rem  Force stable CMake by patching pyproject.toml
-rem ----------------------------------------------------------------------
-rem scikit-build-core defaults to CMake 4.1.2 which has python_add_library issues
-rem Patch pyproject.toml to force cmake.version constraint
-powershell -Command "(Get-Content pyproject.toml) -replace '\[tool\.scikit-build\]', '[tool.scikit-build]`ncmake.version = \">=3.28,<4\"' | Set-Content pyproject.toml.patched"
-move /y pyproject.toml.patched pyproject.toml
-type pyproject.toml | findstr /C:"cmake.version"
 rem Always use Ninja for the Python build
 set "CMAKE_GENERATOR=Ninja"
 set "CMAKE_BUILD_PARALLEL_LEVEL=%CPU_COUNT%"
