@@ -38,7 +38,10 @@ if /I not "%cuda_compiler_version%"=="None" (
   rem Remove trailing backslash from CUDA_HOME
   set "CUDA_HOME=!CUDA_HOME:~0,-1!"
 
-  set "CUDACXX=!NVCC_PATH!"
+  rem Convert backslashes to forward slashes for CMake compatibility
+  set "CUDACXX=!NVCC_PATH:\=/!"
+  set "CUDA_HOME_CMAKE=!CUDA_HOME:\=/!"
+
   echo Using CUDA from: !CUDA_HOME!
   echo CUDACXX set to: !CUDACXX!
 )
