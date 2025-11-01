@@ -13,7 +13,6 @@ source:
     patches:
       - patches/0001-Fix-torch_python-discovery-for-Windows-builds.patch
       - patches/0002-Use-ninja-instead-of-visual-studio.patch
-      - patches/0003-Set-CMake-policy-CMP0148-for-python_add_library.patch
 
 build:
   number: 1
