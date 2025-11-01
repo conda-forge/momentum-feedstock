@@ -9,11 +9,12 @@ rem ----------------------------------------------------------------------
 cd /d %SRC_DIR%
 
 rem ----------------------------------------------------------------------
-rem  Fix CMake policies for python_add_library command
+rem  Force stable CMake (scikit-build-core defaults to unstable 4.1.2)
 rem ----------------------------------------------------------------------
-rem Insert CMake policies after line 14 (after list(APPEND CMAKE_MODULE_PATH...))
-powershell -Command "(Get-Content CMakeLists.txt) | ForEach-Object { if ($_ -match 'list\(APPEND CMAKE_MODULE_PATH') { $_; ''; '# Set CMake policy to use FindPython instead of deprecated modules'; 'if(POLICY CMP0148)'; '  cmake_policy(SET CMP0148 NEW)'; 'endif()'; ''; '# Ensure Python3 module is found in modern way and commands are exported'; 'cmake_policy(SET CMP0094 NEW)' } else { $_ } } | Set-Content CMakeLists.txt.new"
-move /y CMakeLists.txt.new CMakeLists.txt
+rem CMake 4.1.2 has issues with python_add_library command
+rem Force use of stable CMake from conda environment
+set "SKBUILD_CMAKE_EXECUTABLE=%BUILD_PREFIX%\Library\bin\cmake.exe"
+echo Using CMake: %SKBUILD_CMAKE_EXECUTABLE%
 rem Always use Ninja for the Python build
 set "CMAKE_GENERATOR=Ninja"
 set "CMAKE_BUILD_PARALLEL_LEVEL=%CPU_COUNT%"
