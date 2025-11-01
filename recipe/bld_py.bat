@@ -77,6 +77,8 @@ rem ----------------------------------------------------------------------
 rem  Build & install the wheel (use only supported config-settings)
 rem ----------------------------------------------------------------------
 set "PIP_CSET=-Ccmake.build-type=Release -Cbuild-dir=build/{wheel_tag}"
+rem Set CMake policy for python_add_library (pybind11 2.13.6 issue)
+set "PIP_CSET=%PIP_CSET% -Ccmake.define.CMAKE_POLICY_DEFAULT_CMP0148=NEW"
 if defined CUDACXX set "PIP_CSET=%PIP_CSET% -Ccmake.define.CMAKE_CUDA_COMPILER=%CUDACXX%"
 
 %PYTHON% -m pip install . -vv --no-deps --no-build-isolation %PIP_CSET%
