@@ -38,7 +38,8 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - libboost-devel
-        - cmake >=3.28,<4
+        - cmake >=3.28,<4  # [win and cuda_compiler_version != "None"]
+        - cmake  # [not (win and cuda_compiler_version != "None")]
         - gtest  # [build_platform == target_platform]
         - indicators
         - ninja
@@ -116,7 +117,8 @@ outputs:
         - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None" and win]
         - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
         - cuda-nvcc_win-64                              # [cuda_compiler_version != "None" and win]
-        - cmake >=3.28,<4
+        - cmake >=3.28,<4  # [win and cuda_compiler_version != "None"]
+        - cmake  # [not (win and cuda_compiler_version != "None")]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - gtest
         - indicators
