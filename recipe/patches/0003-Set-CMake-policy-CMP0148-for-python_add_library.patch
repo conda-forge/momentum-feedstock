@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jeongseok Lee <jeongseok@meta.com>
+Date: Fri, 1 Nov 2024 23:25:00 +0000
+Subject: [PATCH] Set CMake policy CMP0148 for python_add_library command
+
+pybind11 2.13.6 requires the python_add_library() command which is
+provided by CMake's FindPython3 module. This command is only available
+when policy CMP0148 is set to NEW (use FindPython3 instead of deprecated
+FindPythonInterp/FindPythonLibs).
+
+Set the policy before finding pybind11 to ensure python_add_library is available.
+
+Fixes: Unknown CMake command "python_add_library"
+---
+ pymomentum/CMakeLists.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/pymomentum/CMakeLists.txt b/pymomentum/CMakeLists.txt
+index 1111111..2222222 100644
+--- a/pymomentum/CMakeLists.txt
++++ b/pymomentum/CMakeLists.txt
+@@ -35,6 +35,11 @@ if(MOMENTUM_ENABLE_SIMD)
+   target_compile_definitions(pymomentum_common INTERFACE MOMENTUM_ENABLE_SIMD)
+ endif()
+
++# Set CMake policy to use modern FindPython3 module
++# This enables python_add_library() command required by pybind11 2.13.6
++if(POLICY CMP0148)
++  cmake_policy(SET CMP0148 NEW)
++endif()
+
+ find_package(Torch REQUIRED)
+ find_package(pybind11 REQUIRED)
+--
+2.47.0
