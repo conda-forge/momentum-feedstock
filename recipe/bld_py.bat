@@ -10,11 +10,15 @@ rem Always use Ninja for the Python build
 set "CMAKE_GENERATOR=Ninja"
 set "CMAKE_BUILD_PARALLEL_LEVEL=%CPU_COUNT%"
 
+rem Convert paths to forward slashes for CMake compatibility
+set "LIBRARY_PREFIX_CMAKE=%LIBRARY_PREFIX:\=/%"
+set "PREFIX_CMAKE=%PREFIX:\=/%"
+
 rem Make CMake find previously installed deps from the C++ step
-set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
+set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX_CMAKE%"
 
 rem Optional: libtorch hint only if it exists
-if exist "%PREFIX%\Library\share\cmake\Torch" set "Torch_DIR=%PREFIX%\Library\share\cmake\Torch"
+if exist "%PREFIX%\Library\share\cmake\Torch" set "Torch_DIR=%PREFIX_CMAKE%/Library/share/cmake/Torch"
 
 rem CUDA: only set when the cuda variant is enabled
 if /I not "%cuda_compiler_version%"=="None" (
