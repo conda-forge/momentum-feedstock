@@ -16,14 +16,26 @@ set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
 rem Optional: libtorch hint only if it exists
 if exist "%PREFIX%\Library\share\cmake\Torch" set "Torch_DIR=%PREFIX%\Library\share\cmake\Torch"
 
-rem CUDA: only set when the cuda variant is enabled AND nvcc exists
+rem CUDA: only set when the cuda variant is enabled
 if /I not "%cuda_compiler_version%"=="None" (
-  if exist "%CUDA_HOME%\bin\nvcc.exe" (
-    set "CUDACXX=%CUDA_HOME%\bin\nvcc.exe"
-  ) else (
-    echo Requested CUDA build but nvcc not found at %%CUDA_HOME%%\bin\nvcc.exe
+  rem Find nvcc in PATH and derive CUDA_HOME
+  where nvcc.exe >nul 2>&1
+  if errorlevel 1 (
+    echo ERROR: CUDA build requested but nvcc.exe not found in PATH
     exit /b 1
   )
+
+  rem Get the full path to nvcc
+  for /f "tokens=*" %%i in ('where nvcc.exe') do set "NVCC_PATH=%%i"
+
+  rem Derive CUDA_HOME from nvcc path (remove \bin\nvcc.exe)
+  for %%i in ("%NVCC_PATH%") do set "CUDA_BIN_DIR=%%~dpi"
+  for %%i in ("%CUDA_BIN_DIR:~0,-1%") do set "CUDA_HOME=%%~dpi"
+  set "CUDA_HOME=%CUDA_HOME:~0,-1%"
+
+  set "CUDACXX=%NVCC_PATH%"
+  echo Using CUDA from: %CUDA_HOME%
+  echo CUDACXX set to: %CUDACXX%
 )
 
 rem Extra Momentum options
