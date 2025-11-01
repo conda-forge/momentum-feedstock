@@ -14,6 +14,11 @@ rem Convert paths to forward slashes for CMake compatibility
 set "LIBRARY_PREFIX_CMAKE=%LIBRARY_PREFIX:\=/%"
 set "PREFIX_CMAKE=%PREFIX:\=/%"
 
+rem Fix CMAKE_ARGS paths: convert all backslashes to forward slashes
+rem This is needed because conda-build sets CMAKE_ARGS with backslash paths
+rem which get stripped when passed through environment variables
+set "CMAKE_ARGS=%CMAKE_ARGS:\=/%"
+
 rem Make CMake find previously installed deps from the C++ step
 set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX_CMAKE%"
 
@@ -55,6 +60,8 @@ set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_ENABLE_SIMD=OFF"
 set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON"
 set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_USE_SYSTEM_PYBIND11=ON"
 set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON"
+set "CMAKE_ARGS=%CMAKE_ARGS% -DPython_FIND_STRATEGY=LOCATION"
+set "CMAKE_ARGS=%CMAKE_ARGS% -DPython_ROOT_DIR=%PREFIX_CMAKE%"
 if defined CUDACXX set "CMAKE_ARGS=%CMAKE_ARGS% -DCMAKE_CUDA_COMPILER=%CUDACXX%"
 
 if EXIST build (
