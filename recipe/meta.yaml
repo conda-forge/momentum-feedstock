@@ -136,6 +136,7 @@ outputs:
         # CUDA runtime/headers for both link & import time:
         - cuda-cudart-dev                               # [cuda_compiler_version != "None" and win]
         - cuda-cudart                                   # [cuda_compiler_version != "None"]
+        - cuda-nvrtc-dev                                # [cuda_compiler_version != "None" and win]
         - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
         - nvtx-c                                        # [cuda_compiler_version != "None"]
         - kokkos * *cuda*                               # [cuda_compiler_version != "None"]
