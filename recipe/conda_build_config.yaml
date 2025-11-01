@@ -1,39 +1,7 @@
 # https://github.com/conda-forge/conda-forge-pinning-feedstock/blob/main/recipe/conda_build_config.yaml
 
-c_stdlib_version:  # [(osx and x86_64) or linux]
+c_stdlib_version:  # [osx and x86_64]
   - '10.15'        # [osx and x86_64]
-  - '2.17'         # [linux]
-  - '2.17'         # [linux]
-  - '2.17'         # [linux]
-
-cuda_compiler_version:         # [linux or win]
-  - None                       # [linux or win]
-  - '12.6'                     # [linux or win]
-  - '12.9'                     # [linux or win]
-
-cuda_compiler_version_min:     # [linux or win]
-  - None                       # [linux or win]
-  - '12.6'                     # [linux or win]
-  - '12.9'                     # [linux or win]
-
-c_compiler_version:            # [linux]
-  - '14'                       # [linux]
-  - '13'                       # [linux]
-  - '14'                       # [linux]
-
-cxx_compiler_version:          # [linux]
-  - '14'                       # [linux]
-  - '13'                       # [linux]
-  - '14'                       # [linux]
-
-fortran_compiler_version:      # [linux]
-  - '14'                       # [linux]
-  - '13'                       # [linux]
-  - '14'                       # [linux]
 
 rerun_version:
   - '0.23'
-
-# TODO: Remove when upgrading rerun_version to >0.22
-re2_version:
-  - '2024.07.02'
