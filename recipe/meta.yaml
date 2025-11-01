@@ -13,6 +13,7 @@ source:
     patches:
       - patches/0001-Fix-torch_python-discovery-for-Windows-builds.patch
       - patches/0002-Use-ninja-instead-of-visual-studio.patch
+      - patches/0003-Fix-Python3-module-scope.patch  # [win]
 
 build:
   number: 1
