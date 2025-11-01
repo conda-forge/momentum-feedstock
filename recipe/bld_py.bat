@@ -1,5 +1,5 @@
 @echo on
-setlocal EnableExtensions
+setlocal EnableExtensions EnableDelayedExpansion
 
 where nvcc >nul 2>&1 && nvcc --version
 
@@ -28,14 +28,19 @@ if /I not "%cuda_compiler_version%"=="None" (
   rem Get the full path to nvcc
   for /f "tokens=*" %%i in ('where nvcc.exe') do set "NVCC_PATH=%%i"
 
-  rem Derive CUDA_HOME from nvcc path (remove \bin\nvcc.exe)
-  for %%i in ("%NVCC_PATH%") do set "CUDA_BIN_DIR=%%~dpi"
-  for %%i in ("%CUDA_BIN_DIR:~0,-1%") do set "CUDA_HOME=%%~dpi"
-  set "CUDA_HOME=%CUDA_HOME:~0,-1%"
+  rem Derive CUDA_HOME: nvcc path is typically CUDA_HOME\bin\nvcc.exe
+  rem Extract drive and path, then go up one directory
+  for %%i in ("!NVCC_PATH!") do set "CUDA_BIN_DIR=%%~dpi"
+  rem Remove trailing backslash from bin directory
+  set "CUDA_BIN_DIR=!CUDA_BIN_DIR:~0,-1!"
+  rem Get parent directory
+  for %%i in ("!CUDA_BIN_DIR!") do set "CUDA_HOME=%%~dpi"
+  rem Remove trailing backslash from CUDA_HOME
+  set "CUDA_HOME=!CUDA_HOME:~0,-1!"
 
-  set "CUDACXX=%NVCC_PATH%"
-  echo Using CUDA from: %CUDA_HOME%
-  echo CUDACXX set to: %CUDACXX%
+  set "CUDACXX=!NVCC_PATH!"
+  echo Using CUDA from: !CUDA_HOME!
+  echo CUDACXX set to: !CUDACXX!
 )
 
 rem Extra Momentum options
