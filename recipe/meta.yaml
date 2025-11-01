@@ -138,6 +138,7 @@ outputs:
         - cuda-cudart                                   # [cuda_compiler_version != "None"]
         - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
         - nvtx-c                                        # [cuda_compiler_version != "None"]
+        - kokkos * *cuda*                               # [cuda_compiler_version != "None"]
         # other requirements
         - ceres-solver
         - cli11
