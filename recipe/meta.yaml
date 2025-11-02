@@ -12,6 +12,7 @@ source:
     sha256: 8f48c2f5fae474f372052b8e8fb8de2e38c1370a60cb6d94e9ce52579ea0820a
     patches:
       - patches/0001-Fix-torch_python-discovery-for-Windows-builds.patch
+      - patches/0002-Use-ninja-instead-of-visual-studio.patch
 
 build:
   number: 1
@@ -40,7 +41,7 @@ outputs:
         - cmake
         - gtest  # [build_platform == target_platform]
         - indicators
-        - ninja  # [not win]
+        - ninja
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
       host:
@@ -84,7 +85,7 @@ outputs:
         - cmake
         - {{ compiler("c") }}
         - {{ compiler("cxx") }}
-        - ninja  # [unix]
+        - ninja
       files:
         - tests/
       commands:
@@ -106,35 +107,39 @@ outputs:
     build:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      skip: true  # [win and cuda_compiler_version != "None"]
     requirements:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
-        {% if cuda_compiler_version != "None" %}
-        - {{ compiler('cuda') }}
-        - cuda-toolkit
-        - nvtx-c
-        {% endif %}
+        - {{ compiler('cuda') }}                        # [cuda_compiler_version != "None" and not win]
+        - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
+        - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None" and win]
+        - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
+        - cuda-nvcc_win-64                              # [cuda_compiler_version != "None" and win]
         - cmake
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - gtest
         - indicators
         - libboost-devel
         - make
-        - ninja  # [not win]
+        - ninja
         - pip
         - pybind11
         - python
         - pytorch
-        - scikit-build-core
+        - scikit-build-core >=0.10
       host:
         # GPU requirements
-        {% if cuda_compiler_version != "None" %}
-        - cuda-version {{ cuda_compiler_version }}
-        - cuda-toolkit
-        - nvtx-c
-        {% endif %}
+        - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
+        - cuda-version {{ cuda_compiler_version }}      # [cuda_compiler_version != "None"]
+        - vs2022_win-64                                 # [cuda_compiler_version != "None" and win]
+        # CUDA runtime/headers for both link & import time:
+        - cuda-cudart-dev                               # [cuda_compiler_version != "None" and win]
+        - cuda-cudart                                   # [cuda_compiler_version != "None"]
+        - cuda-nvrtc-dev                                # [cuda_compiler_version != "None" and win]
+        - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
+        - nvtx-c                                        # [cuda_compiler_version != "None"]
+        - kokkos * *cuda*                               # [cuda_compiler_version != "None"]
         # other requirements
         - ceres-solver
         - cli11
@@ -146,7 +151,6 @@ outputs:
         - fx-gltf
         - indicators
         - librerun-sdk {{ rerun_version }}
-        - libtorch
         - ms-gsl
         - nlohmann_json
         - numpy
@@ -156,11 +160,14 @@ outputs:
         - pytorch
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
         - re2
-        - scikit-build-core
+        - scikit-build-core >=0.10
         - spdlog
         - urdfdom
         - zlib
       run:
+        # CUDA runtime needed at import time (no GPU required to import):
+        - cuda-cudart                                   # [cuda_compiler_version != "None"]
+        - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
         - ezc3d
         - dispenso
         - fmt
@@ -198,7 +205,6 @@ outputs:
       string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       detect_binary_files_with_prefix: false
-      skip: true  # [win and cuda_compiler_version != "None"]
     requirements:
       run:
         - {{ pin_subpackage("pymomentum", exact=True) }}
