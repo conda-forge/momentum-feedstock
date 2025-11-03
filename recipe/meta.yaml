@@ -53,6 +53,7 @@ outputs:
         - fmt
         - fx-gltf
         - indicators
+        - kokkos
         - librerun-sdk {{ rerun_version }}
         - ms-gsl
         - nlohmann_json
@@ -145,6 +146,7 @@ outputs:
         - fmt
         - fx-gltf
         - indicators
+        - kokkos
         - librerun-sdk {{ rerun_version }}
         - libtorch
         - ms-gsl
