@@ -133,6 +133,7 @@ outputs:
         - ninja
         - pip
         - pybind11-abi
+        - pytest
         - python
         - pytorch
         - scikit-build-core >=0.11
