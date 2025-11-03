@@ -14,7 +14,7 @@ source:
       - patches/0001-Fix-torch_python-discovery-for-Windows-builds.patch
 
 build:
-  number: 1
+  number: 2
   skip: true  # [py<312]
 
 outputs:
@@ -180,6 +180,7 @@ outputs:
         - pymomentum.geometry
         - pymomentum.marker_tracking
         - pymomentum.quaternion
+        - pymomentum.renderer
         - pymomentum.skel_state
         - pymomentum.solver
         - pymomentum.solver2

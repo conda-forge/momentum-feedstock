@@ -8,7 +8,7 @@ if [[ "${target_platform}" == *aarch64 || "${target_platform}" == *ppc64le ]]; t
 fi
 
 export CMAKE_ARGS="$CMAKE_ARGS \
-    -DMOMENTUM_BUILD_RENDERER=OFF \
+    -DMOMENTUM_BUILD_RENDERER=ON \
     -DMOMENTUM_BUILD_TESTING=OFF \
     -DMOMENTUM_ENABLE_SIMD=OFF \
     -DMOMENTUM_USE_SYSTEM_PYBIND11=OFF \
