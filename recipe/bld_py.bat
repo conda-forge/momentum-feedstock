@@ -11,3 +11,7 @@ set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON
 
 %PYTHON% -m pip install . -vv --no-deps --no-build-isolation
+
+REM Run Python unit tests
+set MOMENTUM_MODELS_PATH=%SRC_DIR%\momentum\
+pytest pymomentum\test\*.py -v

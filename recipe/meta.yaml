@@ -126,6 +126,7 @@ outputs:
         - ninja  # [not win]
         - pip
         - pybind11
+        - pytest
         - python
         - pytorch
         - scikit-build-core
