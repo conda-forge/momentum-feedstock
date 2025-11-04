@@ -8,7 +8,7 @@ if [[ "${target_platform}" == *aarch64 || "${target_platform}" == *ppc64le ]]; t
 fi
 
 export CMAKE_ARGS="$CMAKE_ARGS \
-    -DMOMENTUM_BUILD_RENDERER=OFF \
+    -DMOMENTUM_BUILD_RENDERER=ON \
     -DMOMENTUM_BUILD_TESTING=OFF \
     -DMOMENTUM_ENABLE_SIMD=OFF \
     -DMOMENTUM_USE_SYSTEM_PYBIND11=OFF \
@@ -21,3 +21,9 @@ else
 fi
 
 $PYTHON -m pip install . -vv --no-deps --no-build-isolation
+
+# Run Python unit tests
+# Change to a different directory to ensure we import the installed package
+cd "${SRC_DIR}/.."
+export MOMENTUM_MODELS_PATH="${SRC_DIR}/momentum/"
+$PYTHON -m pytest --pyargs pymomentum.test -v
