@@ -133,7 +133,6 @@ outputs:
         - ninja
         - pip
         - pybind11-abi
-        - pytest
         - python
         - pytorch
         - scikit-build-core >=0.11
@@ -167,6 +166,7 @@ outputs:
         - openfbx
         - openusd  # [linux]
         - pip
+        - pytest
         - python
         - pytorch
         - re2
