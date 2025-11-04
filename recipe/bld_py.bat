@@ -13,5 +13,7 @@ set CMAKE_ARGS=%CMAKE_ARGS% ^
 %PYTHON% -m pip install . -vv --no-deps --no-build-isolation
 
 REM Run Python unit tests
+REM Change to a different directory to ensure we import the installed package
+cd ..
 set MOMENTUM_MODELS_PATH=%SRC_DIR%\momentum\
-pytest pymomentum\test -v
+%PYTHON% -m pytest --pyargs pymomentum.test -v
