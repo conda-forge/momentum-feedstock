@@ -24,4 +24,4 @@ $PYTHON -m pip install . -vv --no-deps --no-build-isolation
 
 # Run Python unit tests
 export MOMENTUM_MODELS_PATH="${SRC_DIR}/momentum/"
-pytest pymomentum/test/*.py -v
+pytest pymomentum/test -v

@@ -14,4 +14,4 @@ set CMAKE_ARGS=%CMAKE_ARGS% ^
 
 REM Run Python unit tests
 set MOMENTUM_MODELS_PATH=%SRC_DIR%\momentum\
-pytest pymomentum\test\*.py -v
+pytest pymomentum\test -v
