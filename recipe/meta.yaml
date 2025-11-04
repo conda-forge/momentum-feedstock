@@ -126,7 +126,6 @@ outputs:
         - ninja  # [not win]
         - pip
         - pybind11
-        - pytest
         - python
         - pytorch
         - scikit-build-core
@@ -155,6 +154,7 @@ outputs:
         - numpy
         - openfbx
         - pip
+        - pytest
         - python
         - pytorch
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
