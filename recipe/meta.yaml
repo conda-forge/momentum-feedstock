@@ -10,8 +10,6 @@ package:
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
     sha256: 5b24de7ee1b691830c5fb53a1ce5a09c30f7c22e9d781e31b5341320087701e9
-    patches:
-      - patches/0001-Fix-torch_python-discovery-for-Windows-builds.patch
 
 build:
   number: 0
