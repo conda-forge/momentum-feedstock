@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.83" %}
+{% set version = "0.1.84" %}
 
 package:
   name: {{ name|lower }}
@@ -9,12 +9,10 @@ package:
 
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
-    sha256: 8f48c2f5fae474f372052b8e8fb8de2e38c1370a60cb6d94e9ce52579ea0820a
-    patches:
-      - patches/0001-Fix-torch_python-discovery-for-Windows-builds.patch
+    sha256: 5b24de7ee1b691830c5fb53a1ce5a09c30f7c22e9d781e31b5341320087701e9
 
 build:
-  number: 1
+  number: 0
   skip: true  # [py<312]
 
 outputs:
