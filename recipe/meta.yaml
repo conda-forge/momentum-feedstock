@@ -55,6 +55,7 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
+        - openusd
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
         - re2
         - spdlog
@@ -73,6 +74,7 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
+        - openusd
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
         - re2
     test:
@@ -149,6 +151,7 @@ outputs:
         - nlohmann_json
         - numpy
         - openfbx
+        - openusd
         - pip
         - python
         - pytorch
