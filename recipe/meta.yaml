@@ -56,6 +56,7 @@ outputs:
         - nlohmann_json
         - openfbx
         - openusd
+        - python
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
         - re2
         - spdlog
