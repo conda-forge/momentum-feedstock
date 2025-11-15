@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.86" %}
+{% set version = "0.1.87" %}
 
 package:
   name: {{ name|lower }}
@@ -9,7 +9,7 @@ package:
 
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
-    sha256: 9fbb08a3919e469716252fe64d0f700d229a7469a1a34411dcfefdf9cb652ce4
+    sha256: 6f5f26ee560fbbdcd2dec6bbb1f46e25493866c77ed9f3bd5da212030c0afffa
 
 build:
   number: 0
@@ -39,7 +39,7 @@ outputs:
         - gtest  # [build_platform == target_platform]
         - indicators
         - ninja  # [not win]
-        - python                                 # [build_platform != target_platform]
+        - python
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
       host:
         - ceres-solver
@@ -55,6 +55,8 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
+        - openusd
+        - python
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
         - re2
         - spdlog
@@ -73,8 +75,11 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
+        - openusd
+        - python
         # TODO: Remove verson constraint when upgrading rerun_version to >0.22
         - re2
+        - tbb
     test:
       script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
@@ -149,6 +154,7 @@ outputs:
         - nlohmann_json
         - numpy
         - openfbx
+        - openusd
         - pip
         - python
         - pytorch
