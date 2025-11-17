@@ -74,6 +74,7 @@ outputs:
         - nlohmann_json
         - openfbx
         - re2
+        - tbb
     test:
       script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
@@ -169,6 +170,7 @@ outputs:
         - python
         - re2
         - spdlog
+        - tbb
     test:
       imports:
         - pymomentum.axel
