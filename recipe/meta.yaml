@@ -13,7 +13,7 @@ source:
 
 build:
   number: 0
-  skip: true  # [py<312]
+  skip: true  # [py<312 or (osx and x86_64)]
 
 outputs:
   - name: momentum-cpp
