@@ -73,6 +73,7 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
+        - python
         - re2
         - tbb
     test:
