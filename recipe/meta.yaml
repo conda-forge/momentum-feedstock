@@ -55,8 +55,8 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
-        - openusd
-        - python
+        - openusd  # [not win]
+        - python  # [not win]
         - re2
         - spdlog
         - urdfdom
