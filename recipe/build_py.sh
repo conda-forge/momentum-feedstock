@@ -2,6 +2,11 @@
 
 set -exo pipefail
 
+if [[ "${target_platform}" == osx-* ]]; then
+  # See https://conda-forge.org/docs/maintainer/knowledge_base.html#newer-c-features-with-old-sdk
+  CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
+fi
+
 # Workaround for fx/gltf.h:70:13: error: narrowing conversion of '-1' from 'int' to 'char' [-Wnarrowing]
 if [[ "${target_platform}" == *aarch64 || "${target_platform}" == *ppc64le ]]; then
   CXXFLAGS="${CXXFLAGS} -Wno-narrowing"

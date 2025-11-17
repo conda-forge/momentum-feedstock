@@ -149,6 +149,7 @@ outputs:
         - nlohmann_json
         - numpy
         - openfbx
+        - openusd
         - pip
         - python
         - pytorch
