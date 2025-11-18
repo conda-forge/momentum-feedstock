@@ -25,4 +25,9 @@ else
   export CMAKE_ARGS="$CMAKE_ARGS -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON"
 fi
 
+# Disable IO_USD on macOS
+if [[ "${target_platform}" == osx-* ]]; then
+  export CMAKE_ARGS="$CMAKE_ARGS -DMOMENTUM_BUILD_IO_USD=OFF"
+fi
+
 $PYTHON -m pip install . -vv --no-deps --no-build-isolation

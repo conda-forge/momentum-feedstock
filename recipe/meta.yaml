@@ -13,7 +13,7 @@ source:
 
 build:
   number: 0
-  skip: true  # [py<312 or (osx and x86_64)]
+  skip: true  # [py<312]
 
 outputs:
   - name: momentum-cpp
@@ -39,8 +39,7 @@ outputs:
         - gtest  # [build_platform == target_platform]
         - indicators
         - ninja  # [not win]
-        - python 3.12.*  # [win]
-        - python                                 # [build_platform != target_platform and not win]
+        - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
       host:
         - ceres-solver
@@ -56,9 +55,8 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
-        - openusd
-        - python 3.12.*  # [win]
-        - python  # [not win]
+        - openusd  # [linux]
+        - python  # [linux]
         - re2
         - spdlog
         - urdfdom
@@ -77,9 +75,9 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
-        - python
+        - python  # [linux]
         - re2
-        - tbb
+        - tbb  # [linux]
     test:
       script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
@@ -154,7 +152,7 @@ outputs:
         - nlohmann_json
         - numpy
         - openfbx
-        - openusd
+        - openusd  # [linux]
         - pip
         - python
         - pytorch
@@ -176,7 +174,7 @@ outputs:
         - python
         - re2
         - spdlog
-        - tbb
+        - tbb  # [linux]
     test:
       imports:
         - pymomentum.axel
