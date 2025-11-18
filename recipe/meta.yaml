@@ -59,6 +59,8 @@ outputs:
         - python  # [linux]
         - re2
         - spdlog
+        # Should be removed once the TBB dependency logic is fixed in upstream
+        - tbb
         - urdfdom
       run:
         - ceres-solver
@@ -159,6 +161,8 @@ outputs:
         - re2
         - scikit-build-core
         - spdlog
+        # Should be removed once the TBB dependency logic is fixed in upstream
+        - tbb
         - urdfdom
         - zlib
       run:
