@@ -70,6 +70,7 @@ outputs:
         - ezc3d
         - fx-gltf
         - indicators
+        - libabseil  # [osx]
         - librerun-sdk {{ rerun_version }}
         - gflags
         - libdeflate
@@ -168,6 +169,7 @@ outputs:
         - fmt
         - gflags
         - indicators
+        - libabseil  # [osx]
         - libdeflate
         - pytorch
         - numpy
