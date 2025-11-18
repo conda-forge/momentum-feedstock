@@ -1,7 +1,7 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.87" %}
+{% set version = "0.1.88" %}
 
 package:
   name: {{ name|lower }}
@@ -9,7 +9,7 @@ package:
 
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
-    sha256: 6f5f26ee560fbbdcd2dec6bbb1f46e25493866c77ed9f3bd5da212030c0afffa
+    sha256: d64451a1de69ffced26b255d62d218f590e800c826344ddaf663fefd4ebd36e4
 
 build:
   number: 0
@@ -39,7 +39,8 @@ outputs:
         - gtest  # [build_platform == target_platform]
         - indicators
         - ninja  # [not win]
-        - python
+        - python 3.12.*  # [win]
+        - python                                 # [build_platform != target_platform and not win]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
       host:
         - ceres-solver
@@ -56,7 +57,8 @@ outputs:
         - nlohmann_json
         - openfbx
         - openusd
-        - python
+        - python 3.12.*  # [win]
+        - python  # [not win]
         - re2
         - spdlog
         - urdfdom
@@ -75,7 +77,6 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
-        - openusd
         - python
         - re2
         - tbb
@@ -175,6 +176,7 @@ outputs:
         - python
         - re2
         - spdlog
+        - tbb
     test:
       imports:
         - pymomentum.axel
