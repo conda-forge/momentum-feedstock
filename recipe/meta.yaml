@@ -39,7 +39,8 @@ outputs:
         - gtest  # [build_platform == target_platform]
         - indicators
         - ninja  # [not win]
-        - python                                 # [build_platform != target_platform]
+        - python 3.12.*  # [win]
+        - python                                 # [build_platform != target_platform and not win]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
       host:
         - ceres-solver
