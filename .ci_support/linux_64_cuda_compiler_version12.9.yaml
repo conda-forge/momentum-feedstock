@@ -45,7 +45,7 @@ spdlog:
 - '1.16'
 target_platform:
 - linux-64
-tbb:
+tbb_devel:
 - '2021'
 urdfdom:
 - '4.0'
