@@ -49,6 +49,8 @@ spdlog:
 - '1.16'
 target_platform:
 - osx-arm64
+tbb_devel:
+- '2021'
 urdfdom:
 - '4.0'
 zip_keys:
