@@ -180,6 +180,7 @@ outputs:
         - indicators
         - libabseil  # [osx]
         - libdeflate
+        - pybind11
         - pytorch
         - numpy
         - python
