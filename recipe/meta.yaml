@@ -128,6 +128,7 @@ outputs:
         - ninja  # [not win]
         - pip
         - pybind11
+        - pybind11-abi
         - python
         - pytorch
         - scikit-build-core
