@@ -5,6 +5,9 @@ where nvcc >nul 2>&1 && nvcc --version
 :: Force Ninja generator to avoid VS CUDA integration issues
 set CMAKE_GENERATOR=Ninja
 
+:: Get Python prefix to help FindPython locate the library
+for /f "usebackq tokens=*" %%a in (`python -c "import sys; print(sys.prefix)"`) do set PYTHON_PREFIX=%%a
+
 set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
@@ -14,6 +17,9 @@ set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_USE_SYSTEM_PYBIND11=ON ^
     -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON ^
     -DCMAKE_POLICY_DEFAULT_CMP0148=NEW ^
-    -DPYBIND11_FINDPYTHON=ON
+    -DPYBIND11_FINDPYTHON=ON ^
+    -DPython_ROOT_DIR="%PYTHON_PREFIX%" ^
+    -DPython3_ROOT_DIR="%PYTHON_PREFIX%" ^
+    -DPython_FIND_STRATEGY=LOCATION
 
 %PYTHON% -m pip install . -vv --no-deps --no-build-isolation
