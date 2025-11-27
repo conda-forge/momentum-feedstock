@@ -13,6 +13,19 @@ set PYTHON_PREFIX=%PYTHON_PREFIX:\=/%
 :: Get Python version
 for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"`) do set PYTHON_VER=%%a
 
+:: Get Python paths
+for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; from pathlib import Path; print(Path(sys.prefix) / 'libs' / f'python{sys.version_info.major}{sys.version_info.minor}.lib')"` ) do set PYTHON_LIB=%%a
+set PYTHON_LIB=%PYTHON_LIB:\=/%
+:: Get Python version
+for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"`) do set PYTHON_VER=%%a
+
+:: Get Python paths
+for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; from pathlib import Path; print(Path(sys.prefix) / 'libs' / f'python{sys.version_info.major}{sys.version_info.minor}.lib')"` ) do set PYTHON_LIB=%%a
+set PYTHON_LIB=%PYTHON_LIB:\=/%
+
+for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; from pathlib import Path; print(Path(sys.prefix) / 'include')"` ) do set PYTHON_INCLUDE=%%a
+set PYTHON_INCLUDE=%PYTHON_INCLUDE:\=/%
+
 set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
@@ -28,6 +41,10 @@ set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DPython3_ROOT_DIR="%PYTHON_PREFIX%" ^
     -DPython_EXECUTABLE="%PYTHON%" ^
     -DPython3_EXECUTABLE="%PYTHON%" ^
+    -DPython_LIBRARY="%PYTHON_LIB%" ^
+    -DPython3_LIBRARY="%PYTHON_LIB%" ^
+    -DPython_INCLUDE_DIR="%PYTHON_INCLUDE%" ^
+    -DPython3_INCLUDE_DIR="%PYTHON_INCLUDE%" ^
     -DPython_FIND_STRATEGY=LOCATION ^
     -DPython3_FIND_STRATEGY=LOCATION ^
     -DPython_FIND_REGISTRY=NEVER ^
