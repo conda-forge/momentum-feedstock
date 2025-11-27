@@ -11,7 +11,6 @@ source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
     sha256: cff9eeda9e01bcce618b62a3a127dc09193745c0e1f93d13200d69f5c7197999
     patches:
-      # - patches/0001-Fix-torch_python-discovery-for-Windows-builds.patch  # [win]
       - patches/0002-Use-ninja-instead-of-visual-studio.patch  # [win]
 
 build:
