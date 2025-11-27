@@ -10,6 +10,9 @@ for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; print(sys.prefix)"`
 :: Convert backslashes to forward slashes for CMake
 set PYTHON_PREFIX=%PYTHON_PREFIX:\=/%
 
+:: Get Python version
+for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"`) do set PYTHON_VER=%%a
+
 set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
@@ -20,8 +23,11 @@ set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON ^
     -DCMAKE_POLICY_DEFAULT_CMP0148=NEW ^
     -DPYBIND11_FINDPYTHON=ON ^
+    -DPYBIND11_PYTHON_VERSION="%PYTHON_VER%" ^
     -DPython_ROOT_DIR="%PYTHON_PREFIX%" ^
     -DPython3_ROOT_DIR="%PYTHON_PREFIX%" ^
+    -DPython_EXECUTABLE="%PYTHON%" ^
+    -DPython3_EXECUTABLE="%PYTHON%" ^
     -DPython_FIND_STRATEGY=LOCATION ^
     -DPython3_FIND_STRATEGY=LOCATION ^
     -DPython_FIND_REGISTRY=NEVER ^
