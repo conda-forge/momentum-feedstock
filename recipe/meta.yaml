@@ -12,7 +12,7 @@ source:
     sha256: cff9eeda9e01bcce618b62a3a127dc09193745c0e1f93d13200d69f5c7197999
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<312]
 
 outputs:
@@ -60,7 +60,7 @@ outputs:
         - re2
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
-        - tbb-devel
+        - tbb-devel  # [not win]
         - urdfdom
       run:
         - ceres-solver
@@ -163,7 +163,7 @@ outputs:
         - scikit-build-core
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
-        - tbb-devel
+        - tbb-devel  # [not win]
         - urdfdom
         - zlib
       run:
@@ -174,6 +174,7 @@ outputs:
         - indicators
         - libabseil  # [osx]
         - libdeflate
+        - pybind11
         - pytorch
         - numpy
         - python
