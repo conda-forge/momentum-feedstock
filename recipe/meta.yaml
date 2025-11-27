@@ -156,6 +156,7 @@ outputs:
         - indicators
         - kokkos
         - librerun-sdk {{ rerun_version }}
+        - libtorch
         - ms-gsl
         - nlohmann_json
         - numpy
