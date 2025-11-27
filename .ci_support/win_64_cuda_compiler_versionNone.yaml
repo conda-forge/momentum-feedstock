@@ -39,8 +39,6 @@ spdlog:
 - '1.16'
 target_platform:
 - win-64
-tbb_devel:
-- '2021'
 urdfdom:
 - '4.0'
 zlib:
