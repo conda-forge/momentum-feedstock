@@ -157,6 +157,7 @@ outputs:
         - fx-gltf
         - indicators
         - librerun-sdk {{ rerun_version }}
+        - libtorch
         - ms-gsl
         - nlohmann_json
         - numpy
