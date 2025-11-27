@@ -1,17 +1,15 @@
 {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}  # [cuda_compiler_version != "None"]
 {% set pymomentum_cpu_gpu = "pymomentum-cpu" %}  # [cuda_compiler_version == "None"]
 {% set name = "momentum" %}
-{% set version = "0.1.83" %}
+{% set version = "0.1.92" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  - git_url: https://github.com/facebookresearch/momentum.git
-    git_rev: 4c08b885b0fefc7712ee72fb3249f81102739c72
-    # patches:
-    #   - patches/0001-Fix-torch_python-discovery-for-Windows-builds.patch
+  - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
+    sha256: cff9eeda9e01bcce618b62a3a127dc09193745c0e1f93d13200d69f5c7197999
 
 build:
   number: 2
@@ -58,9 +56,12 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
-        # TODO: Remove verson constraint when upgrading rerun_version to >0.22
+        - openusd  # [linux]
+        - python  # [linux]
         - re2
         - spdlog
+        # Should be removed once the TBB dependency logic is fixed in upstream
+        - tbb-devel  # [not win]
         - urdfdom
       run:
         - ceres-solver
@@ -70,14 +71,16 @@ outputs:
         - ezc3d
         - fx-gltf
         - indicators
+        - libabseil  # [osx]
         - librerun-sdk {{ rerun_version }}
         - gflags
         - libdeflate
         - ms-gsl
         - nlohmann_json
         - openfbx
-        # TODO: Remove verson constraint when upgrading rerun_version to >0.22
+        - python  # [linux]
         - re2
+        - tbb  # [linux]
     test:
       script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
@@ -126,6 +129,7 @@ outputs:
         - ninja  # [not win]
         - pip
         - pybind11
+        - pybind11-abi
         - python
         - pytorch
         - scikit-build-core
@@ -153,14 +157,16 @@ outputs:
         - nlohmann_json
         - numpy
         - openfbx
+        - openusd  # [linux]
         - pip
         - pytest
         - python
         - pytorch
-        # TODO: Remove verson constraint when upgrading rerun_version to >0.22
         - re2
         - scikit-build-core
         - spdlog
+        # Should be removed once the TBB dependency logic is fixed in upstream
+        - tbb-devel  # [not win]
         - urdfdom
         - zlib
       run:
@@ -169,13 +175,15 @@ outputs:
         - fmt
         - gflags
         - indicators
+        - libabseil  # [osx]
         - libdeflate
+        - pybind11
         - pytorch
         - numpy
         - python
-        # TODO: Remove verson constraint when upgrading rerun_version to >0.22
         - re2
         - spdlog
+        - tbb  # [linux]
     test:
       imports:
         - pymomentum.axel

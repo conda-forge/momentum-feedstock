@@ -17,18 +17,20 @@ fmt:
 libboost_devel:
 - '1.86'
 libtorch:
-- '2.8'
+- '2.9'
 numpy:
 - '2'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
+pybind11_abi:
+- '11'
 python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 pytorch:
-- '2.8'
+- '2.9'
 re2:
 - 2025.08.12
 rerun_version:
@@ -37,6 +39,8 @@ spdlog:
 - '1.16'
 target_platform:
 - win-64
+tbb_devel:
+- '2021'
 urdfdom:
 - '4.0'
 zlib:
