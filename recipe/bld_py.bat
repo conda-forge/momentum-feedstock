@@ -2,6 +2,9 @@
 
 where nvcc >nul 2>&1 && nvcc --version
 
+:: Force Ninja generator to avoid VS CUDA integration issues
+set CMAKE_GENERATOR=Ninja
+
 set CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
