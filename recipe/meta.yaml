@@ -60,7 +60,7 @@ outputs:
         - re2
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
-        - tbb-devel
+        - tbb-devel  # [not win]
         - urdfdom
       run:
         - ceres-solver
@@ -163,7 +163,7 @@ outputs:
         - scikit-build-core
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
-        - tbb-devel
+        - tbb-devel  # [not win]
         - urdfdom
         - zlib
       run:
