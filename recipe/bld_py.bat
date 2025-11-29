@@ -1,28 +1,12 @@
 @echo on
 
-:: Initialize Visual Studio environment for Ninja generator
-:: This is required because Ninja cannot auto-detect MSVC like the VS generator
-:: Find and call vcvars64.bat to set up compiler paths, INCLUDE, LIB, etc.
-if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" (
-    echo Activating VS2022 Enterprise environment...
-    call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-) else if exist "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat" (
-    echo Activating VS2022 Professional environment...
-    call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat"
-) else if exist "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" (
-    echo Activating VS2022 Community environment...
-    call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-) else if exist "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" (
-    echo Activating VS2022 Build Tools environment...
-    call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-) else (
-    echo WARNING: Could not find vcvars64.bat, compiler may not be found
-)
+:: Note: The vs2022_win-64 conda package activation already calls vcvarsall.bat
+:: so we don't need to call it again. Calling it twice causes PATH overflow.
 
-:: Verify cl.exe is now in PATH
+:: Debug: Verify cl.exe is in PATH (set by conda's vs2022 activation)
 where cl.exe
 if errorlevel 1 (
-    echo ERROR: cl.exe not found in PATH after VS environment setup
+    echo ERROR: cl.exe not found in PATH. The vs2022_win-64 activation may have failed.
     exit /b 1
 )
 
