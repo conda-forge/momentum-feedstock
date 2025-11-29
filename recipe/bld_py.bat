@@ -3,12 +3,16 @@
 :: Note: The vs2022_win-64 conda package activation already calls vcvarsall.bat
 :: so we don't need to call it again. Calling it twice causes PATH overflow.
 
-:: Debug: Verify cl.exe is in PATH (set by conda's vs2022 activation)
-where cl.exe
-if errorlevel 1 (
-    echo ERROR: cl.exe not found in PATH. The vs2022_win-64 activation may have failed.
-    exit /b 1
+:: Get the full path to cl.exe for CMake with Ninja generator
+:: Ninja requires the full path, not just the executable name
+for /f "usebackq tokens=*" %%a in (`where cl.exe`) do (
+    set "CL_PATH=%%a"
+    goto :found_cl
 )
+echo ERROR: cl.exe not found in PATH. The vs2022_win-64 activation may have failed.
+exit /b 1
+:found_cl
+echo Found cl.exe at: %CL_PATH%
 
 :: Get Python prefix to help FindPython locate the library
 for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; print(sys.prefix)"`) do set PYTHON_PREFIX=%%a
@@ -37,8 +41,15 @@ set CMAKE_GENERATOR=Ninja
 echo CC: %CC%
 echo CXX: %CXX%
 
+:: Convert CL_PATH backslashes to forward slashes for CMake
+set CL_PATH_CMAKE=%CL_PATH:\=/%
+echo CL_PATH_CMAKE: %CL_PATH_CMAKE%
+
 :: Use SKBUILD_CMAKE_ARGS to pass options to scikit-build-core
+:: Pass the full path to cl.exe since Ninja requires it
 set SKBUILD_CMAKE_ARGS=^
+    -DCMAKE_C_COMPILER="%CL_PATH_CMAKE%" ^
+    -DCMAKE_CXX_COMPILER="%CL_PATH_CMAKE%" ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
     -DMOMENTUM_BUILD_TESTING=OFF ^
