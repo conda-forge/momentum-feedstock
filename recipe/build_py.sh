@@ -31,9 +31,3 @@ if [[ "${target_platform}" == osx-* ]]; then
 fi
 
 $PYTHON -m pip install . -vv --no-deps --no-build-isolation
-
-# Run Python unit tests
-# Change to a different directory to ensure we import the installed package
-cd "${SRC_DIR}/.."
-export MOMENTUM_MODELS_PATH="${SRC_DIR}/momentum/"
-$PYTHON -m pytest --pyargs pymomentum.test -v

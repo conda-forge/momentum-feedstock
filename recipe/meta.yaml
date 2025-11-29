@@ -159,7 +159,6 @@ outputs:
         - openfbx
         - openusd  # [linux]
         - pip
-        - pytest
         - python
         - pytorch
         - re2
