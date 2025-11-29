@@ -23,8 +23,16 @@ echo PYTHON_INCLUDE: %PYTHON_INCLUDE%
 :: Force Ninja generator to avoid VS CUDA integration issues
 set CMAKE_GENERATOR=Ninja
 
+:: Debug: Print compiler environment variables set by conda
+echo CC: %CC%
+echo CXX: %CXX%
+
 :: Use SKBUILD_CMAKE_ARGS to pass options to scikit-build-core
+:: Note: CMAKE_C_COMPILER and CMAKE_CXX_COMPILER must be explicitly set
+:: for Ninja to find the MSVC compiler (cl.exe) on Windows
 set SKBUILD_CMAKE_ARGS=^
+    -DCMAKE_C_COMPILER=cl.exe ^
+    -DCMAKE_CXX_COMPILER=cl.exe ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
     -DMOMENTUM_BUILD_TESTING=OFF ^
