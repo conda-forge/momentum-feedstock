@@ -1,5 +1,31 @@
 @echo on
 
+:: Initialize Visual Studio environment for Ninja generator
+:: This is required because Ninja cannot auto-detect MSVC like the VS generator
+:: Find and call vcvars64.bat to set up compiler paths, INCLUDE, LIB, etc.
+if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" (
+    echo Activating VS2022 Enterprise environment...
+    call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+) else if exist "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat" (
+    echo Activating VS2022 Professional environment...
+    call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat"
+) else if exist "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" (
+    echo Activating VS2022 Community environment...
+    call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+) else if exist "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" (
+    echo Activating VS2022 Build Tools environment...
+    call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
+) else (
+    echo WARNING: Could not find vcvars64.bat, compiler may not be found
+)
+
+:: Verify cl.exe is now in PATH
+where cl.exe
+if errorlevel 1 (
+    echo ERROR: cl.exe not found in PATH after VS environment setup
+    exit /b 1
+)
+
 :: Get Python prefix to help FindPython locate the library
 for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; print(sys.prefix)"`) do set PYTHON_PREFIX=%%a
 :: Convert backslashes to forward slashes for CMake
@@ -23,16 +49,12 @@ echo PYTHON_INCLUDE: %PYTHON_INCLUDE%
 :: Force Ninja generator to avoid VS CUDA integration issues
 set CMAKE_GENERATOR=Ninja
 
-:: Debug: Print compiler environment variables set by conda
+:: Debug: Print compiler environment variables
 echo CC: %CC%
 echo CXX: %CXX%
 
 :: Use SKBUILD_CMAKE_ARGS to pass options to scikit-build-core
-:: Note: CMAKE_C_COMPILER and CMAKE_CXX_COMPILER must be explicitly set
-:: for Ninja to find the MSVC compiler (cl.exe) on Windows
 set SKBUILD_CMAKE_ARGS=^
-    -DCMAKE_C_COMPILER=cl.exe ^
-    -DCMAKE_CXX_COMPILER=cl.exe ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
     -DMOMENTUM_BUILD_TESTING=OFF ^
