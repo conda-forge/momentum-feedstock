@@ -1,10 +1,5 @@
 @echo on
 
-where nvcc >nul 2>&1 && nvcc --version
-
-:: Force Ninja generator to avoid VS CUDA integration issues
-set CMAKE_GENERATOR=Ninja
-
 :: Get Python prefix to help FindPython locate the library
 for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; print(sys.prefix)"`) do set PYTHON_PREFIX=%%a
 :: Convert backslashes to forward slashes for CMake
@@ -16,21 +11,19 @@ for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; print(f'{sys.versio
 :: Get Python paths
 for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; from pathlib import Path; print(Path(sys.prefix) / 'libs' / f'python{sys.version_info.major}{sys.version_info.minor}.lib')"` ) do set PYTHON_LIB=%%a
 set PYTHON_LIB=%PYTHON_LIB:\=/%
-:: Get Python version
-for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"`) do set PYTHON_VER=%%a
-
-:: Get Python paths
-for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; from pathlib import Path; print(Path(sys.prefix) / 'libs' / f'python{sys.version_info.major}{sys.version_info.minor}.lib')"` ) do set PYTHON_LIB=%%a
-set PYTHON_LIB=%PYTHON_LIB:\=/%
 
 for /f "usebackq tokens=*" %%a in (`%PYTHON% -c "import sys; from pathlib import Path; print(Path(sys.prefix) / 'include')"` ) do set PYTHON_INCLUDE=%%a
+set PYTHON_INCLUDE=%PYTHON_INCLUDE:\=/%
+
 echo PYTHON_PREFIX: %PYTHON_PREFIX%
 echo PYTHON_VER: %PYTHON_VER%
 echo PYTHON_LIB: %PYTHON_LIB%
 echo PYTHON_INCLUDE: %PYTHON_INCLUDE%
 
+:: Force Ninja generator to avoid VS CUDA integration issues
+set CMAKE_GENERATOR=Ninja
+
 :: Use SKBUILD_CMAKE_ARGS to pass options to scikit-build-core
-:: This avoids modifying CMAKE_ARGS which might be fragile
 set SKBUILD_CMAKE_ARGS=^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
@@ -49,11 +42,5 @@ set SKBUILD_CMAKE_ARGS=^
     -DPython3_FIND_REGISTRY=NEVER
 
 echo SKBUILD_CMAKE_ARGS: %SKBUILD_CMAKE_ARGS%
-echo CMAKE_ARGS: %CMAKE_ARGS%
-
-%PYTHON% -m pip install . -vv --no-deps --no-build-isolation
-
-echo SKBUILD_CMAKE_ARGS: %SKBUILD_CMAKE_ARGS%
-echo CMAKE_ARGS: %CMAKE_ARGS%
 
 %PYTHON% -m pip install . -vv --no-deps --no-build-isolation
