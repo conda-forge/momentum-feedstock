@@ -3,6 +3,8 @@ setlocal EnableExtensions EnableDelayedExpansion
 
 where nvcc >nul 2>&1 && nvcc --version
 
+where nvcc >nul 2>&1 && nvcc --version
+
 rem ----------------------------------------------------------------------
 rem  Unpack and enter the source directory
 rem ----------------------------------------------------------------------
@@ -72,31 +74,26 @@ if /I not "%cuda_compiler_version%"=="None" (
   echo Using CUDA from: !CUDA_HOME!
   echo CUDACXX set to: !CUDACXX!
 )
+set SKBUILD_CMAKE_ARGS=^
+    -DCMAKE_C_COMPILER="%CL_PATH_CMAKE%" ^
+    -DCMAKE_CXX_COMPILER="%CL_PATH_CMAKE%" ^
+    -DMOMENTUM_BUILD_IO_USD=OFF ^
+    -DMOMENTUM_BUILD_RENDERER=OFF ^
+    -DMOMENTUM_BUILD_TESTING=OFF ^
+    -DMOMENTUM_ENABLE_SIMD=OFF ^
+    -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON ^
+    -DMOMENTUM_USE_SYSTEM_PYBIND11=ON ^
+    -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON ^
+    -DCMAKE_POLICY_DEFAULT_CMP0148=NEW ^
+    -DPYBIND11_PYTHON_VERSION="%PYTHON_VER%" ^
+    -DPython3_ROOT_DIR="%PYTHON_PREFIX%" ^
+    -DPython3_EXECUTABLE="%PYTHON%" ^
+    -DPython3_LIBRARY="%PYTHON_LIB%" ^
+    -DPython3_INCLUDE_DIR="%PYTHON_INCLUDE%" ^
+    -DPython3_FIND_STRATEGY=LOCATION ^
+    -DPython3_FIND_REGISTRY=NEVER
 
-rem Extra Momentum options
-set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_ENABLE_SIMD=OFF"
-set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON"
-set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_USE_SYSTEM_PYBIND11=ON"
-set "CMAKE_ARGS=%CMAKE_ARGS% -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON"
-set "CMAKE_ARGS=%CMAKE_ARGS% -DPython_FIND_STRATEGY=LOCATION"
-set "CMAKE_ARGS=%CMAKE_ARGS% -DPython_ROOT_DIR=%PREFIX_CMAKE%"
-rem Set CMake policy CMP0148 to enable python_add_library() command
-rem Reference: https://github.com/pybind/pybind11/issues/5472
-set "CMAKE_ARGS=%CMAKE_ARGS% -DCMAKE_POLICY_DEFAULT_CMP0148=NEW"
-if defined CUDACXX set "CMAKE_ARGS=%CMAKE_ARGS% -DCMAKE_CUDA_COMPILER=%CUDACXX%"
+echo SKBUILD_CMAKE_ARGS: %SKBUILD_CMAKE_ARGS%
 
-if EXIST build (
-    cmake --build build --target clean
-    if %ERRORLEVEL% neq 0 exit 1
-)
-
-rem ----------------------------------------------------------------------
-rem  Build & install the wheel (use only supported config-settings)
-rem ----------------------------------------------------------------------
-set "PIP_CSET=-Ccmake.build-type=Release -Cbuild-dir=build/{wheel_tag}"
-rem Set CMake policy for python_add_library (pybind11 2.13.6 issue)
-set "PIP_CSET=%PIP_CSET% -Ccmake.define.CMAKE_POLICY_DEFAULT_CMP0148=NEW"
-if defined CUDACXX set "PIP_CSET=%PIP_CSET% -Ccmake.define.CMAKE_CUDA_COMPILER=%CUDACXX%"
-
-%PYTHON% -m pip install . -vv --no-deps --no-build-isolation %PIP_CSET%
-if errorlevel 1 exit 1
+%PYTHON% -m pip install . -vv --no-deps --no-build-isolation
+>>>>>>> ffe18eb (Fix Windows CUDA build: pass full path to cl.exe for Ninja generator)
