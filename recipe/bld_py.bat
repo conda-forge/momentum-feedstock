@@ -35,7 +35,11 @@ echo PYTHON_LIB: %PYTHON_LIB%
 echo PYTHON_INCLUDE: %PYTHON_INCLUDE%
 
 :: Force Ninja generator to avoid VS CUDA integration issues
+:: Also clear CMAKE_GENERATOR_PLATFORM and CMAKE_GENERATOR_TOOLSET which are
+:: set by conda's vs2022 activation but not supported by Ninja
 set CMAKE_GENERATOR=Ninja
+set CMAKE_GENERATOR_PLATFORM=
+set CMAKE_GENERATOR_TOOLSET=
 
 :: Convert CL_PATH backslashes to forward slashes for CMake
 set CL_PATH_CMAKE=%CL_PATH:\=/%
