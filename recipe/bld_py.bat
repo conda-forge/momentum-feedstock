@@ -3,8 +3,6 @@ setlocal EnableExtensions EnableDelayedExpansion
 
 where nvcc >nul 2>&1 && nvcc --version
 
-where nvcc >nul 2>&1 && nvcc --version
-
 rem ----------------------------------------------------------------------
 rem  Unpack and enter the source directory
 rem ----------------------------------------------------------------------
