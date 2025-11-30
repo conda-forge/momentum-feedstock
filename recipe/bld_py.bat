@@ -37,6 +37,17 @@ set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX_CMAKE%"
 rem Optional: libtorch hint only if it exists
 if exist "%PREFIX%\Library\share\cmake\Torch" set "Torch_DIR=%PREFIX_CMAKE%/Library/share/cmake/Torch"
 
+rem Find cl.exe compiler for explicit CMake configuration
+rem Visual Studio sets VSINSTALLDIR and related variables
+for /f "tokens=*" %%i in ('where cl.exe 2^>nul') do set "CL_PATH=%%i"
+if not defined CL_PATH (
+  echo ERROR: cl.exe not found in PATH
+  exit /b 1
+)
+rem Convert backslashes to forward slashes for CMake compatibility
+set "CL_PATH_CMAKE=%CL_PATH:\=/%"
+echo Using C++ compiler: %CL_PATH%
+
 rem CUDA: only set when the cuda variant is enabled
 if /I not "%cuda_compiler_version%"=="None" (
   rem Find nvcc in PATH and derive CUDA_HOME
