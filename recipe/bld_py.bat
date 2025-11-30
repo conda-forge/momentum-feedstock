@@ -44,11 +44,17 @@ if not defined CL_PATH (
   echo ERROR: cl.exe not found in PATH
   exit /b 1
 )
-echo Using C++ compiler: %CL_PATH%
 
-rem Set compiler environment variables for CMake/Ninja
-set "CC=%CL_PATH%"
-set "CXX=%CL_PATH%"
+rem Convert to 8.3 short path to avoid issues with spaces
+for %%i in ("!CL_PATH!") do set "CL_PATH_SHORT=%%~si"
+echo Using C++ compiler: !CL_PATH_SHORT!
+
+rem Set compiler environment variables for CMake/Ninja (using short path)
+set "CC=!CL_PATH_SHORT!"
+set "CXX=!CL_PATH_SHORT!"
+
+rem Prevent scikit-build-core from setting platform (Ninja doesn't support it)
+set "CMAKE_GENERATOR_PLATFORM="
 
 rem CUDA: only set when the cuda variant is enabled
 if /I not "%cuda_compiler_version%"=="None" (
