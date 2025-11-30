@@ -190,7 +190,7 @@ outputs:
         - pymomentum.geometry
         - pymomentum.marker_tracking
         - pymomentum.quaternion
-        - pymomentum.renderer  # [cuda_compiler_version == "None"]
+        - pymomentum.renderer
         - pymomentum.skel_state
         - pymomentum.solver
         - pymomentum.solver2
