@@ -12,7 +12,7 @@ source:
     sha256: cff9eeda9e01bcce618b62a3a127dc09193745c0e1f93d13200d69f5c7197999
 
 build:
-  number: 0
+  number: 3
   skip: true  # [py<312]
 
 outputs:
@@ -51,6 +51,7 @@ outputs:
         - fmt
         - fx-gltf
         - indicators
+        - kokkos
         - librerun-sdk {{ rerun_version }}
         - ms-gsl
         - nlohmann_json
@@ -157,6 +158,7 @@ outputs:
         - fmt
         - fx-gltf
         - indicators
+        - kokkos
         - librerun-sdk {{ rerun_version }}
         - libtorch
         - ms-gsl
@@ -199,6 +201,7 @@ outputs:
         - pymomentum.geometry
         - pymomentum.marker_tracking
         - pymomentum.quaternion
+        - pymomentum.renderer
         - pymomentum.skel_state
         - pymomentum.solver
         - pymomentum.solver2
