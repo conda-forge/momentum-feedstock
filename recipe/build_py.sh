@@ -12,8 +12,12 @@ if [[ "${target_platform}" == *aarch64 || "${target_platform}" == *ppc64le ]]; t
   CXXFLAGS="${CXXFLAGS} -Wno-narrowing"
 fi
 
-# Enable renderer for all builds
-MOMENTUM_BUILD_RENDERER=ON
+# Disable renderer for CUDA builds due to pybind11/nvcc template incompatibility
+if [[ -n "${cuda_compiler_version}" && "${cuda_compiler_version}" != "None" ]]; then
+  MOMENTUM_BUILD_RENDERER=OFF
+else
+  MOMENTUM_BUILD_RENDERER=ON
+fi
 
 export CMAKE_ARGS="$CMAKE_ARGS \
     -DMOMENTUM_BUILD_RENDERER=$MOMENTUM_BUILD_RENDERER \
