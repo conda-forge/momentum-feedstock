@@ -128,7 +128,7 @@ outputs:
         - make
         - ninja  # [not win]
         - pip
-        - pybind11
+        - pybind11 <3
         - pybind11-abi
         - python
         - pytorch
@@ -176,7 +176,7 @@ outputs:
         - indicators
         - libabseil  # [osx]
         - libdeflate
-        - pybind11
+        - pybind11 <3
         - pytorch
         - numpy
         - python
