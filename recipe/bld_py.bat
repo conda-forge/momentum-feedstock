@@ -37,16 +37,18 @@ set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX_CMAKE%"
 rem Optional: libtorch hint only if it exists
 if exist "%PREFIX%\Library\share\cmake\Torch" set "Torch_DIR=%PREFIX_CMAKE%/Library/share/cmake/Torch"
 
-rem Find cl.exe compiler for explicit CMake configuration
-rem Visual Studio sets VSINSTALLDIR and related variables
+rem Find cl.exe compiler and set environment variables for Ninja
+rem Ninja generator on Windows requires CC/CXX env vars instead of CMake args
 for /f "tokens=*" %%i in ('where cl.exe 2^>nul') do set "CL_PATH=%%i"
 if not defined CL_PATH (
   echo ERROR: cl.exe not found in PATH
   exit /b 1
 )
-rem Convert backslashes to forward slashes for CMake compatibility
-set "CL_PATH_CMAKE=%CL_PATH:\=/%"
 echo Using C++ compiler: %CL_PATH%
+
+rem Set compiler environment variables for CMake/Ninja
+set "CC=%CL_PATH%"
+set "CXX=%CL_PATH%"
 
 rem CUDA: only set when the cuda variant is enabled
 if /I not "%cuda_compiler_version%"=="None" (
@@ -78,8 +80,6 @@ if /I not "%cuda_compiler_version%"=="None" (
   echo CUDACXX set to: !CUDACXX!
 )
 set SKBUILD_CMAKE_ARGS=^
-    -DCMAKE_C_COMPILER="%CL_PATH_CMAKE%" ^
-    -DCMAKE_CXX_COMPILER="%CL_PATH_CMAKE%" ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
     -DMOMENTUM_BUILD_TESTING=OFF ^
