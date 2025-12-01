@@ -84,7 +84,10 @@ if /I not "%cuda_compiler_version%"=="None" (
   echo Using CUDA from: !CUDA_HOME!
   echo CUDACXX set to: !CUDACXX!
 )
-set SKBUILD_CMAKE_ARGS=^
+
+rem Append Momentum-specific CMake options to CMAKE_ARGS
+rem scikit-build-core reads from CMAKE_ARGS environment variable
+set "CMAKE_ARGS=%CMAKE_ARGS% ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=OFF ^
     -DMOMENTUM_BUILD_TESTING=OFF ^
@@ -93,15 +96,15 @@ set SKBUILD_CMAKE_ARGS=^
     -DMOMENTUM_USE_SYSTEM_PYBIND11=ON ^
     -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON ^
     -DCMAKE_POLICY_DEFAULT_CMP0148=NEW ^
-    -DPYBIND11_PYTHON_VERSION="%PYTHON_VER%" ^
-    -DPython3_ROOT_DIR="%PYTHON_PREFIX%" ^
-    -DPython3_EXECUTABLE="%PYTHON%" ^
-    -DPython3_LIBRARY="%PYTHON_LIB%" ^
-    -DPython3_INCLUDE_DIR="%PYTHON_INCLUDE%" ^
+    -DPYBIND11_PYTHON_VERSION=%PYTHON_VER% ^
+    -DPython3_ROOT_DIR=%PYTHON_PREFIX% ^
+    -DPython3_EXECUTABLE=%PYTHON% ^
+    -DPython3_LIBRARY=%PYTHON_LIB% ^
+    -DPython3_INCLUDE_DIR=%PYTHON_INCLUDE% ^
     -DPython3_FIND_STRATEGY=LOCATION ^
-    -DPython3_FIND_REGISTRY=NEVER
+    -DPython3_FIND_REGISTRY=NEVER"
 
-echo SKBUILD_CMAKE_ARGS: %SKBUILD_CMAKE_ARGS%
+echo CMAKE_ARGS: %CMAKE_ARGS%
 
 %PYTHON% -m pip install . -vv --no-deps --no-build-isolation
 if errorlevel 1 exit 1
