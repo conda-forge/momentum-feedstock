@@ -51,8 +51,9 @@ rem Set compiler environment variables for CMake/Ninja (using short path)
 set "CC=!CL_PATH_SHORT!"
 set "CXX=!CL_PATH_SHORT!"
 
-rem Prevent scikit-build-core from setting platform (Ninja doesn't support it)
+rem Prevent scikit-build-core from setting platform/toolset (Ninja doesn't support them)
 set "CMAKE_GENERATOR_PLATFORM="
+set "CMAKE_GENERATOR_TOOLSET="
 
 rem CUDA: only set when the cuda variant is enabled
 if /I not "%cuda_compiler_version%"=="None" (
