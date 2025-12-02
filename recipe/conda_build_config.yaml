@@ -3,5 +3,10 @@
 c_stdlib_version:  # [osx and x86_64]
   - '10.15'        # [osx and x86_64]
 
+# Pin pybind11_abi to version 4 (pybind11 2.x) to avoid pybind11 3.0.x
+# which requires python_add_library not available with scikit-build-core
+pybind11_abi:
+  - '4'
+
 rerun_version:
   - '0.23'
