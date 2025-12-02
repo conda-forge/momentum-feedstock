@@ -12,9 +12,10 @@ rem Always use Ninja for the Python build
 rem IMPORTANT: scikit-build-core has issues with Debug/Release mode on Windows.
 rem Build directly with CMake to have full control over the build configuration.
 
-rem Create build directory
-mkdir build
-cd build
+rem Create build directory (use build_py to avoid conflict with C++ build directory)
+if exist build_py rmdir /s /q build_py
+mkdir build_py
+cd build_py
 
 rem Configure with CMake - explicitly set Release mode and all necessary options
 cmake .. -G Ninja ^
@@ -30,8 +31,7 @@ cmake .. -G Ninja ^
     -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON ^
     -DMOMENTUM_USE_SYSTEM_PYBIND11=OFF ^
     -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON ^
-    -DCMAKE_POLICY_DEFAULT_CMP0148=NEW ^
-    %CMAKE_ARGS%
+    -DCMAKE_POLICY_DEFAULT_CMP0148=NEW
 if errorlevel 1 exit 1
 
 rem Build
