@@ -48,7 +48,7 @@ spdlog:
 target_platform:
 - linux-64
 tbb_devel:
-- '2021'
+- '2022'
 urdfdom:
 - '4.0'
 zip_keys:
