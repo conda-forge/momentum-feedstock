@@ -8,14 +8,6 @@ rem  Unpack and enter the source directory
 rem ----------------------------------------------------------------------
 cd /d %SRC_DIR%
 
-rem ----------------------------------------------------------------------
-rem  Fix python_add_library issue by injecting CMake policy
-rem  Reference: https://github.com/pybind/pybind11/issues/5472
-rem ----------------------------------------------------------------------
-echo Injecting CMake policy CMP0148 into pymomentum/CMakeLists.txt
-powershell -Command "$content = Get-Content 'pymomentum/CMakeLists.txt' -Raw; $policy = \"`n# Set CMake policy to use modern FindPython3 module`n\"; $policy += \"# This enables python_add_library() command required by pybind11 2.13.6`n\"; $policy += \"if(POLICY CMP0148)`n\"; $policy += \"  cmake_policy(SET CMP0148 NEW)`n\"; $policy += \"endif()`n`n\"; $content = $content -replace '(find_package\(Torch REQUIRED\))', \"$policy`$1\"; Set-Content 'pymomentum/CMakeLists.txt' -Value $content"
-if errorlevel 1 exit 1
-
 rem Always use Ninja for the Python build
 set "CMAKE_GENERATOR=Ninja"
 set "CMAKE_BUILD_PARALLEL_LEVEL=%CPU_COUNT%"
