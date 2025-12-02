@@ -10,8 +10,11 @@ cd /d %SRC_DIR%
 
 rem Always use Ninja for the Python build
 rem IMPORTANT: scikit-build-core ignores CMAKE_BUILD_TYPE from CMAKE_ARGS,
-rem so we must set it via environment variable
+rem so we must set it via environment variable AND pip config-settings
 set "SKBUILD_CMAKE_BUILD_TYPE=Release"
+
+rem Install pymomentum using pip with explicit Release build type
+pip install . -vv --no-build-isolation --no-deps --config-settings=cmake.build-type="Release"
 set "CMAKE_GENERATOR=Ninja"
 set "CMAKE_BUILD_PARALLEL_LEVEL=%CPU_COUNT%"
 
