@@ -131,7 +131,7 @@ outputs:
         - make
         - ninja
         - pip
-        - pybind11 <3.0
+        - pybind11 >=2.12,<2.14
         - pybind11-abi
         - python
         - pytorch
@@ -187,7 +187,7 @@ outputs:
         - indicators
         - libabseil  # [osx]
         - libdeflate
-        - pybind11 <3.0
+        - pybind11 >=2.12,<2.14
         - pytorch
         - numpy
         - python
