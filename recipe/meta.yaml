@@ -131,7 +131,6 @@ outputs:
         - make
         - ninja
         - pip
-        - pybind11 >=2.12,<2.14
         - pybind11-abi
         - python
         - pytorch
@@ -167,7 +166,6 @@ outputs:
         - openfbx
         - openusd  # [linux]
         - pip
-        - pybind11 >=2.12,<2.14
         - python
         - pytorch
         - re2
@@ -188,7 +186,6 @@ outputs:
         - indicators
         - libabseil  # [osx]
         - libdeflate
-        - pybind11 >=2.12,<2.14
         - pytorch
         - numpy
         - python
