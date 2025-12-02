@@ -131,11 +131,11 @@ outputs:
         - make
         - ninja
         - pip
-        - pybind11 <3.0
+        - pybind11
         - pybind11-abi
         - python
         - pytorch
-        - scikit-build-core >=0.10
+        - scikit-build-core >=0.11
       host:
         # GPU requirements
         - cuda-toolkit                                  # [cuda_compiler_version != "None" and not win]
@@ -170,7 +170,7 @@ outputs:
         - python
         - pytorch
         - re2
-        - scikit-build-core >=0.10
+        - scikit-build-core >=0.11
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
         - tbb-devel  # [not win]
@@ -187,7 +187,7 @@ outputs:
         - indicators
         - libabseil  # [osx]
         - libdeflate
-        - pybind11 <3.0
+        - pybind11
         - pytorch
         - numpy
         - python
