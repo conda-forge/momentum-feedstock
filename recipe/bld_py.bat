@@ -9,12 +9,47 @@ rem ----------------------------------------------------------------------
 cd /d %SRC_DIR%
 
 rem Always use Ninja for the Python build
-rem IMPORTANT: scikit-build-core ignores CMAKE_BUILD_TYPE from CMAKE_ARGS,
-rem so we must set it via environment variable AND pip config-settings
-set "SKBUILD_CMAKE_BUILD_TYPE=Release"
+rem IMPORTANT: scikit-build-core has issues with Debug/Release mode on Windows.
+rem Build directly with CMake to have full control over the build configuration.
 
-rem Install pymomentum using pip with explicit Release build type
-pip install . -vv --no-build-isolation --no-deps --config-settings=cmake.build-type="Release"
+rem Create build directory
+mkdir build
+cd build
+
+rem Configure with CMake - explicitly set Release mode and all necessary options
+cmake .. -G Ninja ^
+    -DCMAKE_BUILD_TYPE=Release ^
+    -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%" ^
+    -DCMAKE_PREFIX_PATH="%LIBRARY_PREFIX%;%PREFIX%" ^
+    -DPython_EXECUTABLE="%PYTHON%" ^
+    -DPython3_EXECUTABLE="%PYTHON%" ^
+    -DMOMENTUM_BUILD_PYMOMENTUM=ON ^
+    -DMOMENTUM_BUILD_IO_USD=OFF ^
+    -DMOMENTUM_BUILD_TESTING=OFF ^
+    -DMOMENTUM_ENABLE_SIMD=OFF ^
+    -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON ^
+    -DMOMENTUM_USE_SYSTEM_PYBIND11=OFF ^
+    -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON ^
+    -DCMAKE_POLICY_DEFAULT_CMP0148=NEW ^
+    %CMAKE_ARGS%
+if errorlevel 1 exit 1
+
+rem Build
+cmake --build . --config Release --parallel
+if errorlevel 1 exit 1
+
+rem Install the Python package
+cmake --install . --config Release
+if errorlevel 1 exit 1
+
+rem Copy the Python modules to the site-packages directory
+for /R "%LIBRARY_PREFIX%\lib\python%PY_VER%\site-packages" %%f in (*.pyd) do (
+    copy "%%f" "%SP_DIR%\"
+)
+for /R "%LIBRARY_PREFIX%\lib\python%PY_VER%\site-packages\pymomentum" %%f in (*) do (
+    xcopy /E /I /Y "%LIBRARY_PREFIX%\lib\python%PY_VER%\site-packages\pymomentum" "%SP_DIR%\pymomentum"
+)
+if errorlevel 1 exit 1
 set "CMAKE_GENERATOR=Ninja"
 set "CMAKE_BUILD_PARALLEL_LEVEL=%CPU_COUNT%"
 
