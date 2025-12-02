@@ -9,6 +9,9 @@ rem ----------------------------------------------------------------------
 cd /d %SRC_DIR%
 
 rem Always use Ninja for the Python build
+rem IMPORTANT: scikit-build-core ignores CMAKE_BUILD_TYPE from CMAKE_ARGS,
+rem so we must set it via environment variable
+set "SKBUILD_CMAKE_BUILD_TYPE=Release"
 set "CMAKE_GENERATOR=Ninja"
 set "CMAKE_BUILD_PARALLEL_LEVEL=%CPU_COUNT%"
 
