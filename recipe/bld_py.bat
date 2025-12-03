@@ -56,4 +56,38 @@ if exist "%LIBRARY_PREFIX%\pymomentum" (
     exit 1
 )
 
+rem ------------------------------------------------------------------
+rem  Add DLL search path setup to pymomentum __init__.py
+rem  On Windows, the .pyd files depend on DLLs in Library/bin that
+rem  need to be in the DLL search path
+rem ------------------------------------------------------------------
+echo Adding DLL search path setup to pymomentum __init__.py...
+set "INIT_FILE=%SP_DIR%\pymomentum\__init__.py"
+
+rem Create a temporary file with the DLL path setup code
+echo import os > "%INIT_FILE%.tmp"
+echo import sys >> "%INIT_FILE%.tmp"
+echo. >> "%INIT_FILE%.tmp"
+echo # Add conda Library/bin to DLL search path on Windows >> "%INIT_FILE%.tmp"
+echo if sys.platform == 'win32': >> "%INIT_FILE%.tmp"
+echo     _conda_prefix = os.environ.get('CONDA_PREFIX', '') >> "%INIT_FILE%.tmp"
+echo     if _conda_prefix: >> "%INIT_FILE%.tmp"
+echo         _lib_bin = os.path.join(_conda_prefix, 'Library', 'bin') >> "%INIT_FILE%.tmp"
+echo         if os.path.isdir(_lib_bin): >> "%INIT_FILE%.tmp"
+echo             os.add_dll_directory(_lib_bin) >> "%INIT_FILE%.tmp"
+echo         # Also add the package directory for any local DLLs >> "%INIT_FILE%.tmp"
+echo         _pkg_dir = os.path.dirname(__file__) >> "%INIT_FILE%.tmp"
+echo         if os.path.isdir(_pkg_dir): >> "%INIT_FILE%.tmp"
+echo             os.add_dll_directory(_pkg_dir) >> "%INIT_FILE%.tmp"
+echo. >> "%INIT_FILE%.tmp"
+
+rem Append the original __init__.py content if it exists
+if exist "%INIT_FILE%" (
+    type "%INIT_FILE%" >> "%INIT_FILE%.tmp"
+)
+
+rem Replace the original with the new file
+move /Y "%INIT_FILE%.tmp" "%INIT_FILE%"
+if errorlevel 1 exit 1
+
 echo Build completed successfully!
