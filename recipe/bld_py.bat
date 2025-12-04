@@ -57,37 +57,117 @@ if exist "%LIBRARY_PREFIX%\pymomentum" (
 )
 
 rem ------------------------------------------------------------------
-rem  Add DLL search path setup to pymomentum __init__.py
-rem  On Windows, the .pyd files depend on DLLs in Library/bin that
-rem  need to be in the DLL search path
+rem  Copy momentum DLLs to pymomentum package directory
+rem  On Windows, .pyd files need their dependent DLLs in the same
+rem  directory or in a directory that's in the DLL search path.
+rem  Copying to the same directory is the most reliable approach.
 rem ------------------------------------------------------------------
-echo Adding DLL search path setup to pymomentum __init__.py...
-set "INIT_FILE=%SP_DIR%\pymomentum\__init__.py"
+echo Copying momentum DLLs to pymomentum package directory...
+set "PYM_DIR=%SP_DIR%\pymomentum"
 
-rem Create a temporary file with the DLL path setup code
-echo import os > "%INIT_FILE%.tmp"
-echo import sys >> "%INIT_FILE%.tmp"
-echo. >> "%INIT_FILE%.tmp"
-echo # Add conda Library/bin to DLL search path on Windows >> "%INIT_FILE%.tmp"
-echo if sys.platform == 'win32': >> "%INIT_FILE%.tmp"
-echo     _conda_prefix = os.environ.get('CONDA_PREFIX', '') >> "%INIT_FILE%.tmp"
-echo     if _conda_prefix: >> "%INIT_FILE%.tmp"
-echo         _lib_bin = os.path.join(_conda_prefix, 'Library', 'bin') >> "%INIT_FILE%.tmp"
-echo         if os.path.isdir(_lib_bin): >> "%INIT_FILE%.tmp"
-echo             os.add_dll_directory(_lib_bin) >> "%INIT_FILE%.tmp"
-echo         # Also add the package directory for any local DLLs >> "%INIT_FILE%.tmp"
-echo         _pkg_dir = os.path.dirname(__file__) >> "%INIT_FILE%.tmp"
-echo         if os.path.isdir(_pkg_dir): >> "%INIT_FILE%.tmp"
-echo             os.add_dll_directory(_pkg_dir) >> "%INIT_FILE%.tmp"
-echo. >> "%INIT_FILE%.tmp"
-
-rem Append the original __init__.py content if it exists
-if exist "%INIT_FILE%" (
-    type "%INIT_FILE%" >> "%INIT_FILE%.tmp"
+rem Copy momentum*.dll files from Library/bin
+if exist "%LIBRARY_BIN%\momentum*.dll" (
+    echo Found momentum DLLs in %LIBRARY_BIN%
+    copy /Y "%LIBRARY_BIN%\momentum*.dll" "%PYM_DIR%\"
+    if errorlevel 1 (
+        echo WARNING: Failed to copy momentum DLLs, but continuing...
+    )
 )
 
-rem Replace the original with the new file
-move /Y "%INIT_FILE%.tmp" "%INIT_FILE%"
-if errorlevel 1 exit 1
+rem Also copy any other required DLLs that momentum depends on
+rem These are typically installed by the momentum-cpp package
+for %%d in (
+    OpenFBX.dll
+    fmt.dll
+    spdlog.dll
+    drjit.dll
+    drjit-core.dll
+    nanothread.dll
+) do (
+    if exist "%LIBRARY_BIN%\%%d" (
+        echo Copying %%d
+        copy /Y "%LIBRARY_BIN%\%%d" "%PYM_DIR%\"
+    )
+)
 
+rem List DLLs in Library/bin for debugging
+echo.
+echo DLLs in %LIBRARY_BIN%:
+dir /b "%LIBRARY_BIN%\*.dll" 2>nul || echo No DLLs found in Library/bin
+
+rem List what's in the pymomentum directory
+echo.
+echo Files in %PYM_DIR%:
+dir /b "%PYM_DIR%\*.dll" "%PYM_DIR%\*.pyd" 2>nul || echo No DLLs or PYD files found
+
+rem ------------------------------------------------------------------
+rem  Create __init__.py with DLL search path setup as fallback
+rem  This adds Library/bin to DLL search path in case some DLLs
+rem  couldn't be copied
+rem ------------------------------------------------------------------
+echo Creating __init__.py with DLL search path setup...
+set "INIT_FILE=%PYM_DIR%\__init__.py"
+set "INIT_TMP=%PYM_DIR%\__init__.py.tmp"
+
+rem Use Python to create the init file properly
+"%PYTHON%" -c "
+import os
+import sys
+
+init_file = os.environ['INIT_FILE']
+init_tmp = os.environ['INIT_TMP']
+
+# DLL search path setup code
+dll_setup = '''import os as _os
+import sys as _sys
+
+# Add DLL search paths on Windows for pymomentum native extensions
+if _sys.platform == 'win32':
+    # Add package directory (where we copy DLLs during build)
+    _pkg_dir = _os.path.dirname(__file__)
+    if _os.path.isdir(_pkg_dir):
+        _os.add_dll_directory(_pkg_dir)
+    # Add conda Library/bin as fallback
+    _conda_prefix = _os.environ.get('CONDA_PREFIX', '')
+    if _conda_prefix:
+        _lib_bin = _os.path.join(_conda_prefix, 'Library', 'bin')
+        if _os.path.isdir(_lib_bin):
+            _os.add_dll_directory(_lib_bin)
+    del _pkg_dir, _conda_prefix, _lib_bin
+del _os, _sys
+
+'''
+
+# Read existing content if any
+existing = ''
+if os.path.exists(init_file):
+    with open(init_file, 'r') as f:
+        existing = f.read()
+
+# Write new file with DLL setup prepended
+with open(init_tmp, 'w') as f:
+    f.write(dll_setup)
+    f.write(existing)
+
+print('Successfully created __init__.py with DLL setup')
+"
+if errorlevel 1 (
+    echo WARNING: Failed to create __init__.py with Python, trying batch method...
+    goto :batch_init
+)
+
+rem Replace original with temp file
+move /Y "%INIT_TMP%" "%INIT_FILE%"
+if errorlevel 1 exit 1
+goto :done_init
+
+:batch_init
+rem Fallback: create a simple __init__.py using batch
+echo import os; os.add_dll_directory(os.path.dirname(__file__)) if hasattr(os, 'add_dll_directory') else None > "%INIT_FILE%.new"
+if exist "%INIT_FILE%" (
+    type "%INIT_FILE%" >> "%INIT_FILE%.new"
+)
+move /Y "%INIT_FILE%.new" "%INIT_FILE%"
+
+:done_init
 echo Build completed successfully!
