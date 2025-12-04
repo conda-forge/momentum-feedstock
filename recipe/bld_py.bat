@@ -107,67 +107,23 @@ rem  couldn't be copied
 rem ------------------------------------------------------------------
 echo Creating __init__.py with DLL search path setup...
 set "INIT_FILE=%PYM_DIR%\__init__.py"
-set "INIT_TMP=%PYM_DIR%\__init__.py.tmp"
+set "INIT_BAK=%PYM_DIR%\__init__.py.bak"
 
-rem Use Python to create the init file properly
-"%PYTHON%" -c "
-import os
-import sys
-
-init_file = os.environ['INIT_FILE']
-init_tmp = os.environ['INIT_TMP']
-
-# DLL search path setup code
-dll_setup = '''import os as _os
-import sys as _sys
-
-# Add DLL search paths on Windows for pymomentum native extensions
-if _sys.platform == 'win32':
-    # Add package directory (where we copy DLLs during build)
-    _pkg_dir = _os.path.dirname(__file__)
-    if _os.path.isdir(_pkg_dir):
-        _os.add_dll_directory(_pkg_dir)
-    # Add conda Library/bin as fallback
-    _conda_prefix = _os.environ.get('CONDA_PREFIX', '')
-    if _conda_prefix:
-        _lib_bin = _os.path.join(_conda_prefix, 'Library', 'bin')
-        if _os.path.isdir(_lib_bin):
-            _os.add_dll_directory(_lib_bin)
-    del _pkg_dir, _conda_prefix, _lib_bin
-del _os, _sys
-
-'''
-
-# Read existing content if any
-existing = ''
-if os.path.exists(init_file):
-    with open(init_file, 'r') as f:
-        existing = f.read()
-
-# Write new file with DLL setup prepended
-with open(init_tmp, 'w') as f:
-    f.write(dll_setup)
-    f.write(existing)
-
-print('Successfully created __init__.py with DLL setup')
-"
-if errorlevel 1 (
-    echo WARNING: Failed to create __init__.py with Python, trying batch method...
-    goto :batch_init
-)
-
-rem Replace original with temp file
-move /Y "%INIT_TMP%" "%INIT_FILE%"
-if errorlevel 1 exit 1
-goto :done_init
-
-:batch_init
-rem Fallback: create a simple __init__.py using batch
-echo import os; os.add_dll_directory(os.path.dirname(__file__)) if hasattr(os, 'add_dll_directory') else None > "%INIT_FILE%.new"
+rem Backup original __init__.py if it exists
 if exist "%INIT_FILE%" (
-    type "%INIT_FILE%" >> "%INIT_FILE%.new"
+    copy /Y "%INIT_FILE%" "%INIT_BAK%"
 )
-move /Y "%INIT_FILE%.new" "%INIT_FILE%"
 
-:done_init
+rem Create new __init__.py with DLL setup - using single-line Python for reliability
+rem This one-liner adds both package dir and Library/bin to DLL search path
+echo import os, sys; (os.add_dll_directory(os.path.dirname(__file__)), os.add_dll_directory(os.path.join(os.environ.get('CONDA_PREFIX', ''), 'Library', 'bin'))) if sys.platform == 'win32' and hasattr(os, 'add_dll_directory') and os.environ.get('CONDA_PREFIX') else None > "%INIT_FILE%"
+
+rem Append original content if backup exists
+if exist "%INIT_BAK%" (
+    type "%INIT_BAK%" >> "%INIT_FILE%"
+    del "%INIT_BAK%"
+)
+
+echo __init__.py created successfully
+
 echo Build completed successfully!
