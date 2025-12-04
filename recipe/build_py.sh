@@ -7,6 +7,10 @@ if [[ "${target_platform}" == osx-* ]]; then
   CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 fi
 
+echo CUDA_HOME is set to: $CUDA_HOME
+
+echo PATH is set to: $PATH
+
 # Workaround for fx/gltf.h:70:13: error: narrowing conversion of '-1' from 'int' to 'char' [-Wnarrowing]
 if [[ "${target_platform}" == *aarch64 || "${target_platform}" == *ppc64le ]]; then
   CXXFLAGS="${CXXFLAGS} -Wno-narrowing"
