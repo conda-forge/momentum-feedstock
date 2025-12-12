@@ -188,6 +188,7 @@ outputs:
         - pymomentum.axel
         - pymomentum.backend
         - pymomentum.geometry
+        - pymomentum.diff_geometry
         - pymomentum.marker_tracking
         - pymomentum.quaternion
         - pymomentum.renderer  # [cuda_compiler_version == "None"]
