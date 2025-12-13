@@ -101,29 +101,56 @@ echo Files in %PYM_DIR%:
 dir /b "%PYM_DIR%\*.dll" "%PYM_DIR%\*.pyd" 2>nul || echo No DLLs or PYD files found
 
 rem ------------------------------------------------------------------
-rem  Create __init__.py with DLL search path setup as fallback
-rem  This adds Library/bin to DLL search path in case some DLLs
-rem  couldn't be copied
+rem  Create __init__.py with DLL search path setup
+rem  This ensures DLLs are findable before any module imports
 rem ------------------------------------------------------------------
 echo Creating __init__.py with DLL search path setup...
 set "INIT_FILE=%PYM_DIR%\__init__.py"
 set "INIT_BAK=%PYM_DIR%\__init__.py.bak"
+set "INIT_TEMP=%PYM_DIR%\__init__.py.tmp"
 
 rem Backup original __init__.py if it exists
 if exist "%INIT_FILE%" (
     copy /Y "%INIT_FILE%" "%INIT_BAK%"
 )
 
-rem Create new __init__.py with DLL setup - using single-line Python for reliability
-rem This one-liner adds both package dir and Library/bin to DLL search path
-echo import os, sys; (os.add_dll_directory(os.path.dirname(__file__)), os.add_dll_directory(os.path.join(os.environ.get('CONDA_PREFIX', ''), 'Library', 'bin'))) if sys.platform == 'win32' and hasattr(os, 'add_dll_directory') and os.environ.get('CONDA_PREFIX') else None > "%INIT_FILE%"
+rem Create new __init__.py with proper DLL setup at the very beginning
+rem This MUST execute before any submodule imports
+(
+echo # Auto-generated DLL loading setup for Windows
+echo import sys
+echo import os
+echo if sys.platform == 'win32' and hasattr^(os, 'add_dll_directory'^):
+echo     # Add package directory to DLL search path
+echo     _pkg_dir = os.path.dirname^(__file__^)
+echo     if _pkg_dir:
+echo         try:
+echo             os.add_dll_directory^(_pkg_dir^)
+echo         except Exception:
+echo             pass
+echo     # Add conda Library/bin to DLL search path
+echo     if 'CONDA_PREFIX' in os.environ:
+echo         _lib_bin = os.path.join^(os.environ['CONDA_PREFIX'], 'Library', 'bin'^)
+echo         if os.path.isdir^(_lib_bin^):
+echo             try:
+echo                 os.add_dll_directory^(_lib_bin^)
+echo             except Exception:
+echo                 pass
+echo.
+) > "%INIT_TEMP%"
 
 rem Append original content if backup exists
 if exist "%INIT_BAK%" (
-    type "%INIT_BAK%" >> "%INIT_FILE%"
+    type "%INIT_BAK%" >> "%INIT_TEMP%"
     del "%INIT_BAK%"
 )
 
+rem Move temp file to final location
+move /Y "%INIT_TEMP%" "%INIT_FILE%"
+
 echo __init__.py created successfully
+echo.
+echo Contents of __init__.py first 20 lines:
+type "%INIT_FILE%" | more +0 /E +20
 
 echo Build completed successfully!
