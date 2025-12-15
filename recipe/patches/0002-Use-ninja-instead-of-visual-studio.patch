@@ -1,0 +1,25 @@
+From 2ca55e400a0ed2d7fd328e7633ebafcf6fc03d8c Mon Sep 17 00:00:00 2001
+From: Jeongseok Lee <jeongseok@meta.com>
+Date: Sat, 29 Mar 2025 12:05:50 -0700
+Subject: [PATCH] Use ninja instead of visual studio
+
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 6c54acd9..a04159ff 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -42,7 +42,7 @@ wheel.exclude = ["geometry_test_helper.*"]
+ if.platform-system = "^win32"
+ cmake.args = [
+     "-DBUILD_SHARED_LIBS=OFF",
+-    "-G Visual Studio 17 2022",
++    "-GNinja",
+     "-DMOMENTUM_BUILD_PYMOMENTUM=ON",
+     "-DMOMENTUM_BUILD_EXAMPLES=OFF",
+     "-DMOMENTUM_BUILD_TESTING=ON",
+-- 
+2.20.1.windows.1
+
