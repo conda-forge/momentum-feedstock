@@ -24,6 +24,7 @@ pybind11_abi:
 - '11'
 python:
 - 3.12.* *_cpython
+- 3.13.* *_cp313
 pytorch:
 - '2.9'
 re2:
