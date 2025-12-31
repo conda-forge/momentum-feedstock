@@ -12,7 +12,7 @@ source:
     sha256: 7f480bbdf54f026076f5925ca210ecfe843ca2e3a7ce1d3a25bfe3bbe57f69da
 
 build:
-  number: 1
+  number: 2
   skip: true  # [py<312]
 
 outputs:
@@ -166,6 +166,7 @@ outputs:
         - openfbx
         - openusd  # [linux]
         - pip
+        - pytest
         - python
         - pytorch
         - re2
@@ -204,7 +205,7 @@ outputs:
         - pymomentum.diff_geometry  # [not (win and cuda_compiler_version != "None")]
         - pymomentum.marker_tracking  # [not (win and cuda_compiler_version != "None")]
         - pymomentum.quaternion
-        - pymomentum.renderer  # [cuda_compiler_version == "None" and not win]
+        - pymomentum.renderer  # [cuda_compiler_version == "None"]
         - pymomentum.skel_state
         - pymomentum.solver  # [not (win and cuda_compiler_version != "None")]
         - pymomentum.solver2  # [not (win and cuda_compiler_version != "None")]
