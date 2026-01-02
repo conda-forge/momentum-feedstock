@@ -5,3 +5,9 @@ c_stdlib_version:  # [osx and x86_64]
 
 rerun_version:
   - '0.23'
+
+# Support older PyTorch versions only on linux-64
+pytorch:       # [linux64]
+  - '2.7'      # [linux64]
+  - '2.8'      # [linux64]
+  - '2.9'      # [linux64]
