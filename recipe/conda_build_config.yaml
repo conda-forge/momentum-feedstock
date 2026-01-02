@@ -6,8 +6,14 @@ c_stdlib_version:  # [osx and x86_64]
 rerun_version:
   - '0.23'
 
-# Support older PyTorch versions only on linux-64
-# Note: pytorch 2.7 is filtered out by the active pytorch29 migration
-pytorch:       # [linux and x86_64]
-  - '2.8'      # [linux and x86_64]
-  - '2.9'      # [linux and x86_64]
+# Support older PyTorch versions on linux-64 only
+# Other platforms use the current stable version (2.9)
+pytorch:
+  - '2.7'  # [linux and x86_64]
+  - '2.8'  # [linux and x86_64]
+  - '2.9'
+
+libtorch:
+  - '2.7'  # [linux and x86_64]
+  - '2.8'  # [linux and x86_64]
+  - '2.9'
