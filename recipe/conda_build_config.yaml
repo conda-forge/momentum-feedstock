@@ -19,13 +19,32 @@ libtorch:
   - '2.7'  # [linux and x86_64]
   - '2.9'
 
-# CUDA versions for each platform:
-# - linux-64: None (CPU), 12.6 (for pytorch 2.7), 12.9 (for pytorch 2.9)
-# - windows: None (CPU), 12.9
-# Skip conditions in meta.yaml filter out invalid combinations:
-# - cuda 12.6 + pytorch 2.9 -> skipped
-# - cuda 12.9 + pytorch 2.7 -> skipped
+# CUDA versions for each platform with all zip_key members
+# cuda_compiler_version is part of zip_keys with c_compiler_version, cxx_compiler_version,
+# c_stdlib_version, fortran_compiler_version - all must have matching lengths
+# Using platform selectors on the 12.6 entry ensures all zip_key members are
+# included/excluded together on each platform
 cuda_compiler_version:
   - None
   - '12.6'  # [linux and x86_64]
-  - '12.9'  # [linux or win]
+  - '12.9'
+
+c_compiler_version:
+  - '13'
+  - '13'  # [linux and x86_64]
+  - '13'
+
+cxx_compiler_version:
+  - '13'
+  - '13'  # [linux and x86_64]
+  - '13'
+
+c_stdlib_version:
+  - '2.17'
+  - '2.17'  # [linux and x86_64]
+  - '2.17'
+
+fortran_compiler_version:
+  - '13'
+  - '13'  # [linux and x86_64]
+  - '13'
