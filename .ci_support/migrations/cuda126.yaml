@@ -2,7 +2,7 @@ __migrator:
   kind:
     version
   migration_number:
-    1
+    2
   build_number:
     1
   paused: false
@@ -20,7 +20,7 @@ __migrator:
       - 12.9
       - 11.8
 
-migrator_ts: 1738229376
+migrator_ts: 1738229999
 
 cuda_compiler_version:         # [(linux and x86_64) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
   - 12.6                       # [(linux and x86_64) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
