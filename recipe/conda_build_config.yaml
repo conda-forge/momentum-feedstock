@@ -8,9 +8,9 @@ rerun_version:
 
 # Support older PyTorch versions on linux-64 only
 # Other platforms use the current stable version (2.9)
-# pytorch 2.7, 2.8 require pybind11-abi 4 (pybind11 2.x)
-# pytorch 2.9 requires pybind11-abi 11 (pybind11 3.x)
-# The upstream zip_keys already pairs [pytorch, pybind11_abi]
+# pybind11-abi version is determined by pytorch version in meta.yaml using Jinja2 conditional:
+# - pytorch 2.7, 2.8: pybind11-abi 4
+# - pytorch 2.9: pybind11-abi 11
 pytorch:
   - '2.7'  # [linux and x86_64]
   - '2.8'  # [linux and x86_64]
@@ -20,8 +20,3 @@ libtorch:
   - '2.7'  # [linux and x86_64]
   - '2.8'  # [linux and x86_64]
   - '2.9'
-
-pybind11_abi:
-  - '4'   # for pytorch 2.7 [linux and x86_64]
-  - '4'   # for pytorch 2.8 [linux and x86_64]
-  - '11'  # for pytorch 2.9

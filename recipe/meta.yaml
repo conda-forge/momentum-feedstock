@@ -132,7 +132,9 @@ outputs:
         - make
         - ninja
         - pip
-        - pybind11-abi
+        # pybind11-abi version depends on pytorch version:
+        # pytorch 2.7, 2.8 require pybind11-abi 4; pytorch 2.9 requires pybind11-abi 11
+        - pybind11-abi {{ "11" if pytorch == "2.9" else "4" }}
         - python
         - pytorch
         - scikit-build-core >=0.11
