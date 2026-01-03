@@ -19,8 +19,7 @@ libtorch:
   - '2.7'  # [linux and x86_64]
   - '2.9'
 
-# Add CUDA 12.6 for linux-64 only. 
+# Add CUDA 12.6 for linux-64 only (using same condition as cuda129 migration)
 # cuda129 migration will add CUDA 12.9.
-# None (CPU) comes from base config.
-cuda_compiler_version:     # [linux and x86_64]
-  - '12.6'                 # [linux and x86_64]
+cuda_compiler_version:     # [(linux and x86_64) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
+  - '12.6'                 # [(linux and x86_64) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
