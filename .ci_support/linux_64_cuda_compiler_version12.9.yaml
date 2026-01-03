@@ -31,8 +31,9 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 pybind11_abi:
-- '11'
 - '4'
+- '4'
+- '11'
 python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
@@ -57,5 +58,7 @@ zip_keys:
   - cxx_compiler_version
   - c_stdlib_version
   - cuda_compiler_version
+- - pytorch
+  - pybind11_abi
 zlib:
 - '1'
