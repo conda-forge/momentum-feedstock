@@ -12,7 +12,7 @@ source:
     sha256: 7f480bbdf54f026076f5925ca210ecfe843ca2e3a7ce1d3a25bfe3bbe57f69da
 
 build:
-  number: 2
+  number: 3
   skip: true  # [py<312]
 
 outputs:
@@ -108,8 +108,8 @@ outputs:
     script: build_py.sh  # [unix]
     script: bld_py.bat  # [win]
     build:
-      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+      string: cpu_py{{ CONDA_PY }}_pt{{ pytorch | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_pt{{ pytorch | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       # Internal DLLs bundled together that reference each other
       missing_dso_whitelist:   # [win]
         - "*/momentum_*.dll"  # [win]
@@ -132,7 +132,9 @@ outputs:
         - make
         - ninja
         - pip
-        - pybind11-abi
+        # pybind11-abi version depends on pytorch version:
+        # pytorch 2.7, 2.8 require pybind11-abi 4; pytorch 2.9 requires pybind11-abi 11
+        - pybind11-abi {{ "11" if pytorch == "2.9" else "4" }}
         - python
         - pytorch
         - scikit-build-core >=0.11
@@ -221,8 +223,8 @@ outputs:
   {% set pymomentum_cpu_gpu = "pymomentum-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pymomentum_cpu_gpu }}
     build:
-      string: cpu_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+      string: cpu_py{{ CONDA_PY }}_pt{{ pytorch | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}_pt{{ pytorch | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       detect_binary_files_with_prefix: false
     requirements:
       run:
