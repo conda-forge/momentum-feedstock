@@ -12,7 +12,7 @@ source:
     sha256: d72bb920eba49036fa3457aa6978be61d63fd588a21323ac5a7fb5c570642a79
 
 build:
-  number: 0
+  number: 1
   # Skip Python < 3.12
   # For linux-64 CUDA builds: pair cuda126 with pytorch 2.7, cuda129 with pytorch 2.9
   skip: true  # [py<312 or (cuda_compiler_version == "12.6" and pytorch == "2.9") or (cuda_compiler_version == "12.9" and pytorch == "2.7")]
