@@ -14,8 +14,9 @@ source:
 build:
   number: 1
   # Skip Python < 3.12
-  # For linux-64 CUDA builds: pair cuda126 with pytorch 2.7, cuda129 with pytorch 2.9
-  skip: true  # [py<312 or (cuda_compiler_version == "12.6" and pytorch == "2.9") or (cuda_compiler_version == "12.9" and pytorch == "2.7")]
+  # For linux-64: Skip CUDA builds for pytorch 2.7 (CUDA 12.9 is incompatible with pytorch 2.7)
+  # pytorch 2.7 will only build CPU variant; pytorch 2.9 will build both CPU and CUDA variants
+  skip: true  # [py<312 or (cuda_compiler_version != "None" and pytorch == "2.7")]
 
 outputs:
   - name: momentum-cpp
