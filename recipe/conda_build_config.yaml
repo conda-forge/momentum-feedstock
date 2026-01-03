@@ -23,3 +23,30 @@ pytorch:
 libtorch:
   - '2.7'  # [linux and x86_64]
   - '2.9'
+
+# CUDA variants for linux-64: None (CPU), 12.6 (for pytorch 2.7), 12.9 (for pytorch 2.9)
+# These must match lengths with other zip_key fields
+cuda_compiler_version:     # [linux and x86_64]
+  - None                   # [linux and x86_64]
+  - '12.6'                 # [linux and x86_64]
+  - '12.9'                 # [linux and x86_64]
+
+c_compiler_version:        # [linux and x86_64]
+  - '14'                   # [linux and x86_64]
+  - '14'                   # [linux and x86_64]
+  - '14'                   # [linux and x86_64]
+
+cxx_compiler_version:      # [linux and x86_64]
+  - '14'                   # [linux and x86_64]
+  - '14'                   # [linux and x86_64]
+  - '14'                   # [linux and x86_64]
+
+c_stdlib_version:          # [linux and x86_64]
+  - '2.17'                 # [linux and x86_64]
+  - '2.17'                 # [linux and x86_64]
+  - '2.17'                 # [linux and x86_64]
+
+fortran_compiler_version:  # [linux and x86_64]
+  - '14'                   # [linux and x86_64]
+  - '14'                   # [linux and x86_64]
+  - '14'                   # [linux and x86_64]
