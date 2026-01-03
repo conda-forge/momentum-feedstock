@@ -11,7 +11,7 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler_version:
-- None
+- '12.9'
 cxx_compiler:
 - vs2022
 cxx_compiler_version:
