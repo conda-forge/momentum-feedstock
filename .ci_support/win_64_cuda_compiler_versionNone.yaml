@@ -1,7 +1,11 @@
 c_compiler:
 - vs2022
+c_compiler_version:
+- ''
 c_stdlib:
 - vs
+c_stdlib_version:
+- ''
 channel_sources:
 - conda-forge
 channel_targets:
@@ -10,6 +14,8 @@ cuda_compiler_version:
 - None
 cxx_compiler:
 - vs2022
+cxx_compiler_version:
+- ''
 fmt:
 - '12.0'
 libboost_devel:
