@@ -8,9 +8,6 @@ rerun_version:
 
 # Support older PyTorch versions on linux-64 only
 # Other platforms use the current stable version (2.9)
-# pybind11-abi version is determined by pytorch version in meta.yaml using Jinja2 conditional:
-# - pytorch 2.7: pybind11-abi 4
-# - pytorch 2.9: pybind11-abi 11
 pytorch:
   - '2.7'  # [linux and x86_64]
   - '2.9'
@@ -19,38 +16,37 @@ libtorch:
   - '2.7'  # [linux and x86_64]
   - '2.9'
 
-# CUDA versions with all zip_key members - LINUX ONLY
-# cuda_compiler_version is part of zip_keys with c_compiler_version, cxx_compiler_version,
-# c_stdlib_version, fortran_compiler_version - all must have matching lengths
+# CUDA configuration strategy:
+# - Linux: specify cuda_compiler_version with all zip_key members (c_compiler_version, etc.)
+# - Windows/macOS: let global config handle CUDA (don't override locally)
 #
-# Using [linux] selector on ALL entries means:
-# - Linux-64: cuda=[None, 12.6, 12.9] with matching compiler versions
-# - Linux-aarch64: cuda=[None, 12.9] (12.6 excluded by [linux and x86_64])
-# - Windows/macOS: use global config (no local override)
+# The zip_key members (c_compiler_version=13, c_stdlib_version=2.17) are Linux-specific.
+# On Windows, specifying these would try to install "vs2022_win-64=13" which doesn't exist.
 #
-# This avoids the Windows issue where c_compiler_version=13 gets translated
-# to vs2022_win-64=13 which doesn't exist.
-cuda_compiler_version:
-  - None    # [linux]
-  - '12.6'  # [linux and x86_64]
-  - '12.9'  # [linux]
+# By using [linux] selectors, we:
+# 1. Override CUDA and compiler settings on Linux (adding 12.6 and keeping 12.9)
+# 2. Let Windows/macOS use the global conda-forge config for CUDA
+cuda_compiler_version:  # [linux]
+  - None              # [linux]
+  - '12.6'            # [linux and x86_64]
+  - '12.9'            # [linux]
 
-c_compiler_version:
-  - '13'    # [linux]
-  - '13'    # [linux and x86_64]
-  - '13'    # [linux]
+c_compiler_version:   # [linux]
+  - '13'              # [linux]
+  - '13'              # [linux and x86_64]
+  - '13'              # [linux]
 
-cxx_compiler_version:
-  - '13'    # [linux]
-  - '13'    # [linux and x86_64]
-  - '13'    # [linux]
+cxx_compiler_version: # [linux]
+  - '13'              # [linux]
+  - '13'              # [linux and x86_64]
+  - '13'              # [linux]
 
-c_stdlib_version:
-  - '2.17'  # [linux]
-  - '2.17'  # [linux and x86_64]
-  - '2.17'  # [linux]
+c_stdlib_version:     # [linux]
+  - '2.17'            # [linux]
+  - '2.17'            # [linux and x86_64]
+  - '2.17'            # [linux]
 
-fortran_compiler_version:
-  - '13'    # [linux]
-  - '13'    # [linux and x86_64]
-  - '13'    # [linux]
+fortran_compiler_version:  # [linux]
+  - '13'                   # [linux]
+  - '13'                   # [linux and x86_64]
+  - '13'                   # [linux]
