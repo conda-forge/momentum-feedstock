@@ -52,5 +52,7 @@ urdfdom:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+- - pytorch
+  - re2
 zlib:
 - '1'
