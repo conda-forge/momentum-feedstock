@@ -36,7 +36,7 @@ python:
 pytorch:
 - '2.9'
 re2:
-- 2024.07.02
+- 2025.08.12
 rerun_version:
 - '0.23'
 spdlog:
