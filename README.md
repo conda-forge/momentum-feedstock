@@ -32,17 +32,66 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_64_cuda_compiler_version12.9</td>
+              <td>linux_64_cuda_compiler_version12.6pytorch2.7</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version12.9" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version12.6pytorch2.7" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_cuda_compiler_versionNone</td>
+              <td>linux_64_cuda_compiler_version12.6pytorch2.8</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_versionNone" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version12.6pytorch2.8" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cuda_compiler_version12.6pytorch2.9</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version12.6pytorch2.9" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cuda_compiler_version12.9pytorch2.7</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version12.9pytorch2.7" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cuda_compiler_version12.9pytorch2.8</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version12.9pytorch2.8" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cuda_compiler_version12.9pytorch2.9</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version12.9pytorch2.9" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cuda_compiler_versionNonepytorch2.7</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_versionNonepytorch2.7" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cuda_compiler_versionNonepytorch2.8</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_versionNonepytorch2.8" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cuda_compiler_versionNonepytorch2.9</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=22772&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/momentum-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_versionNonepytorch2.9" alt="variant">
                 </a>
               </td>
             </tr><tr>

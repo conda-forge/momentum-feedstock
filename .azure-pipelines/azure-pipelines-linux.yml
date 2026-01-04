@@ -8,12 +8,40 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      linux_64_cuda_compiler_version12.9:
-        CONFIG: linux_64_cuda_compiler_version12.9
+      linux_64_cuda_compiler_version12.6pytorch2.7:
+        CONFIG: linux_64_cuda_compiler_version12.6pytorch2.7
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-      linux_64_cuda_compiler_versionNone:
-        CONFIG: linux_64_cuda_compiler_versionNone
+      linux_64_cuda_compiler_version12.6pytorch2.8:
+        CONFIG: linux_64_cuda_compiler_version12.6pytorch2.8
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+      linux_64_cuda_compiler_version12.6pytorch2.9:
+        CONFIG: linux_64_cuda_compiler_version12.6pytorch2.9
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+      linux_64_cuda_compiler_version12.9pytorch2.7:
+        CONFIG: linux_64_cuda_compiler_version12.9pytorch2.7
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+      linux_64_cuda_compiler_version12.9pytorch2.8:
+        CONFIG: linux_64_cuda_compiler_version12.9pytorch2.8
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+      linux_64_cuda_compiler_version12.9pytorch2.9:
+        CONFIG: linux_64_cuda_compiler_version12.9pytorch2.9
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+      linux_64_cuda_compiler_versionNonepytorch2.7:
+        CONFIG: linux_64_cuda_compiler_versionNonepytorch2.7
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+      linux_64_cuda_compiler_versionNonepytorch2.8:
+        CONFIG: linux_64_cuda_compiler_versionNonepytorch2.8
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+      linux_64_cuda_compiler_versionNonepytorch2.9:
+        CONFIG: linux_64_cuda_compiler_versionNonepytorch2.9
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
   timeoutInMinutes: 360
