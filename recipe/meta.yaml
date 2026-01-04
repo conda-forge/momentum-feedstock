@@ -15,9 +15,9 @@ build:
   number: 1
   # Skip Python < 3.12
   # CUDA-PyTorch version pairing for linux-64:
-  # - pytorch 2.7 uses CUDA 12.6 (skip cuda129 + py27)
+  # - pytorch 2.7, 2.8 use CUDA 12.6 (skip cuda129 + py27/py28)
   # - pytorch 2.9 uses CUDA 12.9 (skip cuda126 + py29)
-  skip: true  # [py<312 or (cuda_compiler_version == "12.6" and pytorch == "2.9") or (cuda_compiler_version == "12.9" and pytorch == "2.7")]
+  skip: true  # [py<312 or (cuda_compiler_version == "12.6" and pytorch == "2.9") or (cuda_compiler_version == "12.9" and pytorch == "2.7") or (cuda_compiler_version == "12.9" and pytorch == "2.8")]
 
 outputs:
   - name: momentum-cpp
