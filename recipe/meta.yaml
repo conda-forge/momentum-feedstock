@@ -90,6 +90,7 @@ outputs:
         - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
         # Pin tbb to 2021.* for PyTorch 2.7/2.8 to be compatible with libtorch/mkl
         - tbb {{ "2021.*" if pytorch in ("2.7", "2.8") else "" }}  # [linux]
+    test:
       script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
       requires:
