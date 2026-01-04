@@ -62,9 +62,7 @@ outputs:
         - openfbx
         - openusd  # [linux]
         - python  # [linux]
-        # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil version conflict
-        # PyTorch 2.7/2.8 require libabseil 20250127, re2 2025.08.12 requires 20250512
-        - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
+        - re2
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
         - tbb-devel  # [not win]
@@ -85,8 +83,7 @@ outputs:
         - nlohmann_json
         - openfbx
         - python  # [linux]
-        # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil version conflict
-        - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
+        - re2
         - tbb  # [linux]
     test:
       script: run_test_cpp.sh  # [unix]
@@ -122,9 +119,6 @@ outputs:
         - "*/momentum_*.dll"  # [win]
         - "*/axel.dll"  # [win]
         - "*/nvcuda.dll"  # [win and cuda_compiler_version != "None"]  System NVIDIA driver
-      # Ignore re2 run_exports to prevent libre2-11 capture for PyTorch 2.7/2.8
-      ignore_run_exports:
-        - re2
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -181,9 +175,7 @@ outputs:
         - pytest
         - python
         - pytorch
-        # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil version conflict
-        # re2 2024.07.02 uses libre2-10 with libabseil 20250127
-        - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
+        - re2
         - scikit-build-core >=0.11
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
@@ -206,9 +198,7 @@ outputs:
         - pytorch
         - numpy
         - python
-        # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil version conflict
-        # re2 2024.07.02 uses libre2-10 with libabseil 20250127
-        - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
+        - re2
         - spdlog
         - tbb  # [linux]
     test:
