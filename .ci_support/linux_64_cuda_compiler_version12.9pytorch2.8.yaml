@@ -36,7 +36,7 @@ python:
 pytorch:
 - '2.8'
 re2:
-- 2025.08.12
+- 2024.07.02
 rerun_version:
 - '0.23'
 spdlog:
@@ -52,5 +52,7 @@ zip_keys:
   - cxx_compiler_version
   - c_stdlib_version
   - cuda_compiler_version
+- - pytorch
+  - re2
 zlib:
 - '1'

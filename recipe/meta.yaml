@@ -62,7 +62,9 @@ outputs:
         - openfbx
         - openusd  # [linux]
         - python  # [linux]
-        - re2
+        # Pin re2 <2025 for PyTorch 2.7/2.8 to avoid libabseil version conflict
+        # PyTorch 2.7/2.8 require libabseil 20250127, re2 2025.08.12 requires 20250512
+        - re2 {{ "<2025" if pytorch in ("2.7", "2.8") else "" }}
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
         - tbb-devel  # [not win]
@@ -83,7 +85,8 @@ outputs:
         - nlohmann_json
         - openfbx
         - python  # [linux]
-        - re2
+        # Pin re2 <2025 for PyTorch 2.7/2.8 to avoid libabseil version conflict
+        - re2 {{ "<2025" if pytorch in ("2.7", "2.8") else "" }}
         - tbb  # [linux]
     test:
       script: run_test_cpp.sh  # [unix]
@@ -175,7 +178,8 @@ outputs:
         - pytest
         - python
         - pytorch
-        - re2
+        # Pin re2 <2025 for PyTorch 2.7/2.8 to avoid libabseil version conflict
+        - re2 {{ "<2025" if pytorch in ("2.7", "2.8") else "" }}
         - scikit-build-core >=0.11
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
@@ -198,7 +202,8 @@ outputs:
         - pytorch
         - numpy
         - python
-        - re2
+        # Pin re2 <2025 for PyTorch 2.7/2.8 to avoid libabseil version conflict
+        - re2 {{ "<2025" if pytorch in ("2.7", "2.8") else "" }}
         - spdlog
         - tbb  # [linux]
     test:

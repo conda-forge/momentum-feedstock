@@ -16,19 +16,6 @@ libtorch:
   - '2.8'  # [linux and x86_64]
   - '2.9'
 
-# Pin re2 per pytorch version to avoid libabseil conflicts
-# PyTorch 2.7/2.8 require libabseil 20250127, re2 2025.08.12 requires 20250512 (incompatible)
-# Use re2 2024.07.02 for PyTorch 2.7/2.8, re2 2025.08.12 for PyTorch 2.9
-re2:
-  - '2024.07.02'  # [linux and x86_64]
-  - '2024.07.02'  # [linux and x86_64]
-  - '2025.08.12'
-
-zip_keys:
-  - - pytorch
-    - libtorch
-    - re2
-
 # CUDA configuration with zip_keys - LINUX and WINDOWS ONLY
 # By using [linux or win] on the key declarations, macOS uses global config entirely
 #
