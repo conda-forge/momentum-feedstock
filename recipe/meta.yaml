@@ -12,7 +12,7 @@ source:
     sha256: d72bb920eba49036fa3457aa6978be61d63fd588a21323ac5a7fb5c570642a79
 
 build:
-  number: 2
+  number: 3
   # Skip Python < 3.12
   # CUDA-PyTorch version pairing for linux-64:
   # - pytorch 2.7, 2.8 use CUDA 12.6 (skip cuda129 + py27/py28)
@@ -34,6 +34,7 @@ outputs:
         - gflags
         - openfbx
         - re2
+        - tbb-devel  # Allow solver to pick tbb version compatible with libtorch/mkl
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -66,8 +67,8 @@ outputs:
         # re2 2024.07.02 uses libabseil 20250127 (compatible with PyTorch 2.7/2.8)
         - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
         - spdlog
-        # Should be removed once the TBB dependency logic is fixed in upstream
-        - tbb-devel  # [not win]
+        # Pin tbb-devel to 2021.* for PyTorch 2.7/2.8 to be compatible with libtorch/mkl
+        - tbb-devel {{ "2021.*" if pytorch in ("2.7", "2.8") else "" }}  # [not win]
         - urdfdom
       run:
         - ceres-solver
@@ -87,8 +88,8 @@ outputs:
         - python  # [linux]
         # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil conflict
         - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
-        - tbb  # [linux]
-    test:
+        # Pin tbb to 2021.* for PyTorch 2.7/2.8 to be compatible with libtorch/mkl
+        - tbb {{ "2021.*" if pytorch in ("2.7", "2.8") else "" }}  # [linux]
       script: run_test_cpp.sh  # [unix]
       script: run_test_cpp.bat  # [win]
       requires:
@@ -122,6 +123,9 @@ outputs:
         - "*/momentum_*.dll"  # [win]
         - "*/axel.dll"  # [win]
         - "*/nvcuda.dll"  # [win and cuda_compiler_version != "None"]  System NVIDIA driver
+      # Ignore tbb-devel run_exports to allow solver to pick tbb version compatible with libtorch/mkl
+      ignore_run_exports:
+        - tbb-devel
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -182,8 +186,8 @@ outputs:
         - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
         - scikit-build-core >=0.11
         - spdlog
-        # Should be removed once the TBB dependency logic is fixed in upstream
-        - tbb-devel  # [not win]
+        # Pin tbb-devel to 2021.* for PyTorch 2.7/2.8 to be compatible with libtorch/mkl
+        - tbb-devel {{ "2021.*" if pytorch in ("2.7", "2.8") else "" }}  # [not win]
         - urdfdom
         - zlib
       run:
@@ -205,8 +209,8 @@ outputs:
         # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil conflict
         - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
         - spdlog
-        - tbb  # [linux]
-    test:
+        # Pin tbb to 2021.* for PyTorch 2.7/2.8 to be compatible with libtorch/mkl
+        - tbb {{ "2021.*" if pytorch in ("2.7", "2.8") else "" }}  # [linux]
       imports:
         - pymomentum.axel
         # On Windows CUDA builds, geometry/backend require nvcuda.dll (NVIDIA driver)
