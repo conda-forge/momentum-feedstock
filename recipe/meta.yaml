@@ -12,7 +12,7 @@ source:
     sha256: d72bb920eba49036fa3457aa6978be61d63fd588a21323ac5a7fb5c570642a79
 
 build:
-  number: 1
+  number: 2
   # Skip Python < 3.12
   # CUDA-PyTorch version pairing for linux-64:
   # - pytorch 2.7, 2.8 use CUDA 12.6 (skip cuda129 + py27/py28)
@@ -62,7 +62,9 @@ outputs:
         - openfbx
         - openusd  # [linux]
         - python  # [linux]
-        - re2
+        # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil conflict
+        # re2 2024.07.02 uses libabseil 20250127 (compatible with PyTorch 2.7/2.8)
+        - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
         - tbb-devel  # [not win]
@@ -83,7 +85,8 @@ outputs:
         - nlohmann_json
         - openfbx
         - python  # [linux]
-        - re2
+        # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil conflict
+        - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
         - tbb  # [linux]
     test:
       script: run_test_cpp.sh  # [unix]
@@ -175,7 +178,8 @@ outputs:
         - pytest
         - python
         - pytorch
-        - re2
+        # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil conflict
+        - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
         - scikit-build-core >=0.11
         - spdlog
         # Should be removed once the TBB dependency logic is fixed in upstream
@@ -198,7 +202,8 @@ outputs:
         - pytorch
         - numpy
         - python
-        - re2
+        # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil conflict
+        - re2 {{ "=2024.07.02" if pytorch in ("2.7", "2.8") else "" }}
         - spdlog
         - tbb  # [linux]
     test:
