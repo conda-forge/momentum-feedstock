@@ -16,8 +16,6 @@ cxx_compiler:
 - vs2022
 cxx_compiler_version:
 - ''
-fmt:
-- '12.0'
 libboost_devel:
 - '1.86'
 numpy:
