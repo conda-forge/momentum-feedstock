@@ -32,8 +32,12 @@ else
   export CMAKE_ARGS="$CMAKE_ARGS -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON"
 fi
 
-# Disable IO_USD on macOS
+# Disable IO_USD on macOS or when openusd is not available
+# (openusd is skipped for PyTorch 2.7/2.8 due to TBB conflict)
 if [[ "${target_platform}" == osx-* ]]; then
+  export CMAKE_ARGS="$CMAKE_ARGS -DMOMENTUM_BUILD_IO_USD=OFF"
+elif [[ ! -d "${PREFIX}/include/pxr" ]]; then
+  # openusd is not available (check for pxr headers)
   export CMAKE_ARGS="$CMAKE_ARGS -DMOMENTUM_BUILD_IO_USD=OFF"
 fi
 

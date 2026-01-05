@@ -12,7 +12,7 @@ source:
     sha256: d72bb920eba49036fa3457aa6978be61d63fd588a21323ac5a7fb5c570642a79
 
 build:
-  number: 3
+  number: 4
   # Skip Python < 3.12
   # CUDA-PyTorch version pairing for linux-64:
   # - pytorch 2.7, 2.8 use CUDA 12.6 (skip cuda129 + py27/py28)
@@ -61,7 +61,11 @@ outputs:
         - ms-gsl
         - nlohmann_json
         - openfbx
+        # Skip openusd for PyTorch 2.7/2.8 due to TBB conflict:
+        # openusd >=25.05 requires tbb >=2022.3.0, but libtorch/mkl requires tbb 2021.*
+        {% if pytorch not in ("2.7", "2.8") %}
         - openusd  # [linux]
+        {% endif %}
         - python  # [linux]
         # Pin re2 for PyTorch 2.7/2.8 to avoid libabseil conflict
         # re2 2024.07.02 uses libabseil 20250127 (compatible with PyTorch 2.7/2.8)
@@ -178,7 +182,11 @@ outputs:
         - nlohmann_json
         - numpy
         - openfbx
+        # Skip openusd for PyTorch 2.7/2.8 due to TBB conflict:
+        # openusd >=25.05 requires tbb >=2022.3.0, but libtorch/mkl requires tbb 2021.*
+        {% if pytorch not in ("2.7", "2.8") %}
         - openusd  # [linux]
+        {% endif %}
         - pip
         - pytest
         - python

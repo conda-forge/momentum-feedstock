@@ -23,11 +23,15 @@ else
   MOMENTUM_USE_SYSTEM_GOOGLETEST=OFF
 fi
 
-# Disable IO_USD on macOS
+# Disable IO_USD on macOS or when openusd is not available
+# (openusd is skipped for PyTorch 2.7/2.8 due to TBB conflict)
 if [[ "${target_platform}" == osx-* ]]; then
   MOMENTUM_BUILD_IO_USD=OFF
-else
+elif [[ -d "${PREFIX}/include/pxr" ]]; then
+  # openusd is available (check for pxr headers)
   MOMENTUM_BUILD_IO_USD=ON
+else
+  MOMENTUM_BUILD_IO_USD=OFF
 fi
 
 cmake $SRC_DIR \
