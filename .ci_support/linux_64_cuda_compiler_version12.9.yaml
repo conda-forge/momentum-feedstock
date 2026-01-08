@@ -13,7 +13,7 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -26,8 +26,6 @@ libboost_devel:
 - '1.86'
 numpy:
 - '2'
-orc:
-- 2.2.1
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -36,7 +34,7 @@ python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 pytorch:
-- '2.7'
+- '2.9'
 re2:
 - 2025.08.12
 rerun_version:
