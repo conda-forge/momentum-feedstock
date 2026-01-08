@@ -115,15 +115,8 @@ outputs:
       missing_dso_whitelist:   # [win]
         - "*/momentum_*.dll"  # [win]
         - "*/axel.dll"  # [win]
-        - "*/nvcuda.dll"  # [win and cuda_compiler_version != "None"]  System NVIDIA driver
-      # Ignore run_exports to allow solver flexibility:
-      # - tbb-devel: allow solver to pick tbb version compatible with libtorch/mkl
-      # - fmt: fmt is linked statically, not needed at runtime
-      # - spdlog: uses vendored fmt, not needed at runtime
-      ignore_run_exports:
-        - tbb-devel
-        - fmt
-        - spdlog
+        # System NVIDIA driver (not available on Azure CI machines without GPU)
+        - "*/nvcuda.dll"  # [win and cuda_compiler_version != "None"]
     requirements:
       build:
         - {{ compiler('cxx') }}
