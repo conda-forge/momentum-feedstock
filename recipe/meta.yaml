@@ -171,6 +171,7 @@ outputs:
         - pytest
         - python
         - pytorch
+        - libtorch  # [unix]  # Provides torch/torch.h C++ headers
         - re2
         - scikit-build-core >=0.11
         - spdlog
