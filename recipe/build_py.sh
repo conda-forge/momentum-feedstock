@@ -2,13 +2,27 @@
 
 set -exo pipefail
 
-# On Unix, use libtorch package for C++ headers instead of pytorch package.
-# The pytorch package's TorchConfig.cmake references non-existent include
-# directories, while libtorch provides proper C++ headers and CMake config.
-# See: https://github.com/conda-forge/pytorch-cpu-feedstock/issues/474
-if [[ -f "${PREFIX}/lib/cmake/Torch/TorchConfig.cmake" ]]; then
-  export Torch_DIR="${PREFIX}/lib/cmake/Torch"
-  echo "Using libtorch CMake config: ${Torch_DIR}"
+# Workaround for PyTorch 2.9 CMake config issue on Unix:
+# The pytorch package's TorchConfig.cmake references include directories like
+# "torch/include/torch/csrc/api/include" that don't exist. The libtorch package
+# provides proper C++ headers at $PREFIX/include/torch/.
+# Solution: Symlink libtorch headers to the locations pytorch expects.
+TORCH_SITE_PACKAGES="${PREFIX}/lib/python${PY_VER}/site-packages/torch"
+LIBTORCH_INCLUDE="${PREFIX}/include"
+if [[ -d "${TORCH_SITE_PACKAGES}/include" ]] && [[ -d "${LIBTORCH_INCLUDE}/torch" ]]; then
+  echo "Linking libtorch headers to pytorch site-packages..."
+
+  # Backup existing include dir and replace with libtorch headers
+  if [[ -d "${TORCH_SITE_PACKAGES}/include/torch" ]]; then
+    rm -rf "${TORCH_SITE_PACKAGES}/include/torch"
+  fi
+  ln -sf "${LIBTORCH_INCLUDE}/torch" "${TORCH_SITE_PACKAGES}/include/torch"
+
+  # Create the api/include subdirectory that TorchConfig.cmake references
+  mkdir -p "${TORCH_SITE_PACKAGES}/include/torch/csrc/api/include"
+
+  echo "Libtorch headers linked successfully"
+  ls -la "${TORCH_SITE_PACKAGES}/include/"
 fi
 
 if [[ "${target_platform}" == osx-* ]]; then
