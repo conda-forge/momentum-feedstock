@@ -2,14 +2,13 @@
 
 set -exo pipefail
 
-# Workaround for PyTorch 2.9 CMake config issue:
-# The TorchConfig.cmake references non-existent include directories like
-# "torch/include/torch/csrc/api/include". Create empty directories to
-# prevent CMake from failing.
+# On Unix, use libtorch package for C++ headers instead of pytorch package.
+# The pytorch package's TorchConfig.cmake references non-existent include
+# directories, while libtorch provides proper C++ headers and CMake config.
 # See: https://github.com/conda-forge/pytorch-cpu-feedstock/issues/474
-TORCH_INCLUDE_DIR="${PREFIX}/lib/python${PY_VER}/site-packages/torch/include"
-if [[ -d "${TORCH_INCLUDE_DIR}" ]]; then
-  mkdir -p "${TORCH_INCLUDE_DIR}/torch/csrc/api/include"
+if [[ -f "${PREFIX}/lib/cmake/Torch/TorchConfig.cmake" ]]; then
+  export Torch_DIR="${PREFIX}/lib/cmake/Torch"
+  echo "Using libtorch CMake config: ${Torch_DIR}"
 fi
 
 if [[ "${target_platform}" == osx-* ]]; then
