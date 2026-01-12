@@ -12,7 +12,7 @@ source:
     sha256: 16040b82b0030f5883fcee18414d3f4c5c199a5d75104e806d872362c1cb5816
 
 build:
-  number: 0
+  number: 1
   # Skip Python < 3.12
   skip: true  # [py<312]
 
@@ -171,6 +171,7 @@ outputs:
         - pytest
         - python
         - pytorch
+        - libtorch  # [unix]  # Provides torch/torch.h C++ headers
         - re2
         - scikit-build-core >=0.11
         - spdlog
