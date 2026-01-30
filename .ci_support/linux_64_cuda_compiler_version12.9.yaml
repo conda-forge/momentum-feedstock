@@ -35,6 +35,7 @@ pin_run_as_build:
 python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
+- 3.14.* *_cp314
 pytorch:
 - '2.10'
 re2:
