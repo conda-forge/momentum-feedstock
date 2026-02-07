@@ -12,7 +12,7 @@ source:
     sha256: 5af79214549af3464e2c0a2b02467ffcede88cfc00295acba65c9c6f91b3628e
 
 build:
-  number: 0
+  number: 1
   # Skip Python < 3.12
   skip: true  # [py<312]
 
