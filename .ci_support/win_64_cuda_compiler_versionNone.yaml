@@ -20,6 +20,8 @@ fmt:
 - '12.1'
 libboost_devel:
 - '1.86'
+librerun_sdk:
+- 0.29.0
 numpy:
 - '2'
 pin_run_as_build:
@@ -34,8 +36,6 @@ pytorch:
 - '2.10'
 re2:
 - 2025.11.05
-rerun_version:
-- 0.28.2
 spdlog:
 - '1.17'
 target_platform:
