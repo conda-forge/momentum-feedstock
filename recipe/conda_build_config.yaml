@@ -3,9 +3,6 @@
 c_stdlib_version:  # [osx and x86_64]
   - '10.15'        # [osx and x86_64]
 
-rerun_version:
-  - '0.28.2'
-
 # CUDA configuration
 
 # CUDA configuration with zip_keys - LINUX and WINDOWS ONLY
