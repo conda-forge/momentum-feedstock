@@ -12,7 +12,7 @@ source:
     sha256: f0b698bd7602cbcfc06a936d1393daabf9176cd7b8b0d19f77f79840b481c2ee
 
 build:
-  number: 0
+  number: 1
   # Skip Python < 3.12
   skip: true  # [py<312]
 
@@ -54,7 +54,7 @@ outputs:
         - fx-gltf
         - indicators
         - kokkos
-        - librerun-sdk {{ rerun_version }}
+        - librerun-sdk
         - ms-gsl
         - nlohmann_json
         - openfbx
@@ -73,7 +73,7 @@ outputs:
         - fx-gltf
         - indicators
         - libabseil  # [osx]
-        - librerun-sdk {{ rerun_version }}
+        - librerun-sdk
         - gflags
         - libdeflate
         - ms-gsl
@@ -161,7 +161,7 @@ outputs:
         - fx-gltf
         - indicators
         - kokkos
-        - librerun-sdk {{ rerun_version }}
+        - librerun-sdk
         - ms-gsl
         - nlohmann_json
         - numpy
