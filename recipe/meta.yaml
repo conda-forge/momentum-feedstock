@@ -64,6 +64,7 @@ outputs:
         - spdlog
         - tbb-devel  # [not win]
         - urdfdom
+        - urdfdom_headers <2  # urdfdom 4.0.x needs urdf_model_state headers removed in 2.x
       run:
         - ceres-solver
         - cli11
@@ -177,6 +178,7 @@ outputs:
         - spdlog
         - tbb-devel  # [not win]
         - urdfdom
+        - urdfdom_headers <2  # urdfdom 4.0.x needs urdf_model_state headers removed in 2.x
         - zlib
       run:
         # CUDA runtime needed at import time (no GPU required to import):
