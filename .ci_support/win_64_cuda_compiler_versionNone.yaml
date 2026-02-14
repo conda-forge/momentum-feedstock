@@ -43,6 +43,6 @@ target_platform:
 tbb_devel:
 - '2022'
 urdfdom:
-- '4.0'
+- '5.1'
 zlib:
 - '1'
