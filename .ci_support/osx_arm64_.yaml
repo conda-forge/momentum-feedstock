@@ -25,7 +25,7 @@ fmt:
 libboost_devel:
 - '1.86'
 librerun_sdk:
-- 0.29.0
+- 0.30.0
 libtorch:
 - '2.10'
 macos_machine:
