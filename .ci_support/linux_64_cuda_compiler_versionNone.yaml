@@ -23,7 +23,7 @@ docker_image:
 fmt:
 - '12.1'
 libboost_devel:
-- '1.86'
+- '1.88'
 librerun_sdk:
 - 0.31.2
 libtorch:
