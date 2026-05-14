@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16.3)
 
-project(momentum_consumer LANGUAGES CXX)
+project(momentum_consumer LANGUAGES C CXX)
 
 include(CTest)
 
