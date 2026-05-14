@@ -10,3 +10,4 @@ cmake tests \
     -DCMAKE_BUILD_TYPE=Release
 
 cmake --build tests/build --parallel
+ctest --test-dir tests/build --output-on-failure

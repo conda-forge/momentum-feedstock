@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.16.3)
 
-project(momentum)
+project(momentum_consumer LANGUAGES CXX)
+
+include(CTest)
 
 find_package(momentum CONFIG REQUIRED)
-add_executable(hello_world main.cpp)
-target_link_libraries(hello_world PRIVATE momentum::math)
+add_executable(momentum_consumer main.cpp)
+target_link_libraries(momentum_consumer PRIVATE momentum::math)
+add_test(NAME momentum_consumer COMMAND momentum_consumer)
