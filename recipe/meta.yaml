@@ -15,6 +15,9 @@ build:
   number: 0
   # Skip Python < 3.12
   skip: true  # [py<312]
+  # Enable Linux aarch64 for CPU builds first; CUDA aarch64 needs a separate
+  # dependency audit and is not part of this platform-expansion pass.
+  skip: true  # [cuda_compiler_version != "None" and aarch64]
 
 outputs:
   - name: momentum-cpp
