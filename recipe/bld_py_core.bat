@@ -1,0 +1,17 @@
+@echo on
+setlocal EnableExtensions EnableDelayedExpansion
+
+cd /d %SRC_DIR%
+
+set CMAKE_ARGS=%CMAKE_ARGS% ^
+    -DMOMENTUM_BUILD_IO_USD=OFF ^
+    -DMOMENTUM_BUILD_RENDERER=OFF ^
+    -DMOMENTUM_BUILD_RERUN=OFF ^
+    -DMOMENTUM_BUILD_PYMOMENTUM_TORCH_EXTENSIONS=OFF ^
+    -DMOMENTUM_BUILD_TESTING=OFF ^
+    -DMOMENTUM_ENABLE_SIMD=OFF ^
+    -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON ^
+    -DMOMENTUM_USE_SYSTEM_PYBIND11=ON
+
+%PYTHON% -m pip install . -vv --no-deps --no-build-isolation
+if errorlevel 1 exit 1

@@ -10,9 +10,12 @@ package:
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
     sha256: ab8d7fccd7d915bc403a7afa3ab2d03b1d07eae5f66b9dc4b75b6857514e5f4a
+    patches:
+      - patches/0003-Make-native-rerun-support-optional.patch
+      - patches/0004-Make-PyMomentum-Torch-extensions-optional.patch
 
 build:
-  number: 0
+  number: 1
   # Skip Python < 3.12
   skip: true  # [py<312]
 
@@ -44,16 +47,16 @@ outputs:
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
       host:
-        - ceres-solver
+        - ceres-solver * cpu*
         - cli11
         - dispenso
-        - drjit-cpp
+        - drjit-cpp * cpu*
         - eigen
         - ezc3d
         - fmt
         - fx-gltf
         - indicators
-        - kokkos
+        - kokkos * h*
         - librerun-sdk
         - ms-gsl
         - nlohmann_json
@@ -65,15 +68,16 @@ outputs:
         - tbb-devel  # [not win]
         - urdfdom
       run:
-        - ceres-solver
+        - ceres-solver * cpu*
         - cli11
         - dispenso
-        - drjit-cpp
+        - drjit-cpp * cpu*
         - ezc3d
         - fx-gltf
         - indicators
         - libabseil  # [osx]
         - librerun-sdk
+        - kokkos * h*
         - gflags
         - libdeflate
         - ms-gsl
@@ -136,7 +140,8 @@ outputs:
         - pip
         - pybind11-abi 11
         - python
-        - pytorch
+        - pytorch * cpu*                              # [cuda_compiler_version == "None"]
+        - pytorch                                     # [cuda_compiler_version != "None"]
         - scikit-build-core >=0.11
       host:
         # GPU requirements
@@ -151,16 +156,18 @@ outputs:
         - nvtx-c                                        # [cuda_compiler_version != "None"]
         - kokkos * *cuda*                               # [cuda_compiler_version != "None"]
         # other requirements
-        - ceres-solver
+        - ceres-solver * cpu*                         # [cuda_compiler_version == "None"]
+        - ceres-solver                                 # [cuda_compiler_version != "None"]
         - cli11
         - dispenso
-        - drjit-cpp
+        - drjit-cpp * cpu*                             # [cuda_compiler_version == "None"]
+        - drjit-cpp                                    # [cuda_compiler_version != "None"]
         - eigen
         - ezc3d
         - fmt
         - fx-gltf
         - indicators
-        - kokkos
+        - kokkos * h*                                  # [cuda_compiler_version == "None"]
         - librerun-sdk
         - ms-gsl
         - nlohmann_json
@@ -170,8 +177,10 @@ outputs:
         - pip
         - pytest
         - python
-        - pytorch
-        - libtorch  # [unix]  # Provides torch/torch.h C++ headers
+        - pytorch * cpu*                              # [cuda_compiler_version == "None"]
+        - pytorch                                     # [cuda_compiler_version != "None"]
+        - libtorch * cpu*                             # [unix and cuda_compiler_version == "None"]  # Provides torch/torch.h C++ headers
+        - libtorch                                    # [unix and cuda_compiler_version != "None"]  # Provides torch/torch.h C++ headers
         - re2
         - scikit-build-core >=0.11
         - spdlog
@@ -184,6 +193,9 @@ outputs:
         - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
         # Kokkos CUDA variant needed for geometry module on CUDA builds
         - kokkos * *cuda*                               # [cuda_compiler_version != "None"]
+        - kokkos * h*                                   # [cuda_compiler_version == "None"]
+        - ceres-solver * cpu*                           # [cuda_compiler_version == "None"]
+        - drjit-cpp * cpu*                              # [cuda_compiler_version == "None"]
         - ezc3d
         - dispenso
         - gflags
@@ -196,6 +208,8 @@ outputs:
         - re2
         - spdlog
         - tbb  # [linux]
+      run_constrained:
+        - pymomentum-core <0.0a0
     test:
       imports:
         - pymomentum.axel
@@ -213,6 +227,114 @@ outputs:
         - pymomentum.torch.character  # [not (win and cuda_compiler_version != "None")]
         - pymomentum.trs
       commands:
+        - pip list
+        - pip check
+      requires:
+        - pip
+
+  - name: pymomentum-core
+    script: build_py_core.sh  # [unix]
+    script: bld_py_core.bat  # [win]
+    build:
+      skip:
+        - true  # [cuda_compiler_version != "None"]
+      string: cpu_py{{ CONDA_PY }}_pt{{ pytorch | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
+      # Core lists runtime deps explicitly so host run_exports do not pull
+      # renderer/viewer transitive deps back into the trimmed package.
+      ignore_run_exports_from:
+        - ceres-solver
+        - cli11
+        - dispenso
+        - drjit-cpp
+        - eigen
+        - ezc3d
+        - fmt
+        - fx-gltf
+        - indicators
+        - ms-gsl
+        - nlohmann_json
+        - openfbx
+        - re2
+        - spdlog
+        - urdfdom
+        - zlib
+      ignore_run_exports:
+        - ceres-solver
+        - drjit-cpp
+        - eigen
+        - fmt
+        - indicators
+        - openfbx
+        - urdfdom_headers
+    requirements:
+      build:
+        - {{ compiler('cxx') }}
+        - {{ stdlib('c') }}
+        - cmake
+        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+        - gtest
+        - indicators
+        - libboost-devel
+        - make
+        - ninja
+        - pip
+        - pybind11-abi 11
+        - python
+        - scikit-build-core >=0.11
+      host:
+        - ceres-solver * cpu*
+        - cli11
+        - dispenso
+        - drjit-cpp * cpu*
+        - eigen
+        - ezc3d
+        - fmt
+        - fx-gltf
+        - indicators
+        - ms-gsl
+        - nlohmann_json
+        - numpy
+        - openfbx
+        - pip
+        - pytest
+        - python
+        - re2
+        - scikit-build-core >=0.11
+        - spdlog
+        - urdfdom
+        - zlib
+      run:
+        - ceres-solver * cpu*
+        - dispenso
+        - drjit-cpp * cpu*
+        - ezc3d
+        - libabseil  # [osx]
+        - libdeflate
+        - libre2-11
+        - numpy
+        - python
+        - pytorch
+        - re2
+        - spdlog
+        - urdfdom
+      run_constrained:
+        - pymomentum <0.0a0
+        - pymomentum-cpu <0.0a0
+        - pymomentum-gpu <0.0a0
+    test:
+      imports:
+        - pymomentum.backend
+        - pymomentum.geometry
+        - pymomentum.marker_tracking
+        - pymomentum.quaternion
+        - pymomentum.rerun_vis
+        - pymomentum.skel_state
+        - pymomentum.solver2
+        - pymomentum.torch.character
+        - pymomentum.trs
+        - pymomentum.viser_vis
+      commands:
+        - python -c "import importlib.util; assert importlib.util.find_spec('pymomentum.axel') is None; assert importlib.util.find_spec('pymomentum.diff_geometry') is None; assert importlib.util.find_spec('pymomentum.solver') is None"
         - pip list
         - pip check
       requires:
