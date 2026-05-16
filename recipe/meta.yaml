@@ -243,6 +243,9 @@ outputs:
 
   - name: momentum
     build:
+      # The aggregate package includes the C++ library, which is CPU-only.
+      skip:
+        - true  # [cuda_compiler_version != "None"]
       run_exports:
         - {{ pin_subpackage('momentum-cpp', max_pin='x.x') }}
     requirements:
