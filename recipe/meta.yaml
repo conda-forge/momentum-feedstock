@@ -195,12 +195,19 @@ outputs:
         - indicators
         - libabseil  # [osx]
         - libdeflate
+        # Direct DSOs used by the Python extensions; host run exports do not
+        # cover all of these in the CUDA build.
+        - libgcc  # [linux]
+        - libstdcxx  # [linux]
+        - libre2-11  # [linux]
+        - libtorch * cpu*                             # [unix and cuda_compiler_version == "None"]
+        - libtorch                                    # [unix and cuda_compiler_version != "None"]
         - pytorch
         - numpy
         - python
-        - re2
         - spdlog
         - tbb  # [linux]
+        - urdfdom
     test:
       imports:
         - pymomentum.axel
