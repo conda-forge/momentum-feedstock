@@ -233,6 +233,13 @@ outputs:
     requirements:
       run:
         - {{ pin_subpackage("pymomentum", exact=True) }}
+    test:
+      imports:
+        - pymomentum.axel
+      commands:
+        - pip check
+      requires:
+        - pip
 
   - name: momentum
     build:
@@ -243,6 +250,14 @@ outputs:
         - {{ pin_subpackage('momentum-cpp', exact=True) }}
         - {{ pin_subpackage('pymomentum', exact=True) }}
         - python
+    test:
+      imports:
+        - pymomentum.axel
+      commands:
+        - hello_world
+        - pip check
+      requires:
+        - pip
 
 about:
   home: https://facebookresearch.github.io/momentum/
