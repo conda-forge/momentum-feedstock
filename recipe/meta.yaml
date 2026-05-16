@@ -10,9 +10,11 @@ package:
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v{{ version }}.tar.gz
     sha256: ab8d7fccd7d915bc403a7afa3ab2d03b1d07eae5f66b9dc4b75b6857514e5f4a
+    patches:
+      - patches/0003-Use-packaged-mdspan.patch
 
 build:
-  number: 0
+  number: 1
   # Skip Python < 3.12
   skip: true  # [py<312]
 
@@ -44,17 +46,17 @@ outputs:
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
       host:
-        - ceres-solver
+        - ceres-solver * cpu*
         - cli11
         - dispenso
-        - drjit-cpp
+        - drjit-cpp * cpu*
         - eigen
         - ezc3d
         - fmt
         - fx-gltf
         - indicators
-        - kokkos
         - librerun-sdk
+        - mdspan >=0.6.1.dev20260223
         - ms-gsl
         - nlohmann_json
         - openfbx
@@ -65,15 +67,16 @@ outputs:
         - tbb-devel  # [not win]
         - urdfdom
       run:
-        - ceres-solver
+        - ceres-solver * cpu*
         - cli11
         - dispenso
-        - drjit-cpp
+        - drjit-cpp * cpu*
         - ezc3d
         - fx-gltf
         - indicators
         - libabseil  # [osx]
         - librerun-sdk
+        - mdspan >=0.6.1.dev20260223
         - gflags
         - libdeflate
         - ms-gsl
@@ -136,7 +139,8 @@ outputs:
         - pip
         - pybind11-abi 11
         - python
-        - pytorch
+        - pytorch * cpu*                              # [cuda_compiler_version == "None"]
+        - pytorch                                     # [cuda_compiler_version != "None"]
         - scikit-build-core >=0.11
       host:
         # GPU requirements
@@ -149,18 +153,19 @@ outputs:
         - cuda-nvrtc-dev                                # [cuda_compiler_version != "None" and win]
         - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
         - nvtx-c                                        # [cuda_compiler_version != "None"]
-        - kokkos * *cuda*                               # [cuda_compiler_version != "None"]
         # other requirements
-        - ceres-solver
+        - ceres-solver * cpu*                         # [cuda_compiler_version == "None"]
+        - ceres-solver                                 # [cuda_compiler_version != "None"]
         - cli11
         - dispenso
-        - drjit-cpp
+        - drjit-cpp * cpu*                             # [cuda_compiler_version == "None"]
+        - drjit-cpp                                    # [cuda_compiler_version != "None"]
         - eigen
         - ezc3d
         - fmt
         - fx-gltf
         - indicators
-        - kokkos
+        - mdspan >=0.6.1.dev20260223
         - librerun-sdk
         - ms-gsl
         - nlohmann_json
@@ -170,8 +175,10 @@ outputs:
         - pip
         - pytest
         - python
-        - pytorch
-        - libtorch  # [unix]  # Provides torch/torch.h C++ headers
+        - pytorch * cpu*                              # [cuda_compiler_version == "None"]
+        - pytorch                                     # [cuda_compiler_version != "None"]
+        - libtorch * cpu*                             # [unix and cuda_compiler_version == "None"]  # Provides torch/torch.h C++ headers
+        - libtorch                                    # [unix and cuda_compiler_version != "None"]  # Provides torch/torch.h C++ headers
         - re2
         - scikit-build-core >=0.11
         - spdlog
@@ -182,8 +189,6 @@ outputs:
         # CUDA runtime needed at import time (no GPU required to import):
         - cuda-cudart                                   # [cuda_compiler_version != "None"]
         - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
-        # Kokkos CUDA variant needed for geometry module on CUDA builds
-        - kokkos * *cuda*                               # [cuda_compiler_version != "None"]
         - ezc3d
         - dispenso
         - gflags

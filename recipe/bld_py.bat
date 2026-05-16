@@ -109,11 +109,6 @@ if exist "%LIBRARY_BIN%\momentum*.dll" (
     )
 )
 
-rem Copy Kokkos DLLs - these are critical for geometry module with CUDA
-rem NOTE: NOT copying kokkos DLLs to package dir - they have complex deps (nvcuda.dll etc)
-rem       that cause overlinking errors. Let them be found via os.add_dll_directory()
-echo NOTE: Kokkos DLLs NOT copied (found via Library/bin to avoid overlinking errors)
-
 rem Also copy any other required DLLs that momentum depends on
 rem These are typically installed by the momentum-cpp package
 rem NOTE: NOT copying ceres.dll - it has many CUDA/LAPACK deps that cause overlinking
