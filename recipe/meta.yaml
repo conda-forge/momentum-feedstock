@@ -191,23 +191,32 @@ outputs:
         - cuda-nvrtc                                    # [cuda_compiler_version != "None"]
         - ezc3d
         - dispenso
+        - drjit-cpp * cpu*                             # [win and cuda_compiler_version == "None"]
+        - drjit-cpp                                    # [win and cuda_compiler_version != "None"]
+        - fmt  # [win]
         - gflags
         - indicators
         - libabseil  # [osx]
         - libdeflate
+        - librerun-sdk  # [win]
         # Direct DSOs used by the Python extensions; host run exports do not
         # cover all of these in the CUDA build.
         - libgcc  # [linux]
         - libstdcxx  # [linux]
-        - libre2-11  # [linux]
+        - libre2-11  # [linux or win]
         - libtorch * cpu*                             # [unix and cuda_compiler_version == "None"]
         - libtorch                                    # [unix and cuda_compiler_version != "None"]
+        - libtorch * cpu*                             # [win and cuda_compiler_version == "None"]
+        - libtorch                                    # [win and cuda_compiler_version != "None"]
         - pytorch
         - numpy
-        - python
+        - python {{ python }}
+        - python_abi * *_cp{{ CONDA_PY }}
         - spdlog
         - tbb  # [linux]
         - urdfdom
+        - ucrt  # [win]
+        - vc14_runtime  # [win]
     test:
       imports:
         - pymomentum.axel
