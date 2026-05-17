@@ -55,9 +55,23 @@ for /f "delims=" %%i in ('where cl.exe') do (
     if not defined CMAKE_CUDA_HOST_COMPILER set "CMAKE_CUDA_HOST_COMPILER=%%i"
 )
 if not defined CMAKE_CUDA_HOST_COMPILER (
-    echo ERROR: cl.exe not found after Visual Studio environment setup
+    echo ERROR: cl.exe not found in the Visual Studio compiler environment
     exit 1
 )
+set "ORIGINAL_CUDA_HOST_COMPILER=%CMAKE_CUDA_HOST_COMPILER%"
+for %%I in ("%ORIGINAL_CUDA_HOST_COMPILER%") do set "CUDA_HOST_COMPILER_DIR=%%~dpsI"
+if defined CUDA_HOST_COMPILER_DIR set "PATH=%CUDA_HOST_COMPILER_DIR%;%PATH%"
+set "COPIED_CUDA_HOST_COMPILER="
+if defined BUILD_PREFIX if exist "%BUILD_PREFIX%\Library\bin" (
+    copy /Y "%ORIGINAL_CUDA_HOST_COMPILER%" "%BUILD_PREFIX%\Library\bin\cl.exe"
+    if errorlevel 1 exit 1
+    set "CMAKE_CUDA_HOST_COMPILER=%BUILD_PREFIX%\Library\bin\cl.exe"
+    set "COPIED_CUDA_HOST_COMPILER=1"
+)
+if not defined COPIED_CUDA_HOST_COMPILER (
+    for %%I in ("%CMAKE_CUDA_HOST_COMPILER%") do set "CMAKE_CUDA_HOST_COMPILER=%%~fsI"
+)
+set "CUDAHOSTCXX=%CMAKE_CUDA_HOST_COMPILER%"
 echo Using CUDA host compiler: %CMAKE_CUDA_HOST_COMPILER%
 
 rem Create build directory (use build_py to avoid conflict with C++ build directory)
