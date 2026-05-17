@@ -46,6 +46,24 @@ rem  over the build type (Release) and avoid debug/release mismatch issues
 rem ------------------------------------------------------------------
 echo Using direct CMake for CUDA build...
 
+rem Ensure nvcc can find the MSVC host compiler under rattler-build.
+set "VCVARS64="
+if defined VSINSTALLDIR if exist "%VSINSTALLDIR%VC\Auxiliary\Build\vcvars64.bat" set "VCVARS64=%VSINSTALLDIR%VC\Auxiliary\Build\vcvars64.bat"
+if not defined VCVARS64 if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" set "VCVARS64=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+if defined VCVARS64 (
+    call "%VCVARS64%"
+    if errorlevel 1 exit 1
+)
+set "CMAKE_CUDA_HOST_COMPILER="
+for /f "delims=" %%i in ('where cl.exe') do (
+    if not defined CMAKE_CUDA_HOST_COMPILER set "CMAKE_CUDA_HOST_COMPILER=%%i"
+)
+if not defined CMAKE_CUDA_HOST_COMPILER (
+    echo ERROR: cl.exe not found after Visual Studio environment setup
+    exit 1
+)
+echo Using CUDA host compiler: %CMAKE_CUDA_HOST_COMPILER%
+
 rem Create build directory (use build_py to avoid conflict with C++ build directory)
 if exist build_py rmdir /s /q build_py
 mkdir build_py
@@ -58,6 +76,7 @@ cmake .. -G Ninja ^
     -DCMAKE_PREFIX_PATH="%LIBRARY_PREFIX%;%PREFIX%" ^
     -DPython_EXECUTABLE="%PYTHON%" ^
     -DPython3_EXECUTABLE="%PYTHON%" ^
+    -DCMAKE_CUDA_HOST_COMPILER="%CMAKE_CUDA_HOST_COMPILER%" ^
     -DMOMENTUM_BUILD_PYMOMENTUM=ON ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=ON ^
