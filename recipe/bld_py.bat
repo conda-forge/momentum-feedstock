@@ -47,14 +47,10 @@ rem ------------------------------------------------------------------
 echo Using direct CMake for CUDA build...
 
 rem Ensure nvcc can find the MSVC host compiler under rattler-build.
-set "VCVARS64="
-if defined VSINSTALLDIR if exist "%VSINSTALLDIR%VC\Auxiliary\Build\vcvars64.bat" set "VCVARS64=%VSINSTALLDIR%VC\Auxiliary\Build\vcvars64.bat"
-if not defined VCVARS64 if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" set "VCVARS64=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-if defined VCVARS64 (
-    call "%VCVARS64%"
-    if errorlevel 1 exit 1
-)
+set "VCTOOLS_VERSION="
+if defined VSINSTALLDIR if exist "%VSINSTALLDIR%VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt" set /p VCTOOLS_VERSION=<"%VSINSTALLDIR%VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt"
 set "CMAKE_CUDA_HOST_COMPILER="
+if defined VCTOOLS_VERSION if exist "%VSINSTALLDIR%VC\Tools\MSVC\%VCTOOLS_VERSION%\bin\HostX64\x64\cl.exe" set "CMAKE_CUDA_HOST_COMPILER=%VSINSTALLDIR%VC\Tools\MSVC\%VCTOOLS_VERSION%\bin\HostX64\x64\cl.exe"
 for /f "delims=" %%i in ('where cl.exe') do (
     if not defined CMAKE_CUDA_HOST_COMPILER set "CMAKE_CUDA_HOST_COMPILER=%%i"
 )
