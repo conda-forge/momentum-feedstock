@@ -1,0 +1,38 @@
+c_compiler:
+- vs2022
+c_stdlib:
+- vs
+channel_sources:
+- conda-forge
+channel_targets:
+- conda-forge main
+cuda_compiler_version:
+- None
+cxx_compiler:
+- vs2022
+fmt:
+- '12.1'
+libboost_devel:
+- '1.88'
+librerun_sdk:
+- 0.31.2
+numpy:
+- '2'
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+python:
+- 3.12.* *_cpython
+pytorch:
+- '2.10'
+re2:
+- 2025.11.05
+spdlog:
+- '1.17'
+target_platform:
+- win-64
+urdfdom:
+- '5.1'
+zlib:
+- '1'
