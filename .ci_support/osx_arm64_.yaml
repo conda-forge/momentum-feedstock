@@ -26,8 +26,6 @@ libboost_devel:
 - '1.88'
 librerun_sdk:
 - 0.31.2
-libtorch:
-- '2.10'
 macos_machine:
 - arm64-apple-darwin20.0.0
 numpy:
