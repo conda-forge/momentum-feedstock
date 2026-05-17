@@ -59,10 +59,16 @@ if not defined CMAKE_CUDA_HOST_COMPILER (
     exit 1
 )
 set "ORIGINAL_CUDA_HOST_COMPILER=%CMAKE_CUDA_HOST_COMPILER%"
-for %%I in ("%ORIGINAL_CUDA_HOST_COMPILER%") do set "CUDA_HOST_COMPILER_DIR=%%~dpsI"
-if defined CUDA_HOST_COMPILER_DIR set "PATH=%CUDA_HOST_COMPILER_DIR%;%PATH%"
-if defined VSINSTALLDIR if exist "%VSINSTALLDIR%Common7\IDE" set "PATH=%VSINSTALLDIR%Common7\IDE;%PATH%"
-for %%I in ("%CMAKE_CUDA_HOST_COMPILER%") do set "CMAKE_CUDA_HOST_COMPILER=%%~fsI"
+for %%I in ("%ORIGINAL_CUDA_HOST_COMPILER%") do (
+    set "CMAKE_CUDA_HOST_COMPILER=%%~fsI"
+    set "CUDA_HOST_COMPILER_DIR=%%~dpsI"
+)
+set "CUDA_VS_IDE_DIR="
+if defined VSINSTALLDIR if exist "%VSINSTALLDIR%Common7\IDE" for %%I in ("%VSINSTALLDIR%Common7\IDE") do set "CUDA_VS_IDE_DIR=%%~fsI"
+set "CUDA_WINDOWS_KIT_BIN="
+if defined WindowsSdkDir if defined WindowsSDKVersion if exist "%WindowsSdkDir%bin\%WindowsSDKVersion%x64" for %%I in ("%WindowsSdkDir%bin\%WindowsSDKVersion%x64") do set "CUDA_WINDOWS_KIT_BIN=%%~fsI"
+if not defined CUDA_WINDOWS_KIT_BIN if defined WindowsSdkDir if exist "%WindowsSdkDir%bin\x64" for %%I in ("%WindowsSdkDir%bin\x64") do set "CUDA_WINDOWS_KIT_BIN=%%~fsI"
+set "PATH=%CUDA_HOST_COMPILER_DIR%;%CUDA_VS_IDE_DIR%;%CUDA_WINDOWS_KIT_BIN%;%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\Scripts;%BUILD_PREFIX%\bin;%PREFIX%\Library\bin;%PREFIX%\Scripts;%PREFIX%\bin;%SystemRoot%\System32;%SystemRoot%"
 set "CUDAHOSTCXX=%CMAKE_CUDA_HOST_COMPILER%"
 echo Using CUDA host compiler: %CMAKE_CUDA_HOST_COMPILER%
 
