@@ -1,0 +1,363 @@
+schema_version: 1
+
+context:
+  name: momentum
+  version: "0.1.110"
+  build_number: 1
+
+recipe:
+  name: ${{ name|lower }}-split
+  version: ${{ version }}
+
+source:
+  - url: https://github.com/facebookresearch/momentum/archive/v${{ version }}.tar.gz
+    sha256: ab8d7fccd7d915bc403a7afa3ab2d03b1d07eae5f66b9dc4b75b6857514e5f4a
+    patches:
+      - patches/0003-Use-packaged-mdspan.patch
+
+build:
+  number: ${{ build_number }}
+  # Skip Python < 3.12
+  skip:
+    - match(python, "<3.12")
+
+outputs:
+  - package:
+      name: momentum-cpp
+    build:
+      skip:
+        - cuda_compiler_version != "None"
+      script:
+        file: ${{ "bld_cpp.bat" if win else "build_cpp.sh" }}
+    requirements:
+      build:
+        - ${{ compiler("cxx") }}
+        - ${{ stdlib("c") }}
+        - libboost-devel
+        - cmake
+        - if: build_platform == target_platform
+          then: gtest
+        - indicators
+        - ninja
+        - if: build_platform != target_platform
+          then:
+            - python
+            - cross-python_${{ target_platform }}
+      host:
+        - ceres-solver * cpu*
+        - cli11
+        - dispenso
+        - drjit-cpp * cpu*
+        - eigen
+        - ezc3d
+        - fmt
+        - fx-gltf
+        - indicators
+        - librerun-sdk
+        - mdspan >=0.6.1.dev20260223
+        - ms-gsl
+        - nlohmann_json
+        - openfbx
+        - if: linux
+          then: openusd
+        - if: linux
+          then: python
+        - re2
+        - spdlog
+        - if: not win
+          then: tbb-devel
+        - urdfdom
+      run:
+        - ceres-solver * cpu*
+        - cli11
+        - dispenso
+        - drjit-cpp * cpu*
+        - ezc3d
+        - fx-gltf
+        - indicators
+        - if: osx
+          then: libabseil
+        - librerun-sdk
+        - mdspan >=0.6.1.dev20260223
+        - gflags
+        - libdeflate
+        - ms-gsl
+        - nlohmann_json
+        - openfbx
+        - if: linux
+          then: python
+        - re2
+        - if: linux
+          then: tbb
+      run_exports:
+        - ${{ pin_subpackage("momentum-cpp", upper_bound="x.x") }}
+      ignore_run_exports:
+        from_package:
+          - ceres-solver
+          - drjit-cpp
+          - gflags
+          - openfbx
+          - re2
+          - tbb-devel  # Allow solver to pick tbb version compatible with libtorch/mkl
+    tests:
+      - files:
+          recipe:
+            - run_test_cpp.bat
+            - run_test_cpp.sh
+            - tests/
+        requirements:
+          run:
+            - ${{ compiler("c") }}
+            - ${{ compiler("cxx") }}
+            - ${{ stdlib("c") }}
+            - cmake
+            - ninja
+        script:
+          - if: not win
+            then:
+              - test -f "${PREFIX}/lib/cmake/momentum/momentum-config.cmake"
+              - bash run_test_cpp.sh
+          - if: win
+            then:
+              - if not exist "%PREFIX%\\Library\\lib\\cmake\\momentum\\momentum-config.cmake" exit 1
+              - call run_test_cpp.bat
+          - animate_shapes --help
+          - c3d_viewer --help
+          - convert_model --help
+          - fbx_viewer --help
+          - glb_viewer --help
+          - hello_world
+          - process_markers_app --help
+          - refine_motion --help
+          - urdf_viewer --help
+
+  - package:
+      name: pymomentum
+    build:
+      string: ${{ "cuda" ~ (cuda_compiler_version | replace(".", "")) ~ "_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number if cuda_compiler_version != "None" else "cpu_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number }}
+      script:
+        file: ${{ "bld_py.bat" if win else "build_py.sh" }}
+      # Internal DLLs bundled together that reference each other
+      dynamic_linking:
+        missing_dso_allowlist:
+          - if: win
+            then: "*/momentum_*.dll"
+          - if: win
+            then: "*/axel.dll"
+          # System NVIDIA driver (not available on Azure CI machines without GPU)
+          - if: win and cuda_compiler_version != "None"
+            then: "*/nvcuda.dll"
+    requirements:
+      build:
+        - ${{ compiler("cxx") }}
+        - ${{ stdlib("c") }}
+        - if: cuda_compiler_version != "None" and not win
+          then: ${{ compiler("cuda") }}
+        - if: cuda_compiler_version != "None" and not win
+          then: cuda-toolkit
+        - if: cuda_compiler_version != "None" and win
+          then: cuda-version ==${{ cuda_compiler_version }}
+        - if: cuda_compiler_version != "None" and win
+          then: vs2022_win-64
+        - if: cuda_compiler_version != "None" and win
+          then: cuda-nvcc_win-64
+        - cmake
+        - if: build_platform != target_platform
+          then: cross-python_${{ target_platform }}
+        - gtest
+        - indicators
+        - libboost-devel
+        - make
+        - ninja
+        - pip
+        - pybind11-abi ==11
+        - python
+        - if: cuda_compiler_version == "None"
+          then: pytorch * cpu*
+        - if: cuda_compiler_version != "None"
+          then: pytorch
+        - scikit-build-core >=0.11
+      host:
+        # GPU requirements
+        - if: cuda_compiler_version != "None" and not win
+          then: cuda-toolkit
+        - if: cuda_compiler_version != "None"
+          then: cuda-version ==${{ cuda_compiler_version }}
+        - if: cuda_compiler_version != "None" and win
+          then: vs2022_win-64
+        # CUDA runtime/headers for both link & import time:
+        - if: cuda_compiler_version != "None" and win
+          then: cuda-cudart-dev
+        - if: cuda_compiler_version != "None"
+          then: cuda-cudart
+        - if: cuda_compiler_version != "None" and win
+          then: cuda-nvrtc-dev
+        - if: cuda_compiler_version != "None"
+          then: cuda-nvrtc
+        - if: cuda_compiler_version != "None"
+          then: nvtx-c
+        # other requirements
+        - if: cuda_compiler_version == "None"
+          then: ceres-solver * cpu*
+        - if: cuda_compiler_version != "None"
+          then: ceres-solver
+        - cli11
+        - dispenso
+        - if: cuda_compiler_version == "None"
+          then: drjit-cpp * cpu*
+        - if: cuda_compiler_version != "None"
+          then: drjit-cpp
+        - eigen
+        - ezc3d
+        - fmt
+        - fx-gltf
+        - indicators
+        - mdspan >=0.6.1.dev20260223
+        - librerun-sdk
+        - ms-gsl
+        - nlohmann_json
+        - numpy
+        - openfbx
+        - if: linux
+          then: openusd
+        - pip
+        - pytest
+        - python
+        - if: cuda_compiler_version == "None"
+          then: pytorch * cpu*
+        - if: cuda_compiler_version != "None"
+          then: pytorch
+        - if: unix and cuda_compiler_version == "None"
+          then: libtorch * cpu*  # Provides torch/torch.h C++ headers
+        - if: unix and cuda_compiler_version != "None"
+          then: libtorch  # Provides torch/torch.h C++ headers
+        - re2
+        - scikit-build-core >=0.11
+        - spdlog
+        - if: not win
+          then: tbb-devel
+        - urdfdom
+        - zlib
+      run:
+        # CUDA runtime needed at import time (no GPU required to import):
+        - if: cuda_compiler_version != "None"
+          then: cuda-cudart
+        - if: cuda_compiler_version != "None"
+          then: cuda-nvrtc
+        - ezc3d
+        - dispenso
+        - if: win and cuda_compiler_version == "None"
+          then: drjit-cpp * cpu*
+        - if: win and cuda_compiler_version != "None"
+          then: drjit-cpp
+        - if: win
+          then: fmt
+        - gflags
+        - indicators
+        - if: osx
+          then: libabseil
+        - libdeflate
+        - if: win
+          then: librerun-sdk
+        # Direct DSOs used by the Python extensions; host run exports do not
+        # cover all of these in the CUDA build.
+        - if: linux
+          then: libgcc
+        - if: linux
+          then: libstdcxx
+        - if: linux or win
+          then: libre2-11
+        - if: unix and cuda_compiler_version == "None"
+          then: libtorch * cpu*
+        - if: unix and cuda_compiler_version != "None"
+          then: libtorch
+        - if: win and cuda_compiler_version == "None"
+          then: libtorch * cpu*
+        - if: win and cuda_compiler_version != "None"
+          then: libtorch
+        - pytorch
+        - numpy
+        - python ${{ python }}
+        - python_abi * *_cp${{ python | version_to_buildstring }}
+        - spdlog
+        - if: linux
+          then: tbb
+        - urdfdom
+        - if: win
+          then: ucrt
+        - if: win
+          then: vc14_runtime
+    tests:
+      - requirements:
+          run:
+            - pip
+        script:
+          - pip list
+          - python -c "import pymomentum.axel"
+          - if: not (win and cuda_compiler_version != "None")
+            then:
+              - python -c "import pymomentum.backend"
+              - python -c "import pymomentum.geometry"
+              - python -c "import pymomentum.diff_geometry"
+              - python -c "import pymomentum.marker_tracking"
+          - python -c "import pymomentum.quaternion"
+          - if: cuda_compiler_version == "None"
+            then: python -c "import pymomentum.renderer"
+          - python -c "import pymomentum.skel_state"
+          - if: not (win and cuda_compiler_version != "None")
+            then:
+              - python -c "import pymomentum.solver"
+              - python -c "import pymomentum.solver2"
+              - python -c "import pymomentum.torch.character"
+          - python -c "import pymomentum.trs"
+          - pip check
+
+  - package:
+      name: ${{ "pymomentum-gpu" if cuda_compiler_version != "None" else "pymomentum-cpu" }}
+    build:
+      string: ${{ "cuda" ~ (cuda_compiler_version | replace(".", "")) ~ "_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number if cuda_compiler_version != "None" else "cpu_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number }}
+    requirements:
+      run:
+        - ${{ pin_subpackage("pymomentum", exact=True) }}
+    tests:
+      - requirements:
+          run:
+            - pip
+        script:
+          - python -c "import pymomentum.axel"
+          - pip check
+
+  - package:
+      name: momentum
+    build:
+      # The aggregate package includes the C++ library, which is CPU-only.
+      skip:
+        - cuda_compiler_version != "None"
+    requirements:
+      run:
+        - ${{ pin_subpackage("momentum-cpp", exact=True) }}
+        - ${{ pin_subpackage("pymomentum", exact=True) }}
+        - python
+      run_exports:
+        - ${{ pin_subpackage("momentum-cpp", upper_bound="x.x") }}
+    tests:
+      - requirements:
+          run:
+            - pip
+        script:
+          - python -c "import pymomentum.axel"
+          - hello_world
+          - pip check
+
+about:
+  homepage: https://facebookresearch.github.io/momentum/
+  summary: A library for human kinematic motion and numerical optimization solvers to apply human motion
+  description: |
+    A library for human kinematic motion and numerical optimization solvers to apply human motion
+  license: MIT
+  license_file: LICENSE
+  repository: https://github.com/facebookresearch/momentum
+
+extra:
+  recipe-maintainers:
+    - jeongseok-meta

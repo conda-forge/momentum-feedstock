@@ -46,6 +46,32 @@ rem  over the build type (Release) and avoid debug/release mismatch issues
 rem ------------------------------------------------------------------
 echo Using direct CMake for CUDA build...
 
+rem Ensure nvcc can find the MSVC host compiler under rattler-build.
+set "VCTOOLS_VERSION="
+if defined VSINSTALLDIR if exist "%VSINSTALLDIR%VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt" set /p VCTOOLS_VERSION=<"%VSINSTALLDIR%VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt"
+set "CMAKE_CUDA_HOST_COMPILER="
+if defined VCTOOLS_VERSION if exist "%VSINSTALLDIR%VC\Tools\MSVC\%VCTOOLS_VERSION%\bin\HostX64\x64\cl.exe" set "CMAKE_CUDA_HOST_COMPILER=%VSINSTALLDIR%VC\Tools\MSVC\%VCTOOLS_VERSION%\bin\HostX64\x64\cl.exe"
+for /f "delims=" %%i in ('where cl.exe') do (
+    if not defined CMAKE_CUDA_HOST_COMPILER set "CMAKE_CUDA_HOST_COMPILER=%%i"
+)
+if not defined CMAKE_CUDA_HOST_COMPILER (
+    echo ERROR: cl.exe not found in the Visual Studio compiler environment
+    exit 1
+)
+set "ORIGINAL_CUDA_HOST_COMPILER=%CMAKE_CUDA_HOST_COMPILER%"
+for %%I in ("%ORIGINAL_CUDA_HOST_COMPILER%") do (
+    set "CMAKE_CUDA_HOST_COMPILER=%%~fsI"
+    set "CUDA_HOST_COMPILER_DIR=%%~dpsI"
+)
+set "CUDA_VS_IDE_DIR="
+if defined VSINSTALLDIR if exist "%VSINSTALLDIR%Common7\IDE" for %%I in ("%VSINSTALLDIR%Common7\IDE") do set "CUDA_VS_IDE_DIR=%%~fsI"
+set "CUDA_WINDOWS_KIT_BIN="
+if defined WindowsSdkDir if defined WindowsSDKVersion if exist "%WindowsSdkDir%bin\%WindowsSDKVersion%x64" for %%I in ("%WindowsSdkDir%bin\%WindowsSDKVersion%x64") do set "CUDA_WINDOWS_KIT_BIN=%%~fsI"
+if not defined CUDA_WINDOWS_KIT_BIN if defined WindowsSdkDir if exist "%WindowsSdkDir%bin\x64" for %%I in ("%WindowsSdkDir%bin\x64") do set "CUDA_WINDOWS_KIT_BIN=%%~fsI"
+set "PATH=%CUDA_HOST_COMPILER_DIR%;%CUDA_VS_IDE_DIR%;%CUDA_WINDOWS_KIT_BIN%;%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\Scripts;%BUILD_PREFIX%\bin;%PREFIX%\Library\bin;%PREFIX%\Scripts;%PREFIX%\bin;%SystemRoot%\System32;%SystemRoot%"
+set "CUDAHOSTCXX=%CMAKE_CUDA_HOST_COMPILER%"
+echo Using CUDA host compiler: %CMAKE_CUDA_HOST_COMPILER%
+
 rem Create build directory (use build_py to avoid conflict with C++ build directory)
 if exist build_py rmdir /s /q build_py
 mkdir build_py
@@ -58,6 +84,7 @@ cmake .. -G Ninja ^
     -DCMAKE_PREFIX_PATH="%LIBRARY_PREFIX%;%PREFIX%" ^
     -DPython_EXECUTABLE="%PYTHON%" ^
     -DPython3_EXECUTABLE="%PYTHON%" ^
+    -DCMAKE_CUDA_HOST_COMPILER="%CMAKE_CUDA_HOST_COMPILER%" ^
     -DMOMENTUM_BUILD_PYMOMENTUM=ON ^
     -DMOMENTUM_BUILD_IO_USD=OFF ^
     -DMOMENTUM_BUILD_RENDERER=ON ^
@@ -108,11 +135,6 @@ if exist "%LIBRARY_BIN%\momentum*.dll" (
         echo WARNING: Failed to copy momentum DLLs, but continuing...
     )
 )
-
-rem Copy Kokkos DLLs - these are critical for geometry module with CUDA
-rem NOTE: NOT copying kokkos DLLs to package dir - they have complex deps (nvcuda.dll etc)
-rem       that cause overlinking errors. Let them be found via os.add_dll_directory()
-echo NOTE: Kokkos DLLs NOT copied (found via Library/bin to avoid overlinking errors)
 
 rem Also copy any other required DLLs that momentum depends on
 rem These are typically installed by the momentum-cpp package

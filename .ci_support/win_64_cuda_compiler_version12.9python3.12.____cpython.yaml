@@ -1,21 +1,15 @@
 c_compiler:
 - vs2022
-c_compiler_version:
-- ''
 c_stdlib:
 - vs
-c_stdlib_version:
-- ''
 channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler_version:
-- None
+- '12.9'
 cxx_compiler:
 - vs2022
-cxx_compiler_version:
-- ''
 fmt:
 - '12.1'
 libboost_devel:
@@ -30,8 +24,6 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.12.* *_cpython
-- 3.13.* *_cp313
-- 3.14.* *_cp314
 pytorch:
 - '2.10'
 re2:
@@ -40,8 +32,6 @@ spdlog:
 - '1.17'
 target_platform:
 - win-64
-tbb_devel:
-- '2022'
 urdfdom:
 - '5.1'
 zlib:
