@@ -48,7 +48,8 @@ outputs:
         - cli11
         - dispenso
         - drjit-cpp * cpu*
-        - eigen
+        # Momentum requests Eigen3 3.4.0; Eigen 5's CMake config is not compatible.
+        - eigen >=3.4,<4
         - ezc3d
         - fmt
         - fx-gltf
@@ -72,6 +73,8 @@ outputs:
         - cli11
         - dispenso
         - drjit-cpp * cpu*
+        # The installed CMake config calls find_dependency(Eigen3 3.4.0 CONFIG).
+        - eigen >=3.4,<4
         - ezc3d
         - fx-gltf
         - indicators
@@ -153,7 +156,6 @@ outputs:
         - if: cuda_compiler_version != "None" and not win
           then:
             - ${{ compiler("cuda") }}
-            - cuda-toolkit
         - if: cuda_compiler_version != "None" and win
           then:
             - cuda-version ==${{ cuda_compiler_version }}
@@ -179,7 +181,7 @@ outputs:
         - if: cuda_compiler_version != "None"
           then:
             - if: not win
-              then: cuda-toolkit
+              then: cuda-libraries-dev
             - cuda-version ==${{ cuda_compiler_version }}
             - if: win
               then:
@@ -198,7 +200,8 @@ outputs:
         - if: cuda_compiler_version == "None"
           then: drjit-cpp * cpu*
           else: drjit-cpp
-        - eigen
+        # Momentum requests Eigen3 3.4.0; Eigen 5's CMake config is not compatible.
+        - eigen >=3.4,<4
         - ezc3d
         - fmt
         - fx-gltf
