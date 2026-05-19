@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: momentum
   version: "0.1.110"
-  build_number: 1
+  build_number: 2
 
 recipe:
   name: ${{ name|lower }}-split
@@ -59,9 +59,9 @@ outputs:
         - nlohmann_json
         - openfbx
         - if: linux
-          then: openusd
-        - if: linux
-          then: python
+          then:
+            - openusd
+            - python
         - re2
         - spdlog
         - if: not win
@@ -117,8 +117,7 @@ outputs:
             then:
               - test -f "${PREFIX}/lib/cmake/momentum/momentum-config.cmake"
               - bash run_test_cpp.sh
-          - if: win
-            then:
+            else:
               - if not exist "%PREFIX%\\Library\\lib\\cmake\\momentum\\momentum-config.cmake" exit 1
               - call run_test_cpp.bat
           - animate_shapes --help
@@ -134,33 +133,32 @@ outputs:
   - package:
       name: pymomentum
     build:
-      string: ${{ "cuda" ~ (cuda_compiler_version | replace(".", "")) ~ "_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number if cuda_compiler_version != "None" else "cpu_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number }}
+      string: ${{ "cuda" ~ (cuda_compiler_version | replace(".", "")) ~ "_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number if cuda_compiler_version != "None" else "cpu_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~
+        hash ~ "_" ~ build_number }}
       script:
         file: ${{ "bld_py.bat" if win else "build_py.sh" }}
       # Internal DLLs bundled together that reference each other
       dynamic_linking:
         missing_dso_allowlist:
           - if: win
-            then: "*/momentum_*.dll"
-          - if: win
-            then: "*/axel.dll"
-          # System NVIDIA driver (not available on Azure CI machines without GPU)
-          - if: win and cuda_compiler_version != "None"
-            then: "*/nvcuda.dll"
+            then:
+              - "*/momentum_*.dll"
+              - "*/axel.dll"
+              - if: cuda_compiler_version != "None"
+                then: "*/nvcuda.dll"
     requirements:
       build:
         - ${{ compiler("cxx") }}
         - ${{ stdlib("c") }}
         - if: cuda_compiler_version != "None" and not win
-          then: ${{ compiler("cuda") }}
-        - if: cuda_compiler_version != "None" and not win
-          then: cuda-toolkit
+          then:
+            - ${{ compiler("cuda") }}
+            - cuda-toolkit
         - if: cuda_compiler_version != "None" and win
-          then: cuda-version ==${{ cuda_compiler_version }}
-        - if: cuda_compiler_version != "None" and win
-          then: vs2022_win-64
-        - if: cuda_compiler_version != "None" and win
-          then: cuda-nvcc_win-64
+          then:
+            - cuda-version ==${{ cuda_compiler_version }}
+            - vs2022_win-64
+            - cuda-nvcc_win-64
         - cmake
         - if: build_platform != target_platform
           then: cross-python_${{ target_platform }}
@@ -174,39 +172,32 @@ outputs:
         - python
         - if: cuda_compiler_version == "None"
           then: pytorch * cpu*
-        - if: cuda_compiler_version != "None"
-          then: pytorch
+          else: pytorch
         - scikit-build-core >=0.11
       host:
         # GPU requirements
-        - if: cuda_compiler_version != "None" and not win
-          then: cuda-toolkit
         - if: cuda_compiler_version != "None"
-          then: cuda-version ==${{ cuda_compiler_version }}
-        - if: cuda_compiler_version != "None" and win
-          then: vs2022_win-64
+          then:
+            - if: not win
+              then: cuda-toolkit
+            - cuda-version ==${{ cuda_compiler_version }}
+            - if: win
+              then:
         # CUDA runtime/headers for both link & import time:
-        - if: cuda_compiler_version != "None" and win
-          then: cuda-cudart-dev
-        - if: cuda_compiler_version != "None"
-          then: cuda-cudart
-        - if: cuda_compiler_version != "None" and win
-          then: cuda-nvrtc-dev
-        - if: cuda_compiler_version != "None"
-          then: cuda-nvrtc
-        - if: cuda_compiler_version != "None"
-          then: nvtx-c
-        # other requirements
-        - if: cuda_compiler_version == "None"
-          then: ceres-solver * cpu*
-        - if: cuda_compiler_version != "None"
-          then: ceres-solver
+                - vs2022_win-64
+                - cuda-cudart-dev
+            - cuda-cudart
+            - if: win
+              then: cuda-nvrtc-dev
+            - cuda-nvrtc
+            - nvtx-c
+            - ceres-solver
+          else: ceres-solver * cpu*
         - cli11
         - dispenso
         - if: cuda_compiler_version == "None"
           then: drjit-cpp * cpu*
-        - if: cuda_compiler_version != "None"
-          then: drjit-cpp
+          else: drjit-cpp
         - eigen
         - ezc3d
         - fmt
@@ -225,8 +216,7 @@ outputs:
         - python
         - if: cuda_compiler_version == "None"
           then: pytorch * cpu*
-        - if: cuda_compiler_version != "None"
-          then: pytorch
+          else: pytorch
         - if: unix and cuda_compiler_version == "None"
           then: libtorch * cpu*  # Provides torch/torch.h C++ headers
         - if: unix and cuda_compiler_version != "None"
@@ -241,17 +231,17 @@ outputs:
       run:
         # CUDA runtime needed at import time (no GPU required to import):
         - if: cuda_compiler_version != "None"
-          then: cuda-cudart
-        - if: cuda_compiler_version != "None"
-          then: cuda-nvrtc
+          then:
+            - cuda-cudart
+            - cuda-nvrtc
         - ezc3d
         - dispenso
-        - if: win and cuda_compiler_version == "None"
-          then: drjit-cpp * cpu*
-        - if: win and cuda_compiler_version != "None"
-          then: drjit-cpp
         - if: win
-          then: fmt
+          then:
+            - if: cuda_compiler_version == "None"
+              then: drjit-cpp * cpu*
+              else: drjit-cpp
+            - fmt
         - gflags
         - indicators
         - if: osx
@@ -262,9 +252,9 @@ outputs:
         # Direct DSOs used by the Python extensions; host run exports do not
         # cover all of these in the CUDA build.
         - if: linux
-          then: libgcc
-        - if: linux
-          then: libstdcxx
+          then:
+            - libgcc
+            - libstdcxx
         - if: linux or win
           then: libre2-11
         - if: unix and cuda_compiler_version == "None"
@@ -284,9 +274,9 @@ outputs:
           then: tbb
         - urdfdom
         - if: win
-          then: ucrt
-        - if: win
-          then: vc14_runtime
+          then:
+            - ucrt
+            - vc14_runtime
     tests:
       - requirements:
           run:
@@ -315,7 +305,8 @@ outputs:
   - package:
       name: ${{ "pymomentum-gpu" if cuda_compiler_version != "None" else "pymomentum-cpu" }}
     build:
-      string: ${{ "cuda" ~ (cuda_compiler_version | replace(".", "")) ~ "_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number if cuda_compiler_version != "None" else "cpu_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number }}
+      string: ${{ "cuda" ~ (cuda_compiler_version | replace(".", "")) ~ "_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number if cuda_compiler_version != "None" else "cpu_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~
+        hash ~ "_" ~ build_number }}
     requirements:
       run:
         - ${{ pin_subpackage("pymomentum", exact=True) }}
