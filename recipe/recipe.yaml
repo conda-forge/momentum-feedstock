@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: momentum
   version: "0.1.113"
-  build_number: 0
+  build_number: 1
 
 recipe:
   name: ${{ name|lower }}-split
