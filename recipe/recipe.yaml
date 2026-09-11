@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: momentum
   version: "0.1.114"
-  build_number: 2
+  build_number: 3
 
 recipe:
   name: ${{ name|lower }}-split
@@ -12,12 +12,11 @@ recipe:
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v${{ version }}.tar.gz
     sha256: e0fda8cd38cee74a4cbb581212e4ff015814c58eba83b21e51a560f3399a476b
+    patches:
+      - patches/0001-undef-windows-near-far.patch
 
 build:
   number: ${{ build_number }}
-  # Skip Python < 3.12
-  skip:
-    - match(python, "<3.12")
 
 outputs:
   - package:
@@ -31,11 +30,7 @@ outputs:
       build:
         - ${{ compiler("cxx") }}
         - ${{ stdlib("c") }}
-        - libboost-devel
         - cmake
-        - if: build_platform == target_platform
-          then: gtest
-        - indicators
         - ninja
         - if: build_platform != target_platform
           then:
@@ -63,8 +58,9 @@ outputs:
             - python
         - re2
         - spdlog
+        # OpenUSD 26.08 still uses the legacy tbb::task API removed in TBB 2023.1.
         - if: not win
-          then: tbb-devel
+          then: tbb-devel <2023.1
         - urdfdom
       run:
         - ceres-solver * cpu*
@@ -155,10 +151,6 @@ outputs:
         - cmake
         - if: build_platform != target_platform
           then: cross-python_${{ target_platform }}
-        - gtest
-        - indicators
-        - libboost-devel
-        - make
         - ninja
         - pip
         - pybind11-abi ==11
@@ -191,7 +183,7 @@ outputs:
         - scikit-build-core >=0.11
         - spdlog
         - if: not win
-          then: tbb-devel
+          then: tbb-devel <2023.1
         - urdfdom
         - zlib
       run:
@@ -238,7 +230,6 @@ outputs:
           run:
             - pip
         script:
-          - pip list
           - python -c "import pymomentum.axel"
           - python -c "import pymomentum.backend"
           - python -c "import pymomentum.geometry"
@@ -251,6 +242,7 @@ outputs:
           - python -c "import pymomentum.trs"
           - python -c "import importlib.util; assert importlib.util.find_spec('pymomentum.diff_geometry') is None"
           - python -c "import importlib.util; assert importlib.util.find_spec('pymomentum.solver') is None"
+          - python -c "from importlib.metadata import version; assert version('pymomentum-core') == '${{ version }}'"
           - pip check
 
   - package:
@@ -286,10 +278,6 @@ outputs:
         - cmake
         - if: build_platform != target_platform
           then: cross-python_${{ target_platform }}
-        - gtest
-        - indicators
-        - libboost-devel
-        - make
         - ninja
         - pip
         - pybind11-abi ==11
@@ -352,7 +340,7 @@ outputs:
         - scikit-build-core >=0.11
         - spdlog
         - if: not win
-          then: tbb-devel
+          then: tbb-devel <2023.1
         - urdfdom
         - zlib
       run:
@@ -415,7 +403,6 @@ outputs:
           run:
             - pip
         script:
-          - pip list
           - python -c "import pymomentum.axel"
           - if: not (win and cuda_compiler_version != "None")
             then:
@@ -433,6 +420,9 @@ outputs:
               - python -c "import pymomentum.solver2"
               - python -c "import pymomentum.torch.character"
           - python -c "import pymomentum.trs"
+          - if: cuda_compiler_version != "None"
+            then: python -c "from importlib.metadata import version; assert version('pymomentum-gpu') == '${{ version }}'"
+            else: python -c "from importlib.metadata import version; assert version('pymomentum-cpu') == '${{ version }}'"
           - pip check
 
   - package:
@@ -451,6 +441,9 @@ outputs:
             - pip
         script:
           - python -c "import pymomentum.axel"
+          - if: cuda_compiler_version != "None"
+            then: python -c "from importlib.metadata import version; assert version('pymomentum-gpu') == '${{ version }}'"
+            else: python -c "from importlib.metadata import version; assert version('pymomentum-cpu') == '${{ version }}'"
           - pip check
 
   - package:
@@ -473,6 +466,7 @@ outputs:
         script:
           - python -c "import pymomentum.axel"
           - hello_world
+          - python -c "from importlib.metadata import version; assert version('pymomentum-cpu') == '${{ version }}'"
           - pip check
 
 about:
@@ -483,7 +477,9 @@ about:
   license: MIT
   license_file: LICENSE
   repository: https://github.com/facebookresearch/momentum
+  documentation: https://facebookresearch.github.io/momentum/
 
 extra:
+  feedstock-name: momentum
   recipe-maintainers:
     - jeongseok-meta

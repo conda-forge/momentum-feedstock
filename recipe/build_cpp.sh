@@ -16,15 +16,7 @@ if [[ "${target_platform}" == *ppc64le ]]; then
   CXXFLAGS="${CXXFLAGS} -DNO_WARN_X86_INTRINSICS"
 fi
 
-# Disable use of system-installed GTest libraries when cross-compiling
-if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" ]]; then
-  MOMENTUM_USE_SYSTEM_GOOGLETEST=ON
-else
-  MOMENTUM_USE_SYSTEM_GOOGLETEST=OFF
-fi
-
 # Disable IO_USD on macOS or when openusd is not available
-# (openusd is skipped for PyTorch 2.7/2.8 due to TBB conflict)
 if [[ "${target_platform}" == osx-* ]]; then
   MOMENTUM_BUILD_IO_USD=OFF
 elif [[ -d "${PREFIX}/include/pxr" ]]; then
@@ -47,15 +39,9 @@ cmake $SRC_DIR \
   -DMOMENTUM_BUILD_TESTING=OFF \
   -DMOMENTUM_ENABLE_SIMD=OFF \
   -DMOMENTUM_INSTALL_EXAMPLES=ON \
-  -DMOMENTUM_USE_SYSTEM_GOOGLETEST=$MOMENTUM_USE_SYSTEM_GOOGLETEST \
   -DMOMENTUM_USE_SYSTEM_MDSPAN=ON \
   -DMOMENTUM_USE_SYSTEM_PYBIND11=OFF \
   -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON
 
 cmake --build build --parallel
-
-if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" ]]; then
-  ctest --test-dir build --output-on-failure
-fi
-
 cmake --build build --parallel --target install

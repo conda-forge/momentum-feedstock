@@ -1,0 +1,50 @@
+--- /dev/null
++++ b/momentum/io/urdf/urdf_headers.h
+@@ -0,0 +1,26 @@
++/*
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * This source code is licensed under the MIT license found in the
++ * LICENSE file in the root directory of this source tree.
++ */
++
++#pragma once
++
++#ifdef _WIN32
++#pragma push_macro("near")
++#pragma push_macro("far")
++#undef near
++#undef far
++#endif
++
++#include <urdf_model/link.h>
++#include <urdf_model/model.h>
++#include <urdf_model/pose.h>
++#include <urdf_parser/urdf_parser.h>
++
++#ifdef _WIN32
++#pragma pop_macro("far")
++#pragma pop_macro("near")
++#endif
++
+--- a/momentum/io/urdf/urdf_io.cpp
++++ b/momentum/io/urdf/urdf_io.cpp
+@@ -7,6 +7,7 @@
+ 
+ #include "momentum/io/urdf/urdf_io.h"
++#include "momentum/io/urdf/urdf_headers.h"
+ #include "momentum/io/urdf/urdf_mesh_io.h"
+ 
+ #include "momentum/character/skeleton_state.h"
+ #include "momentum/common/log.h"
+@@ -13,10 +14,6 @@
+ #include "momentum/math/constants.h"
+ 
+ #include <fmt/format.h>
+-#include <urdf_model/link.h>
+-#include <urdf_model/model.h>
+-#include <urdf_model/pose.h>
+-#include <urdf_parser/urdf_parser.h>
+ 
+ #include <algorithm>
+ #include <array>

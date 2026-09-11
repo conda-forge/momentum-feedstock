@@ -4,6 +4,9 @@ set -exo pipefail
 
 : "${MOMENTUM_BUILD_TORCH_EXTENSIONS:=ON}"
 
+python "${RECIPE_DIR}/prepare_pyproject.py"
+export CMAKE_GENERATOR=Ninja
+
 # Workaround for PyTorch 2.9 CMake config issue on Unix:
 # The pytorch package's TorchConfig.cmake references include directories like
 # "torch/include/torch/csrc/api/include" that don't exist. The libtorch package
@@ -53,14 +56,7 @@ export CMAKE_ARGS="$CMAKE_ARGS \
     -DMOMENTUM_USE_SYSTEM_PYBIND11=OFF \
     -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON"
 
-if [[ "${target_platform}" != "${build_platform}" ]]; then
-  export CMAKE_ARGS="$CMAKE_ARGS -DMOMENTUM_USE_SYSTEM_GOOGLETEST=OFF"
-else
-  export CMAKE_ARGS="$CMAKE_ARGS -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON"
-fi
-
 # Disable IO_USD on macOS or when openusd is not available
-# (openusd is skipped for PyTorch 2.7/2.8 due to TBB conflict)
 if [[ "${target_platform}" == osx-* ]]; then
   export CMAKE_ARGS="$CMAKE_ARGS -DMOMENTUM_BUILD_IO_USD=OFF"
 elif [[ ! -d "${PREFIX}/include/pxr" ]]; then

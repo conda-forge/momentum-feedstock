@@ -25,6 +25,11 @@ rem  CPU build: Use simple pip install (original approach that works)
 rem  CUDA build: Use direct CMake for better control over Release mode
 rem ------------------------------------------------------------------
 cd /d %SRC_DIR%
+"%PYTHON%" "%RECIPE_DIR%\prepare_pyproject.py"
+if errorlevel 1 exit 1
+set "CMAKE_GENERATOR=Ninja"
+set "CMAKE_GENERATOR_PLATFORM="
+set "CMAKE_GENERATOR_TOOLSET="
 
 if %IS_CUDA_BUILD%==0 (
     echo Using pip install for CPU build...
@@ -35,7 +40,6 @@ if %IS_CUDA_BUILD%==0 (
         -DMOMENTUM_BUILD_RENDERER=ON ^
         -DMOMENTUM_BUILD_TESTING=OFF ^
         -DMOMENTUM_ENABLE_SIMD=OFF ^
-        -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON ^
         -DMOMENTUM_USE_SYSTEM_MDSPAN=ON ^
         -DMOMENTUM_USE_SYSTEM_PYBIND11=ON ^
         -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON
@@ -97,7 +101,6 @@ cmake .. -G Ninja ^
     -DMOMENTUM_BUILD_RENDERER=ON ^
     -DMOMENTUM_BUILD_TESTING=OFF ^
     -DMOMENTUM_ENABLE_SIMD=OFF ^
-    -DMOMENTUM_USE_SYSTEM_GOOGLETEST=ON ^
     -DMOMENTUM_USE_SYSTEM_MDSPAN=ON ^
     -DMOMENTUM_USE_SYSTEM_PYBIND11=OFF ^
     -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON ^
@@ -126,45 +129,7 @@ if exist "%LIBRARY_PREFIX%\pymomentum" (
     exit 1
 )
 
-rem ------------------------------------------------------------------
-rem  Copy momentum DLLs to pymomentum package directory
-rem  On Windows, .pyd files need their dependent DLLs in the same
-rem  directory or in a directory that's in the DLL search path.
-rem  Copying to the same directory is the most reliable approach.
-rem ------------------------------------------------------------------
-echo Copying momentum DLLs to pymomentum package directory...
 set "PYM_DIR=%SP_DIR%\pymomentum"
-
-rem Copy momentum*.dll files from Library/bin
-if exist "%LIBRARY_BIN%\momentum*.dll" (
-    echo Found momentum DLLs in %LIBRARY_BIN%
-    copy /Y "%LIBRARY_BIN%\momentum*.dll" "%PYM_DIR%\"
-    if errorlevel 1 (
-        echo WARNING: Failed to copy momentum DLLs, but continuing...
-    )
-)
-
-rem Also copy any other required DLLs that momentum depends on
-rem These are typically installed by the momentum-cpp package
-rem NOTE: NOT copying ceres.dll - it has many CUDA/LAPACK deps that cause overlinking
-rem       Let it be found via os.add_dll_directory() in Library/bin
-echo Copying other dependency DLLs...
-for %%d in (
-    OpenFBX.dll
-    fmt.dll
-    spdlog.dll
-    drjit.dll
-    drjit-core.dll
-    nanothread.dll
-    dispenso.dll
-    gflags.dll
-    ezc3d.dll
-) do (
-    if exist "%LIBRARY_BIN%\%%d" (
-        echo Copying %%d
-        copy /Y "%LIBRARY_BIN%\%%d" "%PYM_DIR%\"
-    )
-)
 
 rem ------------------------------------------------------------------
 rem  Create __init__.py with DLL search path setup
@@ -180,7 +145,7 @@ if exist "%INIT_FILE%" (
 )
 
 rem Use Python to create the __init__.py with proper DLL loading code
-"%PYTHON%" -c "import sys; sys.stdout.write('''# Auto-generated DLL loading setup for Windows\nimport sys\nimport os\n\nif sys.platform == 'win32' and hasattr(os, 'add_dll_directory'):\n    _dll_dirs = []\n    # Add package directory to DLL search path\n    _pkg_dir = os.path.dirname(__file__)\n    if _pkg_dir and os.path.isdir(_pkg_dir):\n        _dll_dirs.append(_pkg_dir)\n    # Add conda Library/bin to DLL search path\n    _prefix = os.environ.get('CONDA_PREFIX', '')\n    if not _prefix:\n        # Also check PREFIX (used during conda-build tests)\n        _prefix = os.environ.get('PREFIX', '')\n    if _prefix:\n        _lib_bin = os.path.join(_prefix, 'Library', 'bin')\n        if os.path.isdir(_lib_bin):\n            _dll_dirs.append(_lib_bin)\n        # Also check Library/lib for some DLLs\n        _lib_lib = os.path.join(_prefix, 'Library', 'lib')\n        if os.path.isdir(_lib_lib):\n            _dll_dirs.append(_lib_lib)\n    # Add all collected directories\n    for _d in _dll_dirs:\n        try:\n            os.add_dll_directory(_d)\n        except Exception:\n            pass\n\n''')" > "%INIT_FILE%"
+"%PYTHON%" -c "import sys; sys.stdout.write('''# Auto-generated DLL loading setup for Windows\nimport sys\nimport os\n\nif sys.platform == 'win32' and hasattr(os, 'add_dll_directory'):\n    _prefix = os.environ.get('CONDA_PREFIX') or os.environ.get('PREFIX') or sys.prefix\n    _dll_dirs = [os.path.dirname(__file__), os.path.join(_prefix, 'Library', 'bin')]\n    _dll_handles = [os.add_dll_directory(path) for path in _dll_dirs if os.path.isdir(path)]\n\n''')" > "%INIT_FILE%"
 if errorlevel 1 exit /b 1
 
 rem Append original content if backup exists
@@ -193,6 +158,11 @@ echo __init__.py created successfully
 echo.
 echo First 25 lines of __init__.py:
 type "%INIT_FILE%" | findstr /N "^" | findstr "^[1-9]: ^1[0-9]: ^2[0-5]:"
+
+rem Direct CMake installation bypasses Python wheel metadata generation.
+cd /d %SRC_DIR%
+"%PYTHON%" -c "from scikit_build_core.build import prepare_metadata_for_build_wheel; prepare_metadata_for_build_wheel(r'%SP_DIR%')"
+if errorlevel 1 exit 1
 
 echo Build completed successfully!
 exit /b 0
