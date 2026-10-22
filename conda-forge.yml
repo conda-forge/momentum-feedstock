@@ -1,8 +1,5 @@
 bot:
   automerge: true
-build_platform:
-  linux_aarch64: linux_64
-  osx_arm64: osx_64
 conda_build:
   error_overlinking: true
 conda_build_tool: rattler-build
@@ -13,14 +10,15 @@ github:
   tooling_branch_name: main
 provider:
   linux_aarch64: default
+  osx_arm64: default
 test: native_and_emulated
 workflow_settings:
   build_workspace_dir:
-  - os: win
-    provider: azure
-    value: C:\\bld\\
+    - os: win
+      provider: azure
+      value: C:\\bld\\
   free_disk_space: max
   tools_install_dir:
-  - os: win
-    provider: azure
-    value: C:\Miniforge
+    - os: win
+      provider: azure
+      value: C:\Miniforge
