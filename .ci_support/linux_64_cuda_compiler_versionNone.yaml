@@ -1,3 +1,5 @@
+DOCKER_PLATFORM:
+- linux/amd64
 c_compiler:
 - gcc
 c_compiler_version:
@@ -23,7 +25,7 @@ docker_image:
 fmt:
 - '12.1'
 librerun_sdk:
-- 0.35.0
+- 0.42.0
 libtorch:
 - '2.14'
 numpy:
