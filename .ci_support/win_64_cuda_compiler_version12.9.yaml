@@ -13,7 +13,7 @@ cxx_compiler:
 fmt:
 - '12.1'
 librerun_sdk:
-- 0.42.0
+- 0.43.1
 numpy:
 - '2'
 pin_run_as_build:
