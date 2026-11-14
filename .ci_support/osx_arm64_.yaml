@@ -21,7 +21,7 @@ cxx_compiler_version:
 fmt:
 - '12.1'
 librerun_sdk:
-- 0.43.1
+- 0.43.2
 macos_machine:
 - arm64-apple-darwin20.0.0
 numpy:
