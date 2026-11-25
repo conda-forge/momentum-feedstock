@@ -2,8 +2,8 @@ schema_version: 1
 
 context:
   name: momentum
-  version: "0.1.114"
-  build_number: 7
+  version: "0.1.115"
+  build_number: 0
 
 recipe:
   name: ${{ name|lower }}-split
@@ -11,9 +11,7 @@ recipe:
 
 source:
   - url: https://github.com/facebookresearch/momentum/archive/v${{ version }}.tar.gz
-    sha256: e0fda8cd38cee74a4cbb581212e4ff015814c58eba83b21e51a560f3399a476b
-    patches:
-      - patches/0001-undef-windows-near-far.patch
+    sha256: 77aa49967c9fb793dc2b9be0a749fa2584d721e0d06e11712e97d50c3f7c65a6
 
 build:
   number: ${{ build_number }}
