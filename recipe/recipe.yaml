@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: momentum
   version: "0.1.115"
-  build_number: 0
+  build_number: 1
 
 recipe:
   name: ${{ name|lower }}-split
@@ -373,7 +373,7 @@ outputs:
         - if: unix and cuda_compiler_version == "None"
           then: libtorch * cpu*
         - if: unix and cuda_compiler_version != "None"
-          then: libtorch
+          then: libtorch * cuda*
         - if: win and cuda_compiler_version == "None"
           then: libtorch * cpu*
         - if: win and cuda_compiler_version != "None"
