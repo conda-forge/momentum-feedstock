@@ -4,7 +4,6 @@ set -exo pipefail
 
 : "${MOMENTUM_BUILD_TORCH_EXTENSIONS:=ON}"
 
-python "${RECIPE_DIR}/prepare_pyproject.py"
 export CMAKE_GENERATOR=Ninja
 
 # Workaround for PyTorch 2.9 CMake config issue on Unix:
@@ -66,4 +65,21 @@ fi
 
 rm -rf build
 
-$PYTHON -m pip install . -vv --no-deps --no-build-isolation
+if [[ -n "${cuda_compiler_version}" && "${cuda_compiler_version}" != "None" ]]; then
+  python "${RECIPE_DIR}/prepare_pyproject.py"
+  $PYTHON -m pip install . -vv --no-deps --no-build-isolation
+else
+  # CPU staging build: compile once, with the torch extensions, into the
+  # pymomentum-cpu wheel. The pymomentum-core wheel is the same wheel without
+  # the files of the pymomentum_torch install component.
+  PKG_NAME=pymomentum-cpu python "${RECIPE_DIR}/prepare_pyproject.py"
+  $PYTHON -m pip wheel . -vv --no-deps --no-build-isolation \
+    -Cinstall.components="pymomentum_core;pymomentum_test;pymomentum_torch" \
+    -w "${SRC_DIR}/pymomentum_wheels/pymomentum-cpu"
+  cmake --install build/* --component pymomentum_torch --prefix torch_component
+  python "${RECIPE_DIR}/make_core_wheel.py" \
+    "${SRC_DIR}"/pymomentum_wheels/pymomentum-cpu/*.whl \
+    torch_component \
+    "${SRC_DIR}/pymomentum_wheels/pymomentum-core"
+  rm -rf build torch_component
+fi
