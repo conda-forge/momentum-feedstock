@@ -21,18 +21,17 @@ if defined cuda_compiler_version (
 )
 
 rem ------------------------------------------------------------------
-rem  CPU build: Use simple pip install (original approach that works)
+rem  CPU build (staging output): compile once into the pymomentum-cpu wheel;
+rem  the pymomentum-core wheel is that wheel without the pymomentum_torch files
 rem  CUDA build: Use direct CMake for better control over Release mode
 rem ------------------------------------------------------------------
 cd /d %SRC_DIR%
-"%PYTHON%" "%RECIPE_DIR%\prepare_pyproject.py"
-if errorlevel 1 exit 1
 set "CMAKE_GENERATOR=Ninja"
 set "CMAKE_GENERATOR_PLATFORM="
 set "CMAKE_GENERATOR_TOOLSET="
 
 if %IS_CUDA_BUILD%==0 (
-    echo Using pip install for CPU build...
+    echo Building the pymomentum-core and pymomentum-cpu wheels for CPU...
     if exist build rmdir /s /q build
     set CMAKE_ARGS=%CMAKE_ARGS% ^
         -DMOMENTUM_BUILD_TORCH_EXTENSIONS=%MOMENTUM_BUILD_TORCH_EXTENSIONS% ^
@@ -43,8 +42,17 @@ if %IS_CUDA_BUILD%==0 (
         -DMOMENTUM_USE_SYSTEM_MDSPAN=ON ^
         -DMOMENTUM_USE_SYSTEM_PYBIND11=ON ^
         -DMOMENTUM_USE_SYSTEM_RERUN_CPP_SDK=ON
-    %PYTHON% -m pip install . -vv --no-deps --no-build-isolation
+    set "PKG_NAME=pymomentum-cpu"
+    "%PYTHON%" "%RECIPE_DIR%\prepare_pyproject.py"
     if errorlevel 1 exit 1
+    "%PYTHON%" -m pip wheel . -vv --no-deps --no-build-isolation "-Cinstall.components=pymomentum_core;pymomentum_test;pymomentum_torch" -w "%SRC_DIR%\pymomentum_wheels\pymomentum-cpu"
+    if errorlevel 1 exit 1
+    for /d %%B in (build\*) do cmake --install "%%B" --component pymomentum_torch --prefix torch_component
+    if errorlevel 1 exit 1
+    for %%W in ("%SRC_DIR%\pymomentum_wheels\pymomentum-cpu\*.whl") do "%PYTHON%" "%RECIPE_DIR%\make_core_wheel.py" "%%~W" torch_component "%SRC_DIR%\pymomentum_wheels\pymomentum-core"
+    if errorlevel 1 exit 1
+    rmdir /s /q torch_component
+    rmdir /s /q build
     echo CPU build completed successfully!
     goto :EOF
 )
@@ -55,6 +63,8 @@ rem  Using direct CMake instead of scikit-build-core to have full control
 rem  over the build type (Release) and avoid debug/release mismatch issues
 rem ------------------------------------------------------------------
 echo Using direct CMake for CUDA build...
+"%PYTHON%" "%RECIPE_DIR%\prepare_pyproject.py"
+if errorlevel 1 exit 1
 
 rem Ensure nvcc can find the MSVC host compiler under rattler-build.
 set "VCTOOLS_VERSION="

@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: momentum
   version: "0.1.115"
-  build_number: 1
+  build_number: 2
 
 recipe:
   name: ${{ name|lower }}-split
@@ -125,16 +125,88 @@ outputs:
           - refine_motion --help
           - urdf_viewer --help
 
+  # CPU only: compile pymomentum once per Python, with the torch extensions, into
+  # the pymomentum-cpu wheel; the pymomentum-core wheel is that wheel without the
+  # pymomentum_torch CMake install component (build_py.sh / bld_py.bat).
+  - staging:
+      name: pymomentum-build
+    requirements:
+      build:
+        - if: cuda_compiler_version == "None"
+          then:
+            - ${{ compiler("cxx") }}
+            - ${{ stdlib("c") }}
+            - cmake
+            - if: build_platform != target_platform
+              then: cross-python_${{ target_platform }}
+            - ninja
+            - pip
+            - pybind11-abi ==11
+            - python
+            - pytorch * cpu*
+            - scikit-build-core >=0.11
+      host:
+        - if: cuda_compiler_version == "None"
+          then:
+            - ceres-solver * cpu*
+            - cli11
+            - dispenso
+            - drjit-cpp * cpu*
+            # Momentum 0.1.111 requires Eigen 5.0.x.
+            - eigen >=5.0,<5.1
+            - ezc3d
+            - fmt
+            - fx-gltf
+            - indicators
+            - mdspan >=0.6.1.dev20260223
+            - librerun-sdk
+            - ms-gsl
+            - nlohmann_json
+            - numpy
+            - openfbx
+            - if: linux
+              then: openusd
+            - pip
+            - pytest
+            - pybind11
+            - python
+            - pytorch * cpu*
+            - if: unix
+              then: libtorch * cpu* # Provides torch/torch.h C++ headers
+            - re2
+            - scikit-build-core >=0.11
+            - spdlog
+            - if: not win
+              then: tbb-devel <2023.1
+            - urdfdom
+            - zlib
+    build:
+      script:
+        env:
+          # Staging builds do not set PKG_VERSION; prepare_pyproject.py needs it.
+          PKG_VERSION: ${{ version }}
+        content:
+          - if: cuda_compiler_version == "None" and win
+            then: call "%RECIPE_DIR%\bld_py.bat"
+          - if: cuda_compiler_version == "None" and not win
+            then: bash "${RECIPE_DIR}/build_py.sh"
+
   - package:
       name: pymomentum-core
+    inherit:
+      from: pymomentum-build
+      run_exports: false
     build:
       skip:
         - cuda_compiler_version != "None"
       string: ${{ "core_py" ~ (python | version_to_buildstring) ~ "_h" ~ hash ~ "_" ~ build_number }}
       script:
-        file: ${{ "bld_py.bat" if win else "build_py.sh" }}
-        env:
-          MOMENTUM_BUILD_TORCH_EXTENSIONS: "OFF"
+        file: ${{ "install_py.bat" if win else "install_py.sh" }}
+      # The staging prefix also holds files made by host dependencies (e.g.
+      # post-link scripts) and by build_py.sh; package only pymomentum.
+      files:
+        - "**/site-packages/pymomentum/**"
+        - "**/site-packages/pymomentum_*.dist-info/**"
       # Internal DLLs bundled together that reference each other
       dynamic_linking:
         missing_dso_allowlist:
@@ -245,13 +317,25 @@ outputs:
 
   - package:
       name: ${{ "pymomentum-gpu" if cuda_compiler_version != "None" else "pymomentum-cpu" }}
+    # CUDA builds here; the staging output is empty for CUDA.
+    inherit:
+      from: pymomentum-build
+      run_exports: false
     build:
       string: ${{ "cuda" ~ (cuda_compiler_version | replace(".", "")) ~ "_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~ hash ~ "_" ~ build_number if cuda_compiler_version != "None" else "cpu_py" ~ (python | version_to_buildstring) ~ "_pt" ~ (pytorch | replace(".", "")) ~ "_h" ~
         hash ~ "_" ~ build_number }}
       script:
-        file: ${{ "bld_py.bat" if win else "build_py.sh" }}
+        file: ${{ ("bld_py.bat" if win else "build_py.sh") if cuda_compiler_version != "None" else ("install_py.bat" if win else "install_py.sh") }}
         env:
           MOMENTUM_BUILD_TORCH_EXTENSIONS: "ON"
+      # See pymomentum-core; the staging output is empty for CUDA.
+      files:
+        include:
+          - if: cuda_compiler_version == "None"
+            then:
+              - "**/site-packages/pymomentum/**"
+              - "**/site-packages/pymomentum_*.dist-info/**"
+            else: "**"
       # Internal DLLs bundled together that reference each other
       dynamic_linking:
         missing_dso_allowlist:
